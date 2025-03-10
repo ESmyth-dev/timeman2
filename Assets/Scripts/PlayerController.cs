@@ -16,22 +16,43 @@ public class PlayerController : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.W))
         {
-            animator.SetBool("isRunning", true); 
+            animator.SetBool("movingForwards", true); 
         }
 
         if (Input.GetKeyUp(KeyCode.W))
         {
-            animator.SetBool("isRunning", false);
+            animator.SetBool("movingForwards", false);
         }
+
+        if (Input.GetKeyDown(KeyCode.D))
+        {
+            animator.SetBool("movingRight", true);
+        }
+
+        if (Input.GetKeyUp(KeyCode.D))
+        {
+            animator.SetBool("movingRight", false);
+        }
+
+        if (Input.GetKeyDown(KeyCode.A))
+        {
+            animator.SetBool("movingLeft", true);
+        }
+
+        if (Input.GetKeyUp(KeyCode.A))
+        {
+            animator.SetBool("movingLeft", false);
+        }
+
 
         if (Input.GetKeyDown(KeyCode.S))
         {
-            animator.SetBool("isReversing", true);
+            animator.SetBool("movingBackwards", true);
         }
 
         if (Input.GetKeyUp(KeyCode.S))
         {
-            animator.SetBool("isReversing", false);
+            animator.SetBool("movingBackwards", false);
         }
 
 
