@@ -6,13 +6,13 @@ public class GameManager : MonoBehaviour
 {
     public int numberOfLives = 3;
     private int level = 0;
-    public boolean bulletRicochet = false;
-    public boolean bulletPierce = false;
-    public boolean timeGrenade = false;
-    public boolean timePulse = false;
-    public boolean doubleJump = false;
-    public boolean blink = false;
-    public boolean slowTime = false;
+    public bool bulletRicochet = false;
+    public bool bulletPierce = false;
+    public bool timeGrenade = false;
+    public bool timePulse = false;
+    public bool doubleJump = false;
+    public bool blink = false;
+    public bool slowTime = false;
 
     public void levelUp()
     {
