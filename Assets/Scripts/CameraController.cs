@@ -38,7 +38,7 @@ public class CameraController : MonoBehaviour
         RaycastHit hit;
         Vector3 targetPosition;
         Vector3 desiredPosition = cameraPivot.position + cameraPivot.rotation * cameraOffset;
-        LayerMask wallLayers = LayerMask.GetMask("Level");
+        LayerMask wallLayers = LayerMask.GetMask("level");
 
         if (Physics.Raycast(desiredPosition, playerBody.position - desiredPosition, out hit, (playerBody.position - desiredPosition).magnitude, wallLayers))
         {

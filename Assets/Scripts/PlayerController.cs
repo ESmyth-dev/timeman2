@@ -7,6 +7,7 @@ public class PlayerController : MonoBehaviour
     public Animator animator;
     public float speed = 1.0f;
     public float slowdownFactor = 10;
+    public float blinkDistance = 5;
     public float jumpForce;
     private bool isGrounded;
     private Rigidbody rb;
@@ -61,7 +62,7 @@ public class PlayerController : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.F))
         {
-            BlinkAbility();
+            TeleportAbility();
         }
 
         if (Input.GetKey(KeyCode.S))
@@ -108,10 +109,8 @@ public class PlayerController : MonoBehaviour
 
     IEnumerator SlowTime()
     {
-        Debug.Log("nerf or nuthin");
         //yield on a new YieldInstruction that waits for 5 seconds.
         yield return new WaitForSeconds(2);
-        Debug.Log("back to normal");
         Time.timeScale *= slowdownFactor;
         speed /= slowdownFactor;
         animator.speed /= slowdownFactor;
@@ -123,6 +122,40 @@ public class PlayerController : MonoBehaviour
         speed *= slowdownFactor;
         animator.speed *= slowdownFactor;
         StartCoroutine(SlowTime());
+    }
+
+    void TeleportAbility()
+    {
+        Vector3 blinkVector = Vector3.zero;
+        if (Input.GetKey(KeyCode.W)) 
+        {
+            blinkVector += transform.forward * blinkDistance;
+
+        }
+        if (Input.GetKey(KeyCode.S))
+        {
+            blinkVector -= transform.forward * blinkDistance;
+
+        }
+        if (Input.GetKey(KeyCode.D))
+        {
+            blinkVector += transform.right * blinkDistance;
+
+        }
+        if (Input.GetKey(KeyCode.A))
+        {
+            blinkVector -= transform.right * blinkDistance;
+
+        }
+        Debug.DrawRay(transform.position, blinkVector * blinkDistance, Color.red, 2f);
+        if (Physics.Raycast(transform.position + transform.up*0.5f, blinkVector, out RaycastHit hit, blinkDistance, LayerMask.GetMask("Level")))
+        {
+            Debug.Log("Obstacle detected! Cannot teleport.");
+        }
+        else
+        {
+            transform.position += blinkVector;
+        }
     }
 }
 
