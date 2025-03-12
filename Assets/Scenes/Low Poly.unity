@@ -6123,9 +6123,45 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 3751055815532535093, guid: e714723dd354f734b99066ce40263b88, type: 3}
+      propertyPath: m_Size.y
+      value: 0.271111
+      objectReference: {fileID: 0}
+    - target: {fileID: 3751055815532535093, guid: e714723dd354f734b99066ce40263b88, type: 3}
+      propertyPath: m_Center.y
+      value: 0.24381518
+      objectReference: {fileID: 0}
+    - target: {fileID: 4708938048195681198, guid: e714723dd354f734b99066ce40263b88, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4708938048195681198, guid: e714723dd354f734b99066ce40263b88, type: 3}
+      propertyPath: m_AABB.m_Center.x
+      value: 0.020642698
+      objectReference: {fileID: 0}
+    - target: {fileID: 4708938048195681198, guid: e714723dd354f734b99066ce40263b88, type: 3}
+      propertyPath: m_AABB.m_Center.y
+      value: -0.026865482
+      objectReference: {fileID: 0}
+    - target: {fileID: 4708938048195681198, guid: e714723dd354f734b99066ce40263b88, type: 3}
+      propertyPath: m_AABB.m_Extent.x
+      value: 0.30373728
+      objectReference: {fileID: 0}
+    - target: {fileID: 4708938048195681198, guid: e714723dd354f734b99066ce40263b88, type: 3}
+      propertyPath: m_AABB.m_Extent.y
+      value: 0.80659866
+      objectReference: {fileID: 0}
     - target: {fileID: 5983922796131645361, guid: e714723dd354f734b99066ce40263b88, type: 3}
       propertyPath: speed
-      value: 0.5
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 6441956786937942902, guid: e714723dd354f734b99066ce40263b88, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6959302127547711956, guid: e714723dd354f734b99066ce40263b88, type: 3}
+      propertyPath: m_Enabled
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7171201001517720588, guid: e714723dd354f734b99066ce40263b88, type: 3}
       propertyPath: m_Name
@@ -6171,7 +6207,8 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 6959302127547711956, guid: e714723dd354f734b99066ce40263b88, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []

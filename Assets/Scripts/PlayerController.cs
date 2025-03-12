@@ -6,10 +6,14 @@ public class PlayerController : MonoBehaviour
 {
     public Animator animator;
     public float speed = 1.0f;
+    public float jumpForce;
+    private bool isGrounded;
+    private Rigidbody rb;
     // Start is called before the first frame update
     void Start()
     {
-        
+        animator.applyRootMotion = false;
+        rb = GetComponent<Rigidbody>();
     }
 
     // Update is called once per frame
@@ -69,5 +73,31 @@ public class PlayerController : MonoBehaviour
         {
             transform.Translate(moveDirection * Time.deltaTime * speed, Space.World);
         }
+
+        // Jumping
+        if (Input.GetKeyDown(KeyCode.Space) && isGrounded)
+        {
+            rb.AddForce(transform.up * jumpForce, ForceMode.Impulse);
+            isGrounded = false;
+            animator.SetBool("jumping", true);
+        }
+
+    }
+
+    public void JumpEnd()
+    {
+        animator.SetBool("jumping", false);
+        animator.SetBool("onGround", false);
+    }
+
+    void OnCollisionStay()
+    {
+        if (!animator.GetBool("jumping"))
+        {
+            isGrounded = true;
+            animator.SetBool("onGround", true);
+
+        }
     }
 }
+
