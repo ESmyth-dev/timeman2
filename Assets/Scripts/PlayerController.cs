@@ -6,6 +6,7 @@ public class PlayerController : MonoBehaviour
 {
     public Animator animator;
     public float speed = 1.0f;
+    public float slowdownFactor = 10;
     public float jumpForce;
     private bool isGrounded;
     private Rigidbody rb;
@@ -58,6 +59,11 @@ public class PlayerController : MonoBehaviour
             animator.SetBool("movingLeft", false);
         }
 
+        if (Input.GetKeyDown(KeyCode.F))
+        {
+            BlinkAbility();
+        }
+
         if (Input.GetKey(KeyCode.S))
         {
             animator.SetBool("movingBackwards", true);
@@ -98,6 +104,25 @@ public class PlayerController : MonoBehaviour
             animator.SetBool("onGround", true);
 
         }
+    }
+
+    IEnumerator SlowTime()
+    {
+        Debug.Log("nerf or nuthin");
+        //yield on a new YieldInstruction that waits for 5 seconds.
+        yield return new WaitForSeconds(2);
+        Debug.Log("back to normal");
+        Time.timeScale *= slowdownFactor;
+        speed /= slowdownFactor;
+        animator.speed /= slowdownFactor;
+    }
+
+    void BlinkAbility()
+    {
+        Time.timeScale /= slowdownFactor;
+        speed *= slowdownFactor;
+        animator.speed *= slowdownFactor;
+        StartCoroutine(SlowTime());
     }
 }
 
