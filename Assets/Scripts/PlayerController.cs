@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEditor;
-//using UnityEditor.PackageManager;
+//5using UnityEditor.PackageManager;
 using UnityEngine;
 
 public class PlayerController : MonoBehaviour
@@ -13,6 +13,7 @@ public class PlayerController : MonoBehaviour
     public float blinkDistance = 5;
     public float jumpForce;
     public GameObject shotPrefab;
+    public GameObject blinkEffectPrefab;
     public Camera cam;
     public Transform gun;
     private bool isGrounded;
@@ -184,16 +185,51 @@ public class PlayerController : MonoBehaviour
 
         }
 
+        Vector3 effectVector;
+        //effectVector.z -= 
+        //effectVector.y += 1;
+        //effectVector.z += 4;
+        //effectVector.x += 0;
+
+        //Vector3 effectRotation = effectVector + blinkVector;
+
+        //Quaternion effectRotation = Quaternion.LookRotation(blinkVector, Vector3.up);
 
         if (Physics.Raycast(transform.position + transform.up*0.5f, blinkVector, out RaycastHit hit, blinkDistance, LayerMask.GetMask("Level")))
         {
             Debug.Log("Obstacle detected! shorter teleport");
             transform.position += blinkVector * (hit.distance-1.5f);
+            effectVector = transform.position;
         }
         else
         {
             transform.position += blinkVector * blinkDistance;
+            effectVector = transform.position;
         }
+
+        if (blinkVector != Vector3.zero)
+        {
+            effectVector.y += 1.2f;
+
+            effectVector.x -= blinkVector.x * 1.8f;
+            effectVector.z -= blinkVector.z * 1.8f;
+            //effectVector -= blinkVector;
+
+            Quaternion effectRotation = Quaternion.LookRotation(blinkVector, Vector3.up);
+            GameObject effect = Instantiate(blinkEffectPrefab, effectVector, effectRotation);
+
+            IEnumerator removal = removeBlinkEffect(effect);
+            StartCoroutine(removal);
+        }
+
+        
+    }
+
+    IEnumerator removeBlinkEffect(GameObject effect)
+    {
+        Debug.Log("Destroy");
+        yield return new WaitForSeconds(0.3f);
+        Destroy(effect);
     }
 }
 
