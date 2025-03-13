@@ -129,32 +129,33 @@ public class PlayerController : MonoBehaviour
         Vector3 blinkVector = Vector3.zero;
         if (Input.GetKey(KeyCode.W)) 
         {
-            blinkVector += transform.forward * blinkDistance;
+            blinkVector += transform.forward;
 
         }
         if (Input.GetKey(KeyCode.S))
         {
-            blinkVector -= transform.forward * blinkDistance;
+            blinkVector -= transform.forward;
 
         }
         if (Input.GetKey(KeyCode.D))
         {
-            blinkVector += transform.right * blinkDistance;
+            blinkVector += transform.right;
 
         }
         if (Input.GetKey(KeyCode.A))
         {
-            blinkVector -= transform.right * blinkDistance;
+            blinkVector -= transform.right;
 
         }
         Debug.DrawRay(transform.position, blinkVector * blinkDistance, Color.red, 2f);
         if (Physics.Raycast(transform.position + transform.up*0.5f, blinkVector, out RaycastHit hit, blinkDistance, LayerMask.GetMask("Level")))
         {
-            Debug.Log("Obstacle detected! Cannot teleport.");
+            Debug.Log("Obstacle detected! shorter teleport");
+            transform.position += blinkVector * (hit.distance-1.5f);
         }
         else
         {
-            transform.position += blinkVector;
+            transform.position += blinkVector * blinkDistance;
         }
     }
 }
