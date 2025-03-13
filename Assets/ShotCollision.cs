@@ -18,7 +18,6 @@ public class ShotCollision : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        Debug.Log("HIT SOMETHING");
         Destroy(this.gameObject);
     }
 }
