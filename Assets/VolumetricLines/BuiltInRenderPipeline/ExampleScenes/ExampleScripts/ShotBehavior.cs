@@ -10,13 +10,7 @@ public class ShotBehavior : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		transform.position += transform.forward * Time.deltaTime * 10f;
-	
-	}
+		transform.localPosition = Vector3.zero;
 
-    private void OnCollisionEnter(Collision collision)
-    {
-		Debug.Log("HIT SOMETHING");
-        Destroy(this.gameObject);
-    }
+	}
 }

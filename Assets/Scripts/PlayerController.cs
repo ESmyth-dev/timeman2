@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEditor;
 using UnityEngine;
 
@@ -65,7 +66,7 @@ public class PlayerController : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.F))
         {
-            TeleportAbility();
+            BlinkAbility();
         }
 
         if (Input.GetKey(KeyCode.S))
@@ -94,7 +95,8 @@ public class PlayerController : MonoBehaviour
 
         if (Input.GetMouseButtonDown(0))
         {
-            GameObject go = GameObject.Instantiate(shotPrefab, gun.position, gun.rotation) as GameObject;
+            GameObject go = Instantiate(shotPrefab, gun.position, Quaternion.Euler(transform.rotation.x, transform.rotation.y, transform.rotation.z));
+            go.transform.rotation = transform.rotation;
             GameObject.Destroy(go, 3f);
         }
 
@@ -125,7 +127,7 @@ public class PlayerController : MonoBehaviour
         animator.speed /= slowdownFactor;
     }
 
-    void BlinkAbility()
+    void SlowTimeAbility()
     {
         Time.timeScale /= slowdownFactor;
         speed *= slowdownFactor;
@@ -133,7 +135,7 @@ public class PlayerController : MonoBehaviour
         StartCoroutine(SlowTime());
     }
 
-    void TeleportAbility()
+    void BlinkAbility()
     {
         Vector3 blinkVector = Vector3.zero;
         if (Input.GetKey(KeyCode.W)) 
