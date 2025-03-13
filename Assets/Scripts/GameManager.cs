@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
+    public static GameManager instance;
     public int numberOfLives = 3;
     private int level = 0;
     public bool bulletRicochet = false;
@@ -14,9 +15,32 @@ public class GameManager : MonoBehaviour
     public bool blink = false;
     public bool slowTime = false;
 
+    void Awake()
+    {
+        if (instance == null)
+        {
+            instance = this;
+            DontDestroyOnLoad(gameObject); // Optional: Keeps the GameManager instance across scenes
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+    }
+
     public void levelUp()
     {
         level++;
+    }
+
+    public void gainLife()
+    {
+        numberOfLives++;
+    }
+
+    public void loseLife()
+    {
+        numberOfLives--;
     }
 
     // Start is called before the first frame update
