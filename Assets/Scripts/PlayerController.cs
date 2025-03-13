@@ -66,7 +66,7 @@ public class PlayerController : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.F))
         {
-            TeleportAbility();
+            BlinkAbility();
         }
 
         if (Input.GetKey(KeyCode.S))
@@ -127,7 +127,7 @@ public class PlayerController : MonoBehaviour
         animator.speed /= slowdownFactor;
     }
 
-    void BlinkAbility()
+    void SlowTimeAbility()
     {
         Time.timeScale /= slowdownFactor;
         speed *= slowdownFactor;
@@ -135,7 +135,7 @@ public class PlayerController : MonoBehaviour
         StartCoroutine(SlowTime());
     }
 
-    void TeleportAbility()
+    void BlinkAbility()
     {
         Vector3 blinkVector = Vector3.zero;
         if (Input.GetKey(KeyCode.W)) 
