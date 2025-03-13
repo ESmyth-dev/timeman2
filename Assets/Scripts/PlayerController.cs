@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEditor;
 using UnityEngine;
 
@@ -94,7 +95,8 @@ public class PlayerController : MonoBehaviour
 
         if (Input.GetMouseButtonDown(0))
         {
-            GameObject go = GameObject.Instantiate(shotPrefab, gun.position, gun.rotation) as GameObject;
+            GameObject go = Instantiate(shotPrefab, gun.position, Quaternion.Euler(transform.rotation.x, transform.rotation.y, transform.rotation.z));
+            go.transform.rotation = transform.rotation;
             GameObject.Destroy(go, 3f);
         }
 
