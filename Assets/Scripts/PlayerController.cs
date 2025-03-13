@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEditor;
+using UnityEditor.PackageManager;
 using UnityEngine;
 
 public class PlayerController : MonoBehaviour
@@ -11,6 +13,7 @@ public class PlayerController : MonoBehaviour
     public float blinkDistance = 5;
     public float jumpForce;
     public GameObject shotPrefab;
+    public Camera cam;
     public Transform gun;
     private bool isGrounded;
     private Rigidbody rb;
@@ -65,7 +68,7 @@ public class PlayerController : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.F))
         {
-            TeleportAbility();
+            BlinkAbility();
         }
 
         if (Input.GetKey(KeyCode.S))
@@ -105,8 +108,20 @@ public class PlayerController : MonoBehaviour
 
         if (Input.GetMouseButtonDown(0))
         {
-            GameObject go = GameObject.Instantiate(shotPrefab, gun.position, gun.rotation) as GameObject;
-            GameObject.Destroy(go, 3f);
+            GameObject go = Instantiate(shotPrefab, gun.position, Quaternion.Euler(transform.rotation.x, transform.rotation.y, transform.rotation.z));
+            //go.transform.rotation = transform.rotation;
+            RaycastHit[] hits = Physics.RaycastAll(cam.transform.position, cam.transform.forward);
+            for (int i = 0; i < hits.Length; i++)
+            {
+                Debug.Log("one of the hits");
+                if (hits[i].distance > 3)
+                {
+                    go.transform.LookAt(hits[i].point);
+                    Debug.Log("found hit");
+                    break;
+                }
+            }
+
         }
 
     }
@@ -137,7 +152,7 @@ public class PlayerController : MonoBehaviour
         animator.speed /= slowdownFactor;
     }
 
-    void BlinkAbility()
+    void SlowTimeAbility()
     {
         Time.timeScale /= slowdownFactor;
         speed *= slowdownFactor;
@@ -145,7 +160,7 @@ public class PlayerController : MonoBehaviour
         StartCoroutine(SlowTime());
     }
 
-    void TeleportAbility()
+    void BlinkAbility()
     {
         Vector3 blinkVector = Vector3.zero;
         if (Input.GetKey(KeyCode.W)) 
