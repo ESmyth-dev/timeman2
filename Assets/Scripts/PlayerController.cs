@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 
 public class PlayerController : MonoBehaviour
@@ -9,6 +10,8 @@ public class PlayerController : MonoBehaviour
     public float slowdownFactor = 10;
     public float blinkDistance = 5;
     public float jumpForce;
+    public GameObject shotPrefab;
+    public Transform gun;
     private bool isGrounded;
     private Rigidbody rb;
     // Start is called before the first frame update
@@ -89,6 +92,12 @@ public class PlayerController : MonoBehaviour
             animator.SetBool("jumping", true);
         }
 
+        if (Input.GetMouseButtonDown(0))
+        {
+            GameObject go = GameObject.Instantiate(shotPrefab, gun.position, gun.rotation) as GameObject;
+            GameObject.Destroy(go, 3f);
+        }
+
     }
 
     public void JumpEnd()
@@ -147,7 +156,8 @@ public class PlayerController : MonoBehaviour
             blinkVector -= transform.right;
 
         }
-        Debug.DrawRay(transform.position, blinkVector * blinkDistance, Color.red, 2f);
+
+
         if (Physics.Raycast(transform.position + transform.up*0.5f, blinkVector, out RaycastHit hit, blinkDistance, LayerMask.GetMask("Level")))
         {
             Debug.Log("Obstacle detected! shorter teleport");
