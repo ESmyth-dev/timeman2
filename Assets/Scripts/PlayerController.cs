@@ -90,6 +90,17 @@ public class PlayerController : MonoBehaviour
             rb.AddForce(transform.up * jumpForce, ForceMode.Impulse);
             isGrounded = false;
             animator.SetBool("jumping", true);
+        }else{
+            if(Input.GetKeyDown(KeyCode.Space) && !isGrounded)
+            {
+                if(GameManager.instance.doubleJump){
+                    rb.velocity = new Vector3(rb.velocity.x, 0, rb.velocity.z);
+                    rb.AddForce((transform.up * jumpForce), ForceMode.Impulse);
+                    isGrounded = false;
+                    animator.SetBool("falling", false);
+                    animator.SetBool("jumping", true);
+                }
+            }
         }
 
         if (Input.GetMouseButtonDown(0))
@@ -104,6 +115,7 @@ public class PlayerController : MonoBehaviour
     {
         animator.SetBool("jumping", false);
         animator.SetBool("onGround", false);
+        animator.SetBool("falling", true);
     }
 
     void OnCollisionStay()
