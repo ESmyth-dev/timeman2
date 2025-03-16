@@ -4,10 +4,15 @@ using Unity.VisualScripting;
 using UnityEditor;
 //5using UnityEditor.PackageManager;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PlayerController : MonoBehaviour
 {
     public Animator animator;
+    public Slider slider;
+    private float fillPercentage;
+    public float cooldownSpeed = 0.2f;
+    private bool overHeated;
     public float speed = 1.0f;
     public float slowdownFactor = 10;
     public float blinkDistance = 5;
@@ -21,6 +26,8 @@ public class PlayerController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        overHeated = false;
+        fillPercentage = (slider.value - slider.minValue) / (slider.maxValue - slider.minValue) * 100;
         animator.applyRootMotion = false;
         rb = GetComponent<Rigidbody>();
     }
@@ -28,6 +35,11 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        slider.value -= cooldownSpeed * Time.deltaTime;
+        if (slider.value <= 0.1f)
+        {
+            overHeated = false;
+        }
         Vector3 moveDirection = Vector3.zero;
         Vector3 forward = transform.forward;
         Vector3 right = transform.right;
@@ -109,20 +121,28 @@ public class PlayerController : MonoBehaviour
 
         if (Input.GetMouseButtonDown(0))
         {
-            GameObject go = Instantiate(shotPrefab, gun.position, Quaternion.Euler(transform.rotation.x, transform.rotation.y, transform.rotation.z));
-            //go.transform.rotation = transform.rotation;
-            RaycastHit[] hits = Physics.RaycastAll(cam.transform.position, cam.transform.forward);
-            for (int i = 0; i < hits.Length; i++)
+            if (!overHeated)
             {
-                Debug.Log("one of the hits");
-                if (hits[i].distance > 3)
+                slider.value += 0.2f;
+                if (slider.value >= 1f)
                 {
-                    go.transform.LookAt(hits[i].point);
-                    Debug.Log("found hit");
-                    break;
+                    overHeated = true;
                 }
-            }
+                GameObject go = Instantiate(shotPrefab, gun.position, Quaternion.Euler(transform.rotation.x, transform.rotation.y, transform.rotation.z));
+                //go.transform.rotation = transform.rotation;
+                RaycastHit[] hits = Physics.RaycastAll(cam.transform.position, cam.transform.forward);
+                for (int i = 0; i < hits.Length; i++)
+                {
+                    Debug.Log("one of the hits");
+                    if (hits[i].distance > 3)
+                    {
+                        go.transform.LookAt(hits[i].point);
+                        Debug.Log("found hit");
+                        break;
+                    }
+                }
 
+            }
         }
 
     }
