@@ -83,6 +83,10 @@ public class PlayerController : MonoBehaviour
         {
             BlinkAbility();
         }
+        if (Input.GetKeyDown(KeyCode.C))
+        {
+            SlowTimeAbility();
+        }
 
         if (Input.GetKey(KeyCode.S))
         {
@@ -168,6 +172,7 @@ public class PlayerController : MonoBehaviour
     {
         //yield on a new YieldInstruction that waits for 5 seconds.
         yield return new WaitForSeconds(2);
+        // TODO Deactivate slow down screen tint/filter
         Time.timeScale *= slowdownFactor;
         speed /= slowdownFactor;
         animator.speed /= slowdownFactor;
@@ -175,6 +180,7 @@ public class PlayerController : MonoBehaviour
 
     void SlowTimeAbility()
     {
+        // TODO Activate slow down screen tint/filter
         Time.timeScale /= slowdownFactor;
         speed *= slowdownFactor;
         animator.speed *= slowdownFactor;
