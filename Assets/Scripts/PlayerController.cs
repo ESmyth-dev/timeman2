@@ -19,6 +19,7 @@ public class PlayerController : MonoBehaviour
     public float jumpForce;
     public GameObject shotPrefab;
     public GameObject blinkEffectPrefab;
+    //public GameObject blinkSFX;
     public Camera cam;
     public Transform gun;
     private bool isGrounded;
@@ -206,14 +207,6 @@ public class PlayerController : MonoBehaviour
         }
 
         Vector3 effectVector;
-        //effectVector.z -= 
-        //effectVector.y += 1;
-        //effectVector.z += 4;
-        //effectVector.x += 0;
-
-        //Vector3 effectRotation = effectVector + blinkVector;
-
-        //Quaternion effectRotation = Quaternion.LookRotation(blinkVector, Vector3.up);
 
         if (Physics.Raycast(transform.position + transform.up*0.5f, blinkVector, out RaycastHit hit, blinkDistance, LayerMask.GetMask("Level")))
         {
@@ -233,7 +226,6 @@ public class PlayerController : MonoBehaviour
 
             effectVector.x -= blinkVector.x * 1.8f;
             effectVector.z -= blinkVector.z * 1.8f;
-            //effectVector -= blinkVector;
 
             Quaternion effectRotation = Quaternion.LookRotation(blinkVector, Vector3.up);
             GameObject effect = Instantiate(blinkEffectPrefab, effectVector, effectRotation);
@@ -241,7 +233,6 @@ public class PlayerController : MonoBehaviour
             IEnumerator removal = removeBlinkEffect(effect);
             StartCoroutine(removal);
         }
-
         
     }
 
