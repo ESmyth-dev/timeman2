@@ -353,12 +353,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   animator: {fileID: 1490691572001032554}
+  slider: {fileID: 0}
+  cooldownSpeed: 0.2
   speed: 3
   slowdownFactor: 10
   blinkDistance: 5
   jumpForce: 6
   shotPrefab: {fileID: 1220388901695869229, guid: 8b9d98267b265e64db13b54dadece375, type: 3}
   blinkEffectPrefab: {fileID: 7431596080580507413, guid: 774e058f094d51d4c9dde483697ab105, type: 3}
+  blinkSFX: {fileID: 5634767591545691478, guid: 745ff59d0d5cd974092c3b21693210dc, type: 3}
   cam: {fileID: 886996540944758549}
   gun: {fileID: 1420679215102681210}
 --- !u!114 &6938908292205947562
