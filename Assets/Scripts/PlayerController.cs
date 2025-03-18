@@ -136,8 +136,8 @@ public class PlayerController : MonoBehaviour
                 slider.value += 0.2f;
                 if (slider.value >= 1f)
                 {
-                    overHeated = true;
-                }
+                    overHeated = true;                    
+                } 
                 GameObject go = Instantiate(shotPrefab, gun.position, Quaternion.Euler(transform.rotation.x, transform.rotation.y, transform.rotation.z));
                 //go.transform.rotation = transform.rotation;
                 RaycastHit[] hits = Physics.RaycastAll(cam.transform.position, cam.transform.forward);
@@ -160,6 +160,7 @@ public class PlayerController : MonoBehaviour
             if (!overHeated)
             {
                 slider.value += beamFillSpeed * Time.deltaTime;
+                Debug.Log("Click");
                 if (slider.value >= 1f)
                 {
                     overHeated = true;
@@ -259,36 +260,22 @@ public class PlayerController : MonoBehaviour
         {
             Debug.Log("Obstacle detected! shorter teleport");
             transform.position += blinkVector * (hit.distance-1.5f);
-            //effectVector = transform.position;
         }
         else
         {
             transform.position += blinkVector * blinkDistance;
-            //effectVector = transform.position;
         }
 
         if (blinkVector != Vector3.zero)
         {
-            //effectVector.y += 1.2f;
-
-            //effectVector.x -= blinkVector.x * 1.8f;
-            //effectVector.z -= blinkVector.z * 1.8f;
-
             Quaternion effectRotation = Quaternion.LookRotation(blinkVector, Vector3.up);
 
-            Vector3 effectVector = transform.position;
+            Vector3 effectVector = transform.position;  // position on player after 
             effectVector.y += 1f;
 
             Instantiate(blinkSFX, effectVector, effectRotation);
         }
         
     }
-
-    /*IEnumerator removeBlinkEffect(GameObject effect)
-    {
-        Debug.Log("Destroy");
-        yield return new WaitForSeconds(0.3f);
-        Destroy(effect);
-    }*/
 }
 
