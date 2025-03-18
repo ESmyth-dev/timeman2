@@ -10,8 +10,14 @@ public class EnemyBehaviour : MonoBehaviour
     private NavMeshAgent agent;
     private Animator animator;
 
+    public Transform gun;
+    public GameObject shotPrefab;
+    private float shootTimer = 0f;
+    private float shootInterval = 0.5f; // Time between shots in seconds
+
     public enum EnemyState { Idle, Alert }
     public EnemyState state = EnemyState.Idle;
+
 
     public bool BehaviourEnabled = true;
 
@@ -33,6 +39,8 @@ public class EnemyBehaviour : MonoBehaviour
         {
             return;
         }
+
+        // Face player
         Vector3 direction = -(transform.position - player.position).normalized;
         direction.y = 0;
 
@@ -40,6 +48,22 @@ public class EnemyBehaviour : MonoBehaviour
         transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * agent.angularSpeed);
 
         SetWalkingAnimation(direction);
+
+
+        // Shoot
+        shootTimer += Time.deltaTime;
+        if (shootTimer >= shootInterval)
+        {
+            Shoot();
+            shootTimer = 0f; // Reset the timer
+        }
+
+
+        void Shoot()
+        {
+            GameObject go = Instantiate(shotPrefab, gun.position, Quaternion.Euler(transform.rotation.x, transform.rotation.y, transform.rotation.z));
+            go.transform.LookAt(player.position + Vector3.up * 1f);
+        }
     }
 
     IEnumerator RandomRaycastRoutine()
