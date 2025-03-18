@@ -18,8 +18,7 @@ public class PlayerController : MonoBehaviour
     public float blinkDistance = 5;
     public float jumpForce;
     public GameObject shotPrefab;
-    public GameObject blinkEffectPrefab;
-    //public GameObject blinkSFX;
+    public GameObject blinkSFX;
     public Camera cam;
     public Transform gun;
     private bool isGrounded;
@@ -206,41 +205,40 @@ public class PlayerController : MonoBehaviour
 
         }
 
-        Vector3 effectVector;
-
         if (Physics.Raycast(transform.position + transform.up*0.5f, blinkVector, out RaycastHit hit, blinkDistance, LayerMask.GetMask("Level")))
         {
             Debug.Log("Obstacle detected! shorter teleport");
             transform.position += blinkVector * (hit.distance-1.5f);
-            effectVector = transform.position;
+            //effectVector = transform.position;
         }
         else
         {
             transform.position += blinkVector * blinkDistance;
-            effectVector = transform.position;
+            //effectVector = transform.position;
         }
 
         if (blinkVector != Vector3.zero)
         {
-            effectVector.y += 1.2f;
+            //effectVector.y += 1.2f;
 
-            effectVector.x -= blinkVector.x * 1.8f;
-            effectVector.z -= blinkVector.z * 1.8f;
+            //effectVector.x -= blinkVector.x * 1.8f;
+            //effectVector.z -= blinkVector.z * 1.8f;
 
             Quaternion effectRotation = Quaternion.LookRotation(blinkVector, Vector3.up);
-            GameObject effect = Instantiate(blinkEffectPrefab, effectVector, effectRotation);
 
-            IEnumerator removal = removeBlinkEffect(effect);
-            StartCoroutine(removal);
+            Vector3 effectVector = transform.position;
+            effectVector.y += 1f;
+
+            Instantiate(blinkSFX, effectVector, effectRotation);
         }
         
     }
 
-    IEnumerator removeBlinkEffect(GameObject effect)
+    /*IEnumerator removeBlinkEffect(GameObject effect)
     {
         Debug.Log("Destroy");
         yield return new WaitForSeconds(0.3f);
         Destroy(effect);
-    }
+    }*/
 }
 
