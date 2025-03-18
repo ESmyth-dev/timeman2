@@ -12,6 +12,7 @@ public class OverheatSlider : MonoBehaviour
     void Start()
     {
         overheated = false;
+        
     }
 
     // Update is called once per frame
@@ -20,8 +21,10 @@ public class OverheatSlider : MonoBehaviour
         Slider slider = GameObject.Find("Slider").GetComponent<Slider>();
         float value = slider.value;
 
-        float g = Mathf.Round(255 * (1f - value));
+        float g_val = 255 * (1f - value);
+        float g = Mathf.Round(g_val);
         bar = new Color(255, g, 0, 255);
+        bar.a = 1;
 
         Image fill = GameObject.Find("Fill").GetComponent<Image>();
         Image background = GameObject.Find("SliderBackground").GetComponent<Image>();
