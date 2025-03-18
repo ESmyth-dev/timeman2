@@ -10,9 +10,13 @@ public class PlayerController : MonoBehaviour
 {
     public Animator animator;
     public Slider slider;
-    private float fillPercentage;
+    public LineRenderer beamLine;
+    public float beamRange = 100f;
     public float cooldownSpeed = 0.2f;
+    public float beamFillSpeed = 0.5f;
     private bool overHeated;
+    public bool beamEnabled = false;
+    public Light beamLight;
     public float speed = 1.0f;
     public float slowdownFactor = 10;
     public float blinkDistance = 5;
@@ -27,7 +31,6 @@ public class PlayerController : MonoBehaviour
     void Start()
     {
         overHeated = false;
-        fillPercentage = (slider.value - slider.minValue) / (slider.maxValue - slider.minValue) * 100;
         animator.applyRootMotion = false;
         rb = GetComponent<Rigidbody>();
     }
@@ -81,7 +84,8 @@ public class PlayerController : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.F))
         {
-            BlinkAbility();
+            //BlinkAbility();
+            SlowTimeAbility();
         }
         if (Input.GetKeyDown(KeyCode.C))
         {
@@ -123,7 +127,7 @@ public class PlayerController : MonoBehaviour
             }
         }
 
-        if (Input.GetMouseButtonDown(0))
+        if (Input.GetMouseButtonDown(0) && !beamEnabled)
         {
             if (!overHeated)
             {
@@ -147,6 +151,38 @@ public class PlayerController : MonoBehaviour
                 }
 
             }
+        }
+
+        if (Input.GetMouseButton(0) && beamEnabled)
+        {
+            if (!overHeated)
+            {
+                slider.value += beamFillSpeed * Time.deltaTime;
+                if (slider.value >= 1f)
+                {
+                    overHeated = true;
+                }
+                RaycastHit[] hits = Physics.RaycastAll(cam.transform.position, cam.transform.forward);
+                for (int i = 0; i < hits.Length; i++)
+                {
+                    if (hits[i].distance > 3)
+                    {
+                        beamLine.SetPosition(0, gun.position); // Start of the beam
+                        beamLine.SetPosition(1, hits[i].point); // End of the beam
+                        beamLight.transform.position = gun.position;
+                        beamLight.transform.rotation = gun.rotation;
+                        break;
+                    }
+                }
+                beamLine.enabled = true;
+                beamLight.enabled = true;
+            }
+        }
+
+        if (Input.GetMouseButtonUp(0) && beamEnabled)
+        {
+            beamLine.enabled = false;
+            beamLight.enabled = false;
         }
 
     }
