@@ -39,7 +39,7 @@ public class EnemyBehaviour : MonoBehaviour
         while (BehaviourEnabled && player != null && agent.isActiveAndEnabled)
         {
             ChooseNewDestination();
-            yield return new WaitForSeconds(Random.Range(5f, 10f));
+            yield return new WaitForSeconds(Random.Range(2f, 5f));
         }
     }
 
