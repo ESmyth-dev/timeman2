@@ -163,8 +163,8 @@ public class PlayerController : MonoBehaviour
                 {
                     if (hits[i].distance > 3)
                     {
-                        beamLine.SetPosition(0, gun.position); // Start of the beam
-                        beamLine.SetPosition(1, hits[i].point); // End of the beam
+                        beamLine.SetPosition(0, gun.position);
+                        beamLine.SetPosition(1, hits[i].point); 
                         beamLight.transform.position = gun.position;
                         beamLight.transform.rotation = gun.rotation;
                         break;
