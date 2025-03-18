@@ -27,10 +27,12 @@ public class PlayerController : MonoBehaviour
     public Transform gun;
     private bool isGrounded;
     private Rigidbody rb;
+    private bool timeSlowed;
     // Start is called before the first frame update
     void Start()
     {
         overHeated = false;
+        timeSlowed = false;
         animator.applyRootMotion = false;
         rb = GetComponent<Rigidbody>();
     }
@@ -85,6 +87,10 @@ public class PlayerController : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.F))
         {
             //BlinkAbility();
+            SlowTimeAbility();
+        }
+        if (Input.GetKeyDown(KeyCode.C))
+        {
             SlowTimeAbility();
         }
 
@@ -204,17 +210,25 @@ public class PlayerController : MonoBehaviour
     {
         //yield on a new YieldInstruction that waits for 5 seconds.
         yield return new WaitForSeconds(2);
+        // TODO Deactivate slow down screen tint/filter
         Time.timeScale *= slowdownFactor;
         speed /= slowdownFactor;
         animator.speed /= slowdownFactor;
+        timeSlowed = false;
     }
 
     void SlowTimeAbility()
     {
-        Time.timeScale /= slowdownFactor;
-        speed *= slowdownFactor;
-        animator.speed *= slowdownFactor;
-        StartCoroutine(SlowTime());
+        if (!timeSlowed)
+        {
+            // TODO Activate slow down screen tint/filter
+            Time.timeScale /= slowdownFactor;
+            speed *= slowdownFactor;
+            animator.speed *= slowdownFactor;
+            timeSlowed = true;
+            StartCoroutine(SlowTime());
+        }
+        
     }
 
     void BlinkAbility()
