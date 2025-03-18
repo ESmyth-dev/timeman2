@@ -8,6 +8,7 @@ public class EnemyBehaviour : MonoBehaviour
 {
     private Transform player;
     private NavMeshAgent agent;
+    private Animator animator;
 
     public enum EnemyState { Idle, Alert }
     public EnemyState state = EnemyState.Idle;
@@ -19,6 +20,7 @@ public class EnemyBehaviour : MonoBehaviour
     {
         player = GameObject.Find("Player").transform;
         agent = GetComponent<NavMeshAgent>();
+        animator = GetComponent<Animator>();
 
         // start coroutine for random raycasting
         StartCoroutine(RandomRaycastRoutine());
@@ -31,7 +33,13 @@ public class EnemyBehaviour : MonoBehaviour
         {
             return;
         }
-        // do stuff
+        Vector3 direction = -(transform.position - player.position).normalized;
+        direction.y = 0;
+
+        Quaternion targetRotation = Quaternion.LookRotation(direction);
+        transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * agent.angularSpeed);
+
+        SetWalkingAnimation(direction);
     }
 
     IEnumerator RandomRaycastRoutine()
@@ -69,6 +77,61 @@ public class EnemyBehaviour : MonoBehaviour
             {
                 agent.SetDestination(navHit.position);
             }
+        }
+    }
+
+    private void ResetAnimation()
+    {
+        animator.SetBool("movingForwards", false);
+        animator.SetBool("movingBackwards", false);
+        animator.SetBool("movingLeft", false);
+        animator.SetBool("movingRight", false);
+    }
+
+    private void SetWalkingAnimation(Vector3 direction)
+    {
+        // Stop animation is speed is near zero
+        if (agent.velocity.magnitude < 0.1f)
+        {
+            ResetAnimation();
+            return;
+        }
+
+        // Calculate angle between forward direction and movement direction
+        float angle = Vector3.SignedAngle(transform.forward, direction, Vector3.up);
+
+        // Determine which animation to use based on angle
+        if (angle > -45 && angle <= 45)
+        {
+            // forward
+            animator.SetBool("movingForwards", true);
+            animator.SetBool("movingBackwards", false);
+            animator.SetBool("movingLeft", false);
+            animator.SetBool("movingRight", false);
+        }
+        else if (angle > 45 && angle <= 135)
+        {
+            // right
+            animator.SetBool("movingForwards", false);
+            animator.SetBool("movingBackwards", false);
+            animator.SetBool("movingLeft", false);
+            animator.SetBool("movingRight", true);
+        }
+        else if (angle > -135 && angle <= -45)
+        {
+            // left
+            animator.SetBool("movingForwards", false);
+            animator.SetBool("movingBackwards", false);
+            animator.SetBool("movingLeft", true);
+            animator.SetBool("movingRight", false);
+        }
+        else
+        {
+            // backwards
+            animator.SetBool("movingForwards", false);
+            animator.SetBool("movingBackwards", true);
+            animator.SetBool("movingLeft", false);
+            animator.SetBool("movingRight", false);
         }
     }
 }
