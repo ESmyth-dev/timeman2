@@ -7010,6 +7010,10 @@ PrefabInstance:
       propertyPath: beamLight
       value: 
       objectReference: {fileID: 4289366698633582894, guid: 6f78a0c6041c2a84dac901a228584c6b, type: 3}
+    - target: {fileID: 5911558195463978931, guid: 7f38946cfe7aa834f9b1efeaa9feeb0e, type: 3}
+      propertyPath: beamEnabled
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

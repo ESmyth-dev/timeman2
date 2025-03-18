@@ -15,7 +15,7 @@ public class PlayerController : MonoBehaviour
     public float cooldownSpeed = 0.2f;
     public float beamFillSpeed = 0.5f;
     private bool overHeated;
-    public bool beamEnabled = true;
+    public bool beamEnabled = false;
     public Light beamLight;
     public float speed = 1.0f;
     public float slowdownFactor = 10;
@@ -85,7 +85,8 @@ public class PlayerController : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.F))
         {
-            BlinkAbility();
+            //BlinkAbility();
+            SlowTimeAbility();
         }
 
         if (Input.GetKey(KeyCode.S))
