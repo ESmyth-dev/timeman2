@@ -4,6 +4,7 @@ using Unity.VisualScripting;
 using UnityEditor;
 //5using UnityEditor.PackageManager;
 using UnityEngine;
+using UnityEngine.Rendering.PostProcessing;
 using UnityEngine.UI;
 
 public class PlayerController : MonoBehaviour
@@ -28,6 +29,10 @@ public class PlayerController : MonoBehaviour
     private bool isGrounded;
     private Rigidbody rb;
     private bool timeSlowed;
+
+    private GameObject PostProcessVolumeObject;
+    private PostProcessVolume postProcessVolume;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -35,6 +40,9 @@ public class PlayerController : MonoBehaviour
         timeSlowed = false;
         animator.applyRootMotion = false;
         rb = GetComponent<Rigidbody>();
+
+        PostProcessVolumeObject = GameObject.Find("PostProcessVolume");
+        postProcessVolume = PostProcessVolumeObject.GetComponent<PostProcessVolume>();
     }
 
     // Update is called once per frame
@@ -211,7 +219,7 @@ public class PlayerController : MonoBehaviour
     {
         //yield on a new YieldInstruction that waits for 5 seconds.
         yield return new WaitForSeconds(2);
-        // TODO Deactivate slow down screen tint/filter
+        postProcessVolume.enabled = false;
         Time.timeScale *= slowdownFactor;
         speed /= slowdownFactor;
         animator.speed /= slowdownFactor;
@@ -222,7 +230,7 @@ public class PlayerController : MonoBehaviour
     {
         if (!timeSlowed)
         {
-            // TODO Activate slow down screen tint/filter
+            postProcessVolume.enabled = true;
             Time.timeScale /= slowdownFactor;
             speed *= slowdownFactor;
             animator.speed *= slowdownFactor;

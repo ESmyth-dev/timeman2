@@ -43,6 +43,7 @@ GameObject:
   - component: {fileID: 886996540944758549}
   - component: {fileID: 8833136239332773368}
   - component: {fileID: 7151984044411898746}
+  - component: {fileID: 5756250492601392061}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -156,6 +157,66 @@ MonoBehaviour:
   currentStateName: 
   currentTarget: {fileID: 0}
   movementSpeed: {x: 0, y: 0}
+--- !u!114 &5756250492601392061
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7643652255323729007}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 948f4100a11a5c24981795d21301da5c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  volumeTrigger: {fileID: 7008432620270976648}
+  volumeLayer:
+    serializedVersion: 2
+    m_Bits: 8
+  stopNaNPropagation: 1
+  finalBlitToCameraTarget: 0
+  antialiasingMode: 0
+  temporalAntialiasing:
+    jitterSpread: 0.75
+    sharpness: 0.25
+    stationaryBlending: 0.95
+    motionBlending: 0.85
+  subpixelMorphologicalAntialiasing:
+    quality: 2
+  fastApproximateAntialiasing:
+    fastMode: 0
+    keepAlpha: 0
+  fog:
+    enabled: 1
+    excludeSkybox: 1
+  debugLayer:
+    lightMeter:
+      width: 512
+      height: 256
+      showCurves: 1
+    histogram:
+      width: 512
+      height: 256
+      channel: 3
+    waveform:
+      exposure: 0.12
+      height: 256
+    vectorscope:
+      size: 256
+      exposure: 0.12
+    overlaySettings:
+      linearDepth: 0
+      motionColorIntensity: 4
+      motionGridSize: 64
+      colorBlindnessType: 0
+      colorBlindnessStrength: 1
+  m_Resources: {fileID: 11400000, guid: d82512f9c8e5d4a4d938b575d47f88d4, type: 2}
+  m_ShowToolkit: 0
+  m_ShowCustomSorter: 0
+  breakBeforeColorGrading: 0
+  m_BeforeTransparentBundles: []
+  m_BeforeStackBundles: []
+  m_AfterStackBundles: []
 --- !u!1001 &1387114649083660655
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -354,13 +415,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   animator: {fileID: 1490691572001032554}
   slider: {fileID: 0}
+  beamLine: {fileID: 0}
+  beamRange: 100
   cooldownSpeed: 0.2
+  beamFillSpeed: 0.5
+  beamEnabled: 0
+  beamLight: {fileID: 0}
   speed: 3
   slowdownFactor: 10
   blinkDistance: 5
   jumpForce: 6
   shotPrefab: {fileID: 1220388901695869229, guid: 8b9d98267b265e64db13b54dadece375, type: 3}
-  blinkEffectPrefab: {fileID: 7431596080580507413, guid: 774e058f094d51d4c9dde483697ab105, type: 3}
   blinkSFX: {fileID: 5634767591545691478, guid: 745ff59d0d5cd974092c3b21693210dc, type: 3}
   cam: {fileID: 886996540944758549}
   gun: {fileID: 1420679215102681210}
