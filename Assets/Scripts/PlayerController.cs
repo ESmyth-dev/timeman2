@@ -289,7 +289,7 @@ public class PlayerController : MonoBehaviour
     {
         if(GameManager.instance.lives > 0)
         {
-            GameManager.instance.lives--;
+            GameManager.instance.LoseLife();
             DeathRewind.instance.Rewind();
         }
         else
