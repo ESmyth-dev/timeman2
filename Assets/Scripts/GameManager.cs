@@ -28,18 +28,18 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public void levelUp()
+    public void LevelUp()
     {
         level++;
     }
 
-    public void gainLife()
+    public void GainLife()
     {
         numberOfLives++;
         //Need to add code to repair clock on UI
     }
 
-    public void loseLife()
+    public void LoseLife()
     {
         numberOfLives--;
         //Need to add code to break clock on UI

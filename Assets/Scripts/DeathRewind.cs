@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class DeathRewind : MonoBehaviour
 {
+
+    public static DeathRewind instance;
     //The player models position/rotation information
     public Transform playerPosition;
 

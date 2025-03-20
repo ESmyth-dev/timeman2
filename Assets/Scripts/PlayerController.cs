@@ -302,7 +302,7 @@ public class PlayerController : MonoBehaviour
 
     public void Hit()
     {
-        if(GameManager.instance.lives > 0)
+        if(GameManager.instance.numberOfLives> 0)
         {
             GameManager.instance.LoseLife();
             DeathRewind.instance.Rewind();
