@@ -284,13 +284,10 @@ public class PlayerController : MonoBehaviour
             animator.speed *= slowdownFactor;
             timeSlowed = true;
 
-<<<<<<< HEAD
             slowAbilityBackground.enabled = true;
 
             Debug.Log("Enabled");
-=======
             slowTimeAudioSource.PlayOneShot(timeSlowAudioClip);
->>>>>>> 0dfb7c0a4b6b8e31b5ad87a78d6b246eaca2b0eb
 
             StartCoroutine(SlowTime());
         }
