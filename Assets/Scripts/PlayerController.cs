@@ -29,29 +29,52 @@ public class PlayerController : MonoBehaviour
     private bool isGrounded;
     private Rigidbody rb;
     private bool timeSlowed;
+    private bool blinkReady;
 
     // Audio stuff
     private GameObject audioManagers;
+
     private AudioClip timeSlowAudioClip;
     private GameObject slowTimeAudioManager;
     private AudioSource slowTimeAudioSource;
 
+    private AudioClip blinkAudioClip;
+    private GameObject blinkAudioManager;
+    private AudioSource blinkAudioSource;
+
+    private AudioClip pewAudioClip;
+    private GameObject pewAudioManager;
+    private AudioSource pewAudioSource;
+
     private GameObject PostProcessVolumeObject;
     private PostProcessVolume postProcessVolume;
+
 
     // Start is called before the first frame update
     void Start()
     {
         overHeated = false;
+        blinkReady = true;
         timeSlowed = false;
         animator.applyRootMotion = false;
         rb = GetComponent<Rigidbody>();
 
+        slider = GameObject.Find("Slider").GetComponent<Slider>();
+
         // Audio stuff
         audioManagers = GameObject.Find("AudioManagers");
+
         timeSlowAudioClip = Resources.Load<AudioClip>("Audio/ZaWarudo");
         slowTimeAudioManager = audioManagers.transform.Find("SlowTimeAudioManager").gameObject;
         slowTimeAudioSource = slowTimeAudioManager.GetComponent<AudioSource>();
+
+        blinkAudioClip = Resources.Load<AudioClip>("Audio/Blink");
+        blinkAudioManager = audioManagers.transform.Find("BlinkAudioManager").gameObject;
+        blinkAudioSource = slowTimeAudioManager.GetComponent<AudioSource>();
+
+        pewAudioClip = Resources.Load<AudioClip>("Audio/Pew");
+        pewAudioManager = audioManagers.transform.Find("PewAudioManager").gameObject;
+        pewAudioSource = pewAudioManager.GetComponent<AudioSource>();
 
         PostProcessVolumeObject = GameObject.Find("PostProcessVolume");
         postProcessVolume = PostProcessVolumeObject.GetComponent<PostProcessVolume>();
@@ -171,6 +194,8 @@ public class PlayerController : MonoBehaviour
                     }
                 }
 
+                pewAudioSource.PlayOneShot(pewAudioClip);
+
             }
         }
 
@@ -229,12 +254,18 @@ public class PlayerController : MonoBehaviour
     IEnumerator SlowTime()
     {
         //yield on a new YieldInstruction that waits for 5 seconds.
-        yield return new WaitForSeconds(2);
+        yield return new WaitForSeconds(1);
         postProcessVolume.enabled = false;
         Time.timeScale *= slowdownFactor;
         speed /= slowdownFactor;
         animator.speed /= slowdownFactor;
         timeSlowed = false;
+
+        // wait another 5 seconds to use the slow time ability again
+        yield return new WaitForSeconds(5);
+        Image slowAbilityBackground = GameObject.Find("SlowInactive").GetComponent<Image>();
+        slowAbilityBackground.enabled = false;
+
     }
 
     void SlowTimeAbility()
@@ -247,6 +278,9 @@ public class PlayerController : MonoBehaviour
             animator.speed *= slowdownFactor;
             timeSlowed = true;
 
+            Image slowAbilityBackground = GameObject.Find("SlowInactive").GetComponent<Image>();
+            slowAbilityBackground.enabled = true;
+
             slowTimeAudioSource.PlayOneShot(timeSlowAudioClip);
 
             StartCoroutine(SlowTime());
@@ -254,10 +288,19 @@ public class PlayerController : MonoBehaviour
         
     }
 
+    IEnumerator blinkCooldown()
+    {
+        yield return new WaitForSeconds(0.5f);
+        Image blinkBackground = GameObject.Find("BlinkInactive").GetComponent<Image>();
+        blinkBackground.enabled = false;
+        blinkReady = true;
+    }
+
     void BlinkAbility()
     {
+       
         Vector3 blinkVector = Vector3.zero;
-        if (Input.GetKey(KeyCode.W)) 
+        if (Input.GetKey(KeyCode.W))
         {
             blinkVector += transform.forward;
 
@@ -278,26 +321,35 @@ public class PlayerController : MonoBehaviour
 
         }
 
-        if (Physics.Raycast(transform.position + transform.up*0.5f, blinkVector, out RaycastHit hit, blinkDistance, LayerMask.GetMask("Level")))
+        if (blinkReady && blinkVector != Vector3.zero)
         {
-            Debug.Log("Obstacle detected! shorter teleport");
-            transform.position += blinkVector * (hit.distance-1.5f);
-        }
-        else
-        {
-            transform.position += blinkVector * blinkDistance;
-        }
+            if (Physics.Raycast(transform.position + transform.up * 0.5f, blinkVector, out RaycastHit hit, blinkDistance, LayerMask.GetMask("Level")))
+            {
+                Debug.Log("Obstacle detected! shorter teleport");
+                transform.position += blinkVector * (hit.distance - 1.5f);
+            }
+            else
+            {
+                transform.position += blinkVector * blinkDistance;
+            }
 
-        if (blinkVector != Vector3.zero)
-        {
-            Quaternion effectRotation = Quaternion.LookRotation(blinkVector, Vector3.up);
+            if (blinkVector != Vector3.zero)
+            {
+                Quaternion effectRotation = Quaternion.LookRotation(blinkVector, Vector3.up);
 
-            Vector3 effectVector = transform.position;  // position on player after 
-            effectVector.y += 1f;
+                Vector3 effectVector = transform.position;  // position on player after 
+                effectVector.y += 1f;
 
-            Instantiate(blinkSFX, effectVector, effectRotation);
+                Instantiate(blinkSFX, effectVector, effectRotation);
+            }
+            Image blinkBackground = GameObject.Find("BlinkInactive").GetComponent<Image>();
+            blinkBackground.enabled = true;
+            blinkReady = false;
+            blinkAudioSource.PlayOneShot(blinkAudioClip);
+            StartCoroutine(blinkCooldown());
         }
         
+
     }
 
     public void Hit()
