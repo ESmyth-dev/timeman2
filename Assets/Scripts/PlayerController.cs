@@ -30,6 +30,12 @@ public class PlayerController : MonoBehaviour
     private Rigidbody rb;
     private bool timeSlowed;
 
+    // Audio stuff
+    private GameObject audioManagers;
+    private AudioClip timeSlowAudioClip;
+    private GameObject slowTimeAudioManager;
+    private AudioSource slowTimeAudioSource;
+
     private GameObject PostProcessVolumeObject;
     private PostProcessVolume postProcessVolume;
 
@@ -45,6 +51,12 @@ public class PlayerController : MonoBehaviour
         timeSlowed = false;
         animator.applyRootMotion = false;
         rb = GetComponent<Rigidbody>();
+
+        // Audio stuff
+        audioManagers = GameObject.Find("AudioManagers");
+        timeSlowAudioClip = Resources.Load<AudioClip>("Audio/ZaWarudo");
+        slowTimeAudioManager = audioManagers.transform.Find("SlowTimeAudioManager").gameObject;
+        slowTimeAudioSource = slowTimeAudioManager.GetComponent<AudioSource>();
 
         PostProcessVolumeObject = GameObject.Find("PostProcessVolume");
         postProcessVolume = PostProcessVolumeObject.GetComponent<PostProcessVolume>();
@@ -252,9 +264,13 @@ public class PlayerController : MonoBehaviour
             animator.speed *= slowdownFactor;
             timeSlowed = true;
 
+<<<<<<< HEAD
             slowAbilityBackground.enabled = true;
 
             Debug.Log("Enabled");
+=======
+            slowTimeAudioSource.PlayOneShot(timeSlowAudioClip);
+>>>>>>> 0dfb7c0a4b6b8e31b5ad87a78d6b246eaca2b0eb
 
             StartCoroutine(SlowTime());
         }
@@ -318,6 +334,19 @@ public class PlayerController : MonoBehaviour
             StartCoroutine(blinkCooldown());
         }
         
+    }
+
+    public void Hit()
+    {
+        if(GameManager.instance.numberOfLives> 0)
+        {
+            GameManager.instance.LoseLife();
+            DeathRewind.instance.Rewind();
+        }
+        else
+        {
+            GameManager.instance.GameOver();
+        }
     }
 }
 

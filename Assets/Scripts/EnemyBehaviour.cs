@@ -158,4 +158,9 @@ public class EnemyBehaviour : MonoBehaviour
             animator.SetBool("movingRight", false);
         }
     }
+
+    public void Hit()
+    {
+        Destroy(this.gameObject);
+    }
 }
