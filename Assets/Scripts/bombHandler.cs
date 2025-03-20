@@ -30,9 +30,13 @@ public class bombHandler : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        transform.parent = collision.transform;
-        collided = true;
-        GetComponent<Rigidbody>().isKinematic = true;
+        if (!collision.collider.CompareTag("bullet"))
+        {
+            transform.parent = collision.transform;
+            collided = true;
+            GetComponent<Rigidbody>().isKinematic = true;
+        }
+
     }
 
     private void OnTriggerEnter(Collider other)
