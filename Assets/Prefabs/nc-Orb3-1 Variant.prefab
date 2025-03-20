@@ -122,6 +122,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b7b84227edf4d034e9c2be3a6554497d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  shrinkDuration: 2
+  targetScale: {x: 0.5, y: 0.5, z: 0.5}
 --- !u!65 &3947399058049010171
 BoxCollider:
   m_ObjectHideFlags: 0
