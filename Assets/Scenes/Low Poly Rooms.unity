@@ -8386,49 +8386,9 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 940232144711328477, guid: 779529926544249c1974d1d9e6a3f7e2, type: 3}
-      propertyPath: m_Convex
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 1503068486499404288, guid: 779529926544249c1974d1d9e6a3f7e2, type: 3}
       propertyPath: m_Name
       value: CopyPasteRoom
-      objectReference: {fileID: 0}
-    - target: {fileID: 2479964207042388130, guid: 779529926544249c1974d1d9e6a3f7e2, type: 3}
-      propertyPath: m_Convex
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 2898526451532623635, guid: 779529926544249c1974d1d9e6a3f7e2, type: 3}
-      propertyPath: m_Convex
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 3230084815616483813, guid: 779529926544249c1974d1d9e6a3f7e2, type: 3}
-      propertyPath: m_Convex
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4662789225657677621, guid: 779529926544249c1974d1d9e6a3f7e2, type: 3}
-      propertyPath: m_Convex
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 5711042502814273271, guid: 779529926544249c1974d1d9e6a3f7e2, type: 3}
-      propertyPath: m_Convex
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 7106688583004531200, guid: 779529926544249c1974d1d9e6a3f7e2, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 0.34
-      objectReference: {fileID: 0}
-    - target: {fileID: 7106688583004531200, guid: 779529926544249c1974d1d9e6a3f7e2, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 11.6
-      objectReference: {fileID: 0}
-    - target: {fileID: 7878573161927429823, guid: 779529926544249c1974d1d9e6a3f7e2, type: 3}
-      propertyPath: m_Convex
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 7921905860606353230, guid: 779529926544249c1974d1d9e6a3f7e2, type: 3}
-      propertyPath: m_Convex
-      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8606873944446932985, guid: 779529926544249c1974d1d9e6a3f7e2, type: 3}
       propertyPath: m_LocalPosition.x
