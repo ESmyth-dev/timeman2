@@ -159,7 +159,7 @@ public class EnemyBehaviour : MonoBehaviour
         }
     }
 
-    void Hit()
+    public void Hit()
     {
         Destroy(this.gameObject);
     }

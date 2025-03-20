@@ -300,7 +300,7 @@ public class PlayerController : MonoBehaviour
         
     }
 
-    void Hit()
+    public void Hit()
     {
         if(GameManager.instance.lives > 0)
         {
