@@ -1,5 +1,9 @@
 fileFormatVersion: 2
+<<<<<<<< HEAD:Assets/Scripts/BackgroundScaler 3.cs.meta
 guid: 95dad4d2f5c34415ba1b88e6268f1fb7
+========
+guid: a051dad2deb20ba4e8f50fda3a7ddc51
+>>>>>>>> a4b63176f5d9e5a9771e5de5dd8a3c6492cb3866:Assets/Scripts/uiController 2.cs.meta
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2
