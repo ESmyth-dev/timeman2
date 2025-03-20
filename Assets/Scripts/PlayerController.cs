@@ -29,6 +29,7 @@ public class PlayerController : MonoBehaviour
     private bool isGrounded;
     private Rigidbody rb;
     private bool timeSlowed;
+    private bool blinkReady;
 
     // Audio stuff
     private GameObject audioManagers;
@@ -48,9 +49,6 @@ public class PlayerController : MonoBehaviour
     private GameObject PostProcessVolumeObject;
     private PostProcessVolume postProcessVolume;
 
-    private Image slowAbilityBackground;
-    private Image blinkBackground;
-    private bool blinkReady;
 
     // Start is called before the first frame update
     void Start()
@@ -80,12 +78,6 @@ public class PlayerController : MonoBehaviour
 
         PostProcessVolumeObject = GameObject.Find("PostProcessVolume");
         postProcessVolume = PostProcessVolumeObject.GetComponent<PostProcessVolume>();
-
-        slowAbilityBackground = GameObject.Find("SlowInactive").GetComponent<Image>();
-        slowAbilityBackground.enabled = false;
-
-        blinkBackground = GameObject.Find("BlinkInactive").GetComponent<Image>();
-        blinkBackground.enabled = false;
     }
 
     // Update is called once per frame
@@ -271,7 +263,7 @@ public class PlayerController : MonoBehaviour
 
         // wait another 5 seconds to use the slow time ability again
         yield return new WaitForSeconds(5);
-
+        Image slowAbilityBackground = GameObject.Find("SlowInactive").GetComponent<Image>();
         slowAbilityBackground.enabled = false;
 
     }
@@ -286,9 +278,8 @@ public class PlayerController : MonoBehaviour
             animator.speed *= slowdownFactor;
             timeSlowed = true;
 
+            Image slowAbilityBackground = GameObject.Find("SlowInactive").GetComponent<Image>();
             slowAbilityBackground.enabled = true;
-
-
 
             slowTimeAudioSource.PlayOneShot(timeSlowAudioClip);
 
@@ -300,36 +291,38 @@ public class PlayerController : MonoBehaviour
     IEnumerator blinkCooldown()
     {
         yield return new WaitForSeconds(0.5f);
+        Image blinkBackground = GameObject.Find("BlinkInactive").GetComponent<Image>();
         blinkBackground.enabled = false;
         blinkReady = true;
     }
 
     void BlinkAbility()
     {
-        if (blinkReady)
+       
+        Vector3 blinkVector = Vector3.zero;
+        if (Input.GetKey(KeyCode.W))
         {
-            Vector3 blinkVector = Vector3.zero;
-            if (Input.GetKey(KeyCode.W))
-            {
-                blinkVector += transform.forward;
+            blinkVector += transform.forward;
 
-            }
-            if (Input.GetKey(KeyCode.S))
-            {
-                blinkVector -= transform.forward;
+        }
+        if (Input.GetKey(KeyCode.S))
+        {
+            blinkVector -= transform.forward;
 
-            }
-            if (Input.GetKey(KeyCode.D))
-            {
-                blinkVector += transform.right;
+        }
+        if (Input.GetKey(KeyCode.D))
+        {
+            blinkVector += transform.right;
 
-            }
-            if (Input.GetKey(KeyCode.A))
-            {
-                blinkVector -= transform.right;
+        }
+        if (Input.GetKey(KeyCode.A))
+        {
+            blinkVector -= transform.right;
 
-            }
+        }
 
+        if (blinkReady && blinkVector != Vector3.zero)
+        {
             if (Physics.Raycast(transform.position + transform.up * 0.5f, blinkVector, out RaycastHit hit, blinkDistance, LayerMask.GetMask("Level")))
             {
                 Debug.Log("Obstacle detected! shorter teleport");
@@ -349,11 +342,13 @@ public class PlayerController : MonoBehaviour
 
                 Instantiate(blinkSFX, effectVector, effectRotation);
             }
+            Image blinkBackground = GameObject.Find("BlinkInactive").GetComponent<Image>();
             blinkBackground.enabled = true;
             blinkReady = false;
             blinkAudioSource.PlayOneShot(blinkAudioClip);
             StartCoroutine(blinkCooldown());
         }
+        
 
     }
 
