@@ -18,7 +18,7 @@ public class LaserMachine : MonoBehaviour {
         public bool impact;
     };
 
-    public static int laserCount = 8;
+    public int laserCount = 8;
 
     List<LaserElement> elementsList = new List<LaserElement>();
     
@@ -160,6 +160,15 @@ public class LaserMachine : MonoBehaviour {
                         for example, if the hitInfoXD.collider is not null do whatever thing you wanna do to the target object.
                         DoAction();
                         */
+
+                        if (hitInfo3D.collider.gameObject.tag == "Player")
+                        {
+                            Debug.Log("Player hit");
+                            // call from player contorler script
+                            // hitInfo3D.collider.gameObject.GetComponent<Player>().TakeDamage(1);
+                        }
+
+
 
                     }
                     else
