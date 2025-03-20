@@ -25,6 +25,14 @@ public class ShotCollision : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
+        if(collision.gameObject.tag == "Player")
+        {
+            collision.gameObject.GetComponent<PlayerController>().Hit();
+        }
+        if(collision.gameObject.tag == "Enemy")
+        {
+            collision.gameObject.GetComponent<EnemyBehaviour>().Hit();
+        }
         if (ricochets < ricochetCount)
         {
             Vector3 normal = collision.contacts[0].normal;

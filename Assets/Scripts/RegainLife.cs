@@ -8,7 +8,7 @@ public class RegainLife : MonoBehaviour
     {
         if (GameManager.instance != null)
         {
-            GameManager.instance.gainLife();
+            GameManager.instance.GainLife();
         }
         else
         {

@@ -4,6 +4,13 @@
 TagManager:
   serializedVersion: 2
   tags:
+<<<<<<< HEAD
+=======
+  - SlowAbilityUI
+  - blinkInactive
+  - pyramid
+  - plane
+>>>>>>> f122b805eb8120698871093972ae94eeb113df05
   - Enemy
   layers:
   - Default

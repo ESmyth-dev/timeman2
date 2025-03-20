@@ -28,19 +28,21 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public void levelUp()
+    public void LevelUp()
     {
         level++;
     }
 
-    public void gainLife()
+    public void GainLife()
     {
         numberOfLives++;
+        //Need to add code to repair clock on UI
     }
 
-    public void loseLife()
+    public void LoseLife()
     {
         numberOfLives--;
+        //Need to add code to break clock on UI
     }
 
     // Start is called before the first frame update
@@ -53,5 +55,10 @@ public class GameManager : MonoBehaviour
     void Update()
     {
         
+    }
+
+    public void GameOver()
+    {
+        //Need to add code to display game over screen
     }
 }
