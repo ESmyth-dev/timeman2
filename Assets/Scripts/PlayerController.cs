@@ -32,9 +32,18 @@ public class PlayerController : MonoBehaviour
 
     // Audio stuff
     private GameObject audioManagers;
+
     private AudioClip timeSlowAudioClip;
     private GameObject slowTimeAudioManager;
     private AudioSource slowTimeAudioSource;
+
+    private AudioClip blinkAudioClip;
+    private GameObject blinkAudioManager;
+    private AudioSource blinkAudioSource;
+
+    private AudioClip pewAudioClip;
+    private GameObject pewAudioManager;
+    private AudioSource pewAudioSource;
 
     private GameObject PostProcessVolumeObject;
     private PostProcessVolume postProcessVolume;
@@ -54,9 +63,18 @@ public class PlayerController : MonoBehaviour
 
         // Audio stuff
         audioManagers = GameObject.Find("AudioManagers");
+
         timeSlowAudioClip = Resources.Load<AudioClip>("Audio/ZaWarudo");
         slowTimeAudioManager = audioManagers.transform.Find("SlowTimeAudioManager").gameObject;
         slowTimeAudioSource = slowTimeAudioManager.GetComponent<AudioSource>();
+
+        blinkAudioClip = Resources.Load<AudioClip>("Audio/Blink");
+        blinkAudioManager = audioManagers.transform.Find("BlinkAudioManager").gameObject;
+        blinkAudioSource = slowTimeAudioManager.GetComponent<AudioSource>();
+
+        pewAudioClip = Resources.Load<AudioClip>("Audio/Pew");
+        pewAudioManager = audioManagers.transform.Find("PewAudioManager").gameObject;
+        pewAudioSource = pewAudioManager.GetComponent<AudioSource>();
 
         PostProcessVolumeObject = GameObject.Find("PostProcessVolume");
         postProcessVolume = PostProcessVolumeObject.GetComponent<PostProcessVolume>();
@@ -182,6 +200,8 @@ public class PlayerController : MonoBehaviour
                     }
                 }
 
+                pewAudioSource.PlayOneShot(pewAudioClip);
+
             }
         }
 
@@ -266,6 +286,8 @@ public class PlayerController : MonoBehaviour
 
             slowAbilityBackground.enabled = true;
 
+
+
             slowTimeAudioSource.PlayOneShot(timeSlowAudioClip);
 
             StartCoroutine(SlowTime());
@@ -329,7 +351,9 @@ public class PlayerController : MonoBehaviour
             blinkReady = false;
             StartCoroutine(blinkCooldown());
         }
-        
+
+        blinkAudioSource.PlayOneShot(blinkAudioClip);
+
     }
 
     public void Hit()
