@@ -56,4 +56,9 @@ public class GameManager : MonoBehaviour
     {
         
     }
+
+    void GameOver()
+    {
+        //Need to add code to display game over screen
+    }
 }
