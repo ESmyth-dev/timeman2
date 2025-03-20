@@ -23,6 +23,7 @@ public class PlayerController : MonoBehaviour
     public float blinkDistance = 5;
     public float jumpForce;
     public GameObject shotPrefab;
+    public GameObject bombPrefab;
     public GameObject blinkSFX;
     public Camera cam;
     public Transform gun;
@@ -151,11 +152,9 @@ public class PlayerController : MonoBehaviour
                 RaycastHit[] hits = Physics.RaycastAll(cam.transform.position, cam.transform.forward);
                 for (int i = 0; i < hits.Length; i++)
                 {
-                    Debug.Log("one of the hits");
                     if (hits[i].distance > 3)
                     {
                         go.transform.LookAt(hits[i].point);
-                        Debug.Log("found hit");
                         break;
                     }
                 }
@@ -194,6 +193,21 @@ public class PlayerController : MonoBehaviour
         {
             beamLine.enabled = false;
             beamLight.enabled = false;
+        }
+
+
+        if (Input.GetMouseButtonDown(1))
+        {
+            GameObject bomb = Instantiate(bombPrefab, gun.position, Quaternion.Euler(transform.rotation.x, transform.rotation.y, transform.rotation.z));
+            RaycastHit[] hits = Physics.RaycastAll(cam.transform.position, cam.transform.forward);
+            for (int i = 0; i < hits.Length; i++)
+            {
+                if (hits[i].distance > 3)
+                {
+                    bomb.transform.LookAt(hits[i].point);
+                    break;
+                }
+            }
         }
 
     }

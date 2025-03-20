@@ -90,7 +90,6 @@ public class EnemyBehaviour : MonoBehaviour
         RaycastHit hit;
         if (Physics.Raycast(raycastOrigin, randomDirection, out hit, Mathf.Infinity, layerMask))
         {
-            Debug.Log("Raycast hit: " + hit.collider.name);
 
             // choose random point along the raycast
             Vector3 randomPointOnLine = Vector3.Lerp(raycastOrigin, hit.point, Random.Range(0f, 1f));

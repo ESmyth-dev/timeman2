@@ -29,7 +29,6 @@ public class ShotCollision : MonoBehaviour
         {
             Vector3 normal = collision.contacts[0].normal;
             direction = Vector3.Reflect(direction, normal); // Reflect the direction
-            Debug.Log(direction);
             transform.rotation = Quaternion.LookRotation(direction);
             ricochets++;
         }
