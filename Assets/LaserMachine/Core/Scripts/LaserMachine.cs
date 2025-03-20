@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
 
 namespace Lightbug.LaserMachine
 {
@@ -16,6 +17,8 @@ public class LaserMachine : MonoBehaviour {
         public GameObject sparks;
         public bool impact;
     };
+
+    public int laserCount = 8;
 
     List<LaserElement> elementsList = new List<LaserElement>();
     
@@ -48,12 +51,12 @@ public class LaserMachine : MonoBehaviour {
         m_time = m_currentProperties.m_initialTimingPhase * m_currentProperties.m_intervalTime;
         
 
-        float angleStep = m_currentProperties.m_angularRange / m_currentProperties.m_raysNumber;        
+        float angleStep = m_currentProperties.m_angularRange / laserCount;        
 
         m_assignSparks = m_data.m_laserSparks != null;
         m_assignLaserMaterial = m_data.m_laserMaterial != null;
 
-        for (int i = 0; i < m_currentProperties.m_raysNumber ; i++)
+        for (int i = 0; i < laserCount; i++)
         {
             LaserElement element = new LaserElement();
 
@@ -157,6 +160,15 @@ public class LaserMachine : MonoBehaviour {
                         for example, if the hitInfoXD.collider is not null do whatever thing you wanna do to the target object.
                         DoAction();
                         */
+
+                        if (hitInfo3D.collider.gameObject.tag == "Player")
+                        {
+                            Debug.Log("Player hit");
+                            // call from player contorler script
+                            // hitInfo3D.collider.gameObject.GetComponent<Player>().TakeDamage(1);
+                        }
+
+
 
                     }
                     else
