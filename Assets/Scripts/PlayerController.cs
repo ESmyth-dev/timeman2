@@ -30,6 +30,12 @@ public class PlayerController : MonoBehaviour
     private Rigidbody rb;
     private bool timeSlowed;
 
+    // Audio stuff
+    private GameObject audioManagers;
+    private AudioClip timeSlowAudioClip;
+    private GameObject slowTimeAudioManager;
+    private AudioSource slowTimeAudioSource;
+
     private GameObject PostProcessVolumeObject;
     private PostProcessVolume postProcessVolume;
 
@@ -40,6 +46,12 @@ public class PlayerController : MonoBehaviour
         timeSlowed = false;
         animator.applyRootMotion = false;
         rb = GetComponent<Rigidbody>();
+
+        // Audio stuff
+        audioManagers = GameObject.Find("AudioManagers");
+        timeSlowAudioClip = Resources.Load<AudioClip>("Audio/ZaWarudo");
+        slowTimeAudioManager = audioManagers.transform.Find("SlowTimeAudioManager").gameObject;
+        slowTimeAudioSource = slowTimeAudioManager.GetComponent<AudioSource>();
 
         PostProcessVolumeObject = GameObject.Find("PostProcessVolume");
         postProcessVolume = PostProcessVolumeObject.GetComponent<PostProcessVolume>();
@@ -234,6 +246,9 @@ public class PlayerController : MonoBehaviour
             speed *= slowdownFactor;
             animator.speed *= slowdownFactor;
             timeSlowed = true;
+
+            slowTimeAudioSource.PlayOneShot(timeSlowAudioClip);
+
             StartCoroutine(SlowTime());
         }
         
