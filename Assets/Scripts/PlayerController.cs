@@ -284,5 +284,18 @@ public class PlayerController : MonoBehaviour
         }
         
     }
+
+    void Hit()
+    {
+        if(GameManager.instance.lives > 0)
+        {
+            GameManager.instance.lives--;
+            DeathRewind.instance.Rewind();
+        }
+        else
+        {
+            GameManager.instance.GameOver();
+        }
+    }
 }
 
