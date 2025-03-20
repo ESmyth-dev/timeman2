@@ -86,8 +86,7 @@ public class PlayerController : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.F))
         {
-            //BlinkAbility();
-            SlowTimeAbility();
+            BlinkAbility();
         }
         if (Input.GetKeyDown(KeyCode.C))
         {
