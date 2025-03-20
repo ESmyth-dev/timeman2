@@ -48,10 +48,15 @@ public class PlayerController : MonoBehaviour
     private GameObject PostProcessVolumeObject;
     private PostProcessVolume postProcessVolume;
 
+    private Image slowAbilityBackground;
+    private Image blinkBackground;
+    private bool blinkReady;
+
     // Start is called before the first frame update
     void Start()
     {
         overHeated = false;
+        blinkReady = true;
         timeSlowed = false;
         animator.applyRootMotion = false;
         rb = GetComponent<Rigidbody>();
@@ -73,6 +78,12 @@ public class PlayerController : MonoBehaviour
 
         PostProcessVolumeObject = GameObject.Find("PostProcessVolume");
         postProcessVolume = PostProcessVolumeObject.GetComponent<PostProcessVolume>();
+
+        slowAbilityBackground = GameObject.Find("SlowInactive").GetComponent<Image>();
+        slowAbilityBackground.enabled = false;
+
+        blinkBackground = GameObject.Find("BlinkInactive").GetComponent<Image>();
+        blinkBackground.enabled = false;
     }
 
     // Update is called once per frame
@@ -249,12 +260,18 @@ public class PlayerController : MonoBehaviour
     IEnumerator SlowTime()
     {
         //yield on a new YieldInstruction that waits for 5 seconds.
-        yield return new WaitForSeconds(2);
+        yield return new WaitForSeconds(1);
         postProcessVolume.enabled = false;
         Time.timeScale *= slowdownFactor;
         speed /= slowdownFactor;
         animator.speed /= slowdownFactor;
         timeSlowed = false;
+
+        // wait another 5 seconds to use the slow time ability again
+        yield return new WaitForSeconds(5);
+
+        slowAbilityBackground.enabled = false;
+
     }
 
     void SlowTimeAbility()
@@ -267,55 +284,74 @@ public class PlayerController : MonoBehaviour
             animator.speed *= slowdownFactor;
             timeSlowed = true;
 
+<<<<<<< HEAD
+            slowAbilityBackground.enabled = true;
+
+            Debug.Log("Enabled");
+=======
             slowTimeAudioSource.PlayOneShot(timeSlowAudioClip);
+>>>>>>> 0dfb7c0a4b6b8e31b5ad87a78d6b246eaca2b0eb
 
             StartCoroutine(SlowTime());
         }
         
     }
 
+    IEnumerator blinkCooldown()
+    {
+        yield return new WaitForSeconds(0.5f);
+        blinkBackground.enabled = false;
+        blinkReady = true;
+    }
+
     void BlinkAbility()
     {
-        Vector3 blinkVector = Vector3.zero;
-        if (Input.GetKey(KeyCode.W)) 
+        if (blinkReady)
         {
-            blinkVector += transform.forward;
+            Vector3 blinkVector = Vector3.zero;
+            if (Input.GetKey(KeyCode.W))
+            {
+                blinkVector += transform.forward;
 
-        }
-        if (Input.GetKey(KeyCode.S))
-        {
-            blinkVector -= transform.forward;
+            }
+            if (Input.GetKey(KeyCode.S))
+            {
+                blinkVector -= transform.forward;
 
-        }
-        if (Input.GetKey(KeyCode.D))
-        {
-            blinkVector += transform.right;
+            }
+            if (Input.GetKey(KeyCode.D))
+            {
+                blinkVector += transform.right;
 
-        }
-        if (Input.GetKey(KeyCode.A))
-        {
-            blinkVector -= transform.right;
+            }
+            if (Input.GetKey(KeyCode.A))
+            {
+                blinkVector -= transform.right;
 
-        }
+            }
 
-        if (Physics.Raycast(transform.position + transform.up*0.5f, blinkVector, out RaycastHit hit, blinkDistance, LayerMask.GetMask("Level")))
-        {
-            Debug.Log("Obstacle detected! shorter teleport");
-            transform.position += blinkVector * (hit.distance-1.5f);
-        }
-        else
-        {
-            transform.position += blinkVector * blinkDistance;
-        }
+            if (Physics.Raycast(transform.position + transform.up * 0.5f, blinkVector, out RaycastHit hit, blinkDistance, LayerMask.GetMask("Level")))
+            {
+                Debug.Log("Obstacle detected! shorter teleport");
+                transform.position += blinkVector * (hit.distance - 1.5f);
+            }
+            else
+            {
+                transform.position += blinkVector * blinkDistance;
+            }
 
-        if (blinkVector != Vector3.zero)
-        {
-            Quaternion effectRotation = Quaternion.LookRotation(blinkVector, Vector3.up);
+            if (blinkVector != Vector3.zero)
+            {
+                Quaternion effectRotation = Quaternion.LookRotation(blinkVector, Vector3.up);
 
-            Vector3 effectVector = transform.position;  // position on player after 
-            effectVector.y += 1f;
+                Vector3 effectVector = transform.position;  // position on player after 
+                effectVector.y += 1f;
 
-            Instantiate(blinkSFX, effectVector, effectRotation);
+                Instantiate(blinkSFX, effectVector, effectRotation);
+            }
+            blinkBackground.enabled = true;
+            blinkReady = false;
+            StartCoroutine(blinkCooldown());
         }
 
         blinkAudioSource.PlayOneShot(blinkAudioClip);
