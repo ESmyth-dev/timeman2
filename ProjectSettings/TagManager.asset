@@ -4,11 +4,11 @@
 TagManager:
   serializedVersion: 2
   tags:
+  - SlowAbilityUI
+  - blinkInactive
   - pyramid
   - plane
   - Enemy
-  - SlowAbilityUI
-  - blinkInactive
   layers:
   - Default
   - TransparentFX
