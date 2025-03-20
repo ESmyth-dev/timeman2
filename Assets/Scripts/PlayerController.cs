@@ -61,6 +61,8 @@ public class PlayerController : MonoBehaviour
         animator.applyRootMotion = false;
         rb = GetComponent<Rigidbody>();
 
+        slider = GameObject.Find("Slider").GetComponent<Slider>();
+
         // Audio stuff
         audioManagers = GameObject.Find("AudioManagers");
 
@@ -349,10 +351,9 @@ public class PlayerController : MonoBehaviour
             }
             blinkBackground.enabled = true;
             blinkReady = false;
+            blinkAudioSource.PlayOneShot(blinkAudioClip);
             StartCoroutine(blinkCooldown());
         }
-
-        blinkAudioSource.PlayOneShot(blinkAudioClip);
 
     }
 
