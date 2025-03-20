@@ -3,12 +3,13 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class uiController : MonoBehaviour
+public class UserIntManager : MonoBehaviour
 {
     // Start is called before the first frame update
 
     private Image slowAbilityBackground;
     private Image blinkBackground;
+    private GameObject abilityChoice;
 
 
     void Start()
@@ -19,6 +20,11 @@ public class uiController : MonoBehaviour
 
         blinkBackground = GameObject.Find("BlinkInactive").GetComponent<Image>();
         blinkBackground.enabled = false;
+
+        //choose new ability
+        abilityChoice = GameObject.Find("SelectNewAbility");
+        abilityChoice.SetActive(false);
+
     }
 
     // Update is called once per frame
