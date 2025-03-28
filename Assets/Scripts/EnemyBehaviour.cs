@@ -16,6 +16,7 @@ public class EnemyBehaviour : MonoBehaviour
     public GameObject shotPrefab;
     private float shootTimer = 0f;
     private float shootInterval = 1f; // Time between shots in seconds
+    private bool hasSeenPlayer = false;
 
     public enum EnemyState { Idle, Alert }
     public EnemyState state = EnemyState.Idle;
@@ -37,7 +38,12 @@ public class EnemyBehaviour : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (!BehaviourEnabled || player == null || !agent.isActiveAndEnabled)
+        if (!hasSeenPlayer)
+        {
+            hasSeenPlayer = HasLineOfSightToPlayer();
+        }
+
+        if (!BehaviourEnabled || player == null || !agent.isActiveAndEnabled || !hasSeenPlayer)
         {
             return;
         }
@@ -76,7 +82,11 @@ public class EnemyBehaviour : MonoBehaviour
     {
         while (BehaviourEnabled && player != null && agent.isActiveAndEnabled)
         {
-            ChooseNewDestination();
+            if (hasSeenPlayer)
+            {
+                ChooseNewDestination();
+            }
+            
             yield return new WaitForSeconds(Random.Range(2f, 5f));
         }
     }
@@ -92,7 +102,7 @@ public class EnemyBehaviour : MonoBehaviour
 
         Debug.DrawRay(raycastOrigin, randomDirection * 100f, Color.red, 2f);
 
-        int layerMask = LayerMask.GetMask("Level");
+        int layerMask = LayerMask.GetMask("Level", "LevelLineOfSight");
         RaycastHit hit;
         if (Physics.Raycast(raycastOrigin, randomDirection, out hit, Mathf.Infinity, layerMask))
         {
@@ -173,5 +183,24 @@ public class EnemyBehaviour : MonoBehaviour
             skeleton.SetActive(true);
         }
         Destroy(gameObject);
+    }
+
+    private bool HasLineOfSightToPlayer()
+    {
+        Vector3 directionToPlayer = (player.position - transform.position).normalized;
+        float distanceToPlayer = Vector3.Distance(transform.position, player.position);
+
+        int layerMask = LayerMask.GetMask("LevelLineOfSight", "Player");
+
+        // Perform a raycast to check for obstacles
+        RaycastHit hit;
+        if (Physics.Raycast(transform.position, directionToPlayer, out hit, Mathf.Infinity, layerMask))
+        {
+            if (hit.transform == player)
+            {
+                return true;
+            }
+        }
+        return false;
     }
 }
