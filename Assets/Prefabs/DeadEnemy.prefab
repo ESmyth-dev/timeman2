@@ -946,7 +946,7 @@ ParticleSystem:
   emitterVelocityMode: 1
   looping: 1
   prewarm: 0
-  playOnAwake: 0
+  playOnAwake: 1
   useUnscaledTime: 0
   autoRandomSeed: 1
   startDelay:
@@ -5861,7 +5861,7 @@ ParticleSystem:
   emitterVelocityMode: 1
   looping: 0
   prewarm: 0
-  playOnAwake: 0
+  playOnAwake: 1
   useUnscaledTime: 0
   autoRandomSeed: 1
   startDelay:
@@ -11383,7 +11383,7 @@ ParticleSystem:
   emitterVelocityMode: 0
   looping: 0
   prewarm: 0
-  playOnAwake: 0
+  playOnAwake: 1
   useUnscaledTime: 0
   autoRandomSeed: 1
   startDelay:
@@ -16194,7 +16194,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5294f5742ccdfec4d9ae3d6dbc19e7d1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  particleSystems: []
 --- !u!95 &974924398687353842
 Animator:
   serializedVersion: 5

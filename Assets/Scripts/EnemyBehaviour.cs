@@ -165,7 +165,7 @@ public class EnemyBehaviour : MonoBehaviour
     {
         if (skeletonPrefab)
         {
-            GameObject skeleton = Instantiate(skeletonPrefab, transform.position + Vector3.up * 1f, transform.rotation);
+            GameObject skeleton = Instantiate(skeletonPrefab, transform.position + Vector3.up * 0.5f, transform.rotation);
             skeleton.SetActive(true);
         }
         

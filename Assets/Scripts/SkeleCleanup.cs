@@ -9,8 +9,6 @@ public class SkeleCleanup : MonoBehaviour
     void Start()
     {
         animator = GetComponent<Animator>();
-        animator.Play("mixamo_com");
-
         Destroy(gameObject, 2f); // Destroy after 2 seconds
     }
 }
