@@ -15,7 +15,7 @@ public class EnemyBehaviour : MonoBehaviour
     public Transform gun;
     public GameObject shotPrefab;
     private float shootTimer = 0f;
-    private float shootInterval = 0.5f; // Time between shots in seconds
+    private float shootInterval = 1f; // Time between shots in seconds
 
     public enum EnemyState { Idle, Alert }
     public EnemyState state = EnemyState.Idle;
@@ -172,7 +172,6 @@ public class EnemyBehaviour : MonoBehaviour
             GameObject skeleton = Instantiate(skeletonPrefab, transform.position + Vector3.up * 0.5f, transform.rotation);
             skeleton.SetActive(true);
         }
-        
         Destroy(gameObject);
     }
 }
