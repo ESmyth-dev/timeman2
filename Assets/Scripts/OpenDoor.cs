@@ -11,7 +11,6 @@ public class OpenDoor : MonoBehaviour
     {
         // find door with tag = start
         door = GameObject.FindGameObjectWithTag("Start");
-
         // compare tag, if tag = start then open door
         if (door.tag == "Start")
         {
