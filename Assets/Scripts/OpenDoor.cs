@@ -45,6 +45,28 @@ public class OpenDoor : MonoBehaviour
         }
 
     }
+    
+    // collison on enter with a collider on airlock called exitLevel 
+    void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.tag == "exitLevel")
+        {
+            closeDoor(door);
+        }
+    } 
+    
+        // collison on leace with a collider on airlock called start level
+    void OnTriggerExit(Collider other)
+    {
+        if (other.gameObject.tag == "startLevel")
+        {
+            closeDoor(door);
+        }
+    }
+
+
+
+    
     void openDoor(GameObject door)
     {
         // lift door slowly up from starting position plus 3 on the y axis to open
@@ -65,9 +87,9 @@ public class OpenDoor : MonoBehaviour
         transform.position = targetPosition;
     }
 
-    void closeDoor()
+    void closeDoor(GameObject door)
     {
-        Debug.Log("Door Closed");
+        Debug.Log("Door Closing");
         // lower door slowly down from current position minus 3 on the y axis to close
         Vector3 targetPosition = door.transform.position - new Vector3(0, 3, 0);
         StartCoroutine(MoveDoor(door.transform, targetPosition, 2.0f));
