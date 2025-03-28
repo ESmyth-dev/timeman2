@@ -26,6 +26,11 @@ public class OpenDoor : MonoBehaviour
         // if enemy count = 0, open doors with tag = end
         GameObject enemy = GameObject.Find("Enemies");
         
+        if (enemy == null)
+        {
+            openDoor(GameObject.FindGameObjectWithTag("Finish"));
+            return;
+        }
         // count how many enemies are in the enemy game object 
         int enemyCount = enemy.transform.childCount;
         if (enemyCount == 0 && levelEnded == false)
