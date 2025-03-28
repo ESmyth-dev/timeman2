@@ -19,6 +19,14 @@ public class ShotCollision : MonoBehaviour
     {
         direction = transform.forward;
         ricochets = 0;
+        if (Firer != null && Firer.CompareTag("Player"))
+        {
+            FindChildWithTag(this.gameObject, "enemyBullet").SetActive(false);
+        }
+        else
+        {
+            FindChildWithTag(this.gameObject, "playerBullet").SetActive(false);
+        }
     }
 
     // Update is called once per frame
@@ -55,5 +63,17 @@ public class ShotCollision : MonoBehaviour
             Destroy(this.gameObject);
         }
 
+    }
+
+    GameObject FindChildWithTag(GameObject parent, string tag)
+    {
+        foreach (Transform child in parent.transform)
+        {
+            if (child.CompareTag(tag))
+            {
+                return child.gameObject;
+            }
+        }
+        return null; // If no child with the tag was found
     }
 }
