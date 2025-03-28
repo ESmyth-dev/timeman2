@@ -1,26 +1,23 @@
 using System.Collections;
+using System.Data;
 using UnityEngine;
 
 public class OpenDoor : MonoBehaviour
 {
     // Start is called before the first frame update
     private GameObject door;
+    private bool levelEnded = false;
     void Start()
     {
-
-        if (door == null)
-        {
-            door = GameObject.Find("Door");
-        }
+        // find door with tag = start
+        door = GameObject.FindGameObjectWithTag("Start");
 
         // compare tag, if tag = start then open door
         if (door.tag == "Start")
         {
-            openDoor();
+            Debug.Log("Door Opened");
+            openDoor(door);
         }
-
-
-
     }
 
     // Update is called once per frame
@@ -31,25 +28,20 @@ public class OpenDoor : MonoBehaviour
         
         // count how many enemies are in the enemy game object 
         int enemyCount = enemy.transform.childCount;
-        Debug.Log("Enemy Count: " + enemyCount);
-        if (enemyCount == 0)
+        if (enemyCount == 0 && levelEnded == false)
         {
             GameObject[] doors = GameObject.FindGameObjectsWithTag("Finish");
+            Debug.Log(doors);
             foreach (GameObject door in doors)
             {
-                openDoor();
+                openDoor(door);
             }
+            levelEnded = true;
         }
 
-
     }
-
-
-
-
-    void openDoor()
+    void openDoor(GameObject door)
     {
-        Debug.Log("Door Opened");
         // lift door slowly up from starting position plus 3 on the y axis to open
         Vector3 targetPosition = door.transform.position + new Vector3(0, 3, 0);
         StartCoroutine(MoveDoor(door.transform, targetPosition, 2.0f));
