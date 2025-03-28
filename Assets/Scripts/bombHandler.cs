@@ -36,7 +36,6 @@ public class bombHandler : MonoBehaviour
             collided = true;
             GetComponent<Rigidbody>().isKinematic = true;
         }
-
     }
 
     private void OnTriggerEnter(Collider other)
