@@ -13,9 +13,18 @@ public class bombHandler : MonoBehaviour
     private Vector3 originalScale;
     Vector3 targetPosition;
     Vector3 originalPosition;
+
+    // Audio
+    private AudioClip detonateAudioClip;
+    private AudioSource audioSource;
+
     // Start is called before the first frame update
     void Start()
     {
+        audioSource = GetComponent<AudioSource>();
+        detonateAudioClip = Resources.Load<AudioClip>("Audio/timebombbubble");
+
+        audioSource.PlayOneShot(detonateAudioClip);
         StartCoroutine(destroySelf(6));
     }
 
@@ -35,6 +44,8 @@ public class bombHandler : MonoBehaviour
             transform.parent = collision.transform;
             collided = true;
             GetComponent<Rigidbody>().isKinematic = true;
+
+            
         }
 
     }
@@ -43,6 +54,11 @@ public class bombHandler : MonoBehaviour
     {
         if (other.CompareTag("Enemy"))
         {
+            // Stop moving
+            collided = true;
+            GetComponent<Rigidbody>().isKinematic = true;
+
+            // Get da baddie
             Debug.Log("got da baddie");
             other.GetComponent<Animator>().SetBool("babyMode", true);
             other.GetComponent<NavMeshAgent>().enabled = false;
