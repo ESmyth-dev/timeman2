@@ -6179,6 +6179,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: LavaRoom
       objectReference: {fileID: 0}
+    - target: {fileID: 7891282591848019633, guid: f50565cb8113b4eb48cdf27bee260f21, type: 3}
+      propertyPath: m_TagString
+      value: Finish
+      objectReference: {fileID: 0}
+    - target: {fileID: 7895319399744963987, guid: f50565cb8113b4eb48cdf27bee260f21, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 3.56
+      objectReference: {fileID: 0}
     - target: {fileID: 8996180136595652800, guid: f50565cb8113b4eb48cdf27bee260f21, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -6221,10 +6229,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects:
-    - {fileID: -5772790495548093551, guid: f50565cb8113b4eb48cdf27bee260f21, type: 3}
-    - {fileID: 2864993810270754121, guid: f50565cb8113b4eb48cdf27bee260f21, type: 3}
-    - {fileID: 6806306405100803991, guid: f50565cb8113b4eb48cdf27bee260f21, type: 3}
-    - {fileID: -6678337340643709322, guid: f50565cb8113b4eb48cdf27bee260f21, type: 3}
+    - {fileID: 1662067599650998747, guid: f50565cb8113b4eb48cdf27bee260f21, type: 3}
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f50565cb8113b4eb48cdf27bee260f21, type: 3}

@@ -31,6 +31,13 @@ public class PlayerController : MonoBehaviour
     private Rigidbody rb;
     private bool timeSlowed;
     private bool blinkReady;
+    private bool babyBombReady = true;
+
+    // Cooldowns
+    private float slowdownDurationSeconds = 1f;
+    private float slowdownCooldownSeconds = 10f;
+    private float blinkCooldownSeconds = 0.5f;
+    private float babyBombCooldownSeconds = 5f;
 
     // Audio stuff
     private GameObject audioManagers;
@@ -232,8 +239,11 @@ public class PlayerController : MonoBehaviour
         }
 
 
-        if (Input.GetMouseButtonDown(1))
+        if (Input.GetMouseButtonDown(1) && babyBombReady)
         {
+            babyBombReady = false;
+            StartCoroutine(babyBombCooldown());
+
             GameObject bomb = Instantiate(bombPrefab, gun.position, Quaternion.Euler(transform.rotation.x, transform.rotation.y, transform.rotation.z));
             RaycastHit[] hits = Physics.RaycastAll(cam.transform.position, cam.transform.forward);
             for (int i = 0; i < hits.Length; i++)
@@ -246,6 +256,12 @@ public class PlayerController : MonoBehaviour
             }
         }
 
+    }
+
+    IEnumerator babyBombCooldown()
+    {
+        yield return new WaitForSeconds(babyBombCooldownSeconds);
+        babyBombReady = true;
     }
 
     public void JumpEnd()
@@ -268,15 +284,17 @@ public class PlayerController : MonoBehaviour
     IEnumerator SlowTime()
     {
         //yield on a new YieldInstruction that waits for 5 seconds.
-        yield return new WaitForSeconds(1);
+        yield return new WaitForSeconds(slowdownDurationSeconds);
+
+        // Unslow
         postProcessVolume.enabled = false;
         Time.timeScale *= slowdownFactor;
         speed /= slowdownFactor;
         animator.speed /= slowdownFactor;
-        timeSlowed = false;
-
+        
         // wait another 5 seconds to use the slow time ability again
-        yield return new WaitForSeconds(5);
+        yield return new WaitForSeconds(slowdownCooldownSeconds);
+        timeSlowed = false;
         Image slowAbilityBackground = GameObject.Find("SlowInactive").GetComponent<Image>();
         slowAbilityBackground.enabled = false;
 
@@ -304,7 +322,7 @@ public class PlayerController : MonoBehaviour
 
     IEnumerator blinkCooldown()
     {
-        yield return new WaitForSeconds(0.5f);
+        yield return new WaitForSeconds(blinkCooldownSeconds);
         Image blinkBackground = GameObject.Find("BlinkInactive").GetComponent<Image>();
         blinkBackground.enabled = false;
         blinkReady = true;
