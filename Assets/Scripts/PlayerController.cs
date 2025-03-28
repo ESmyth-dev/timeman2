@@ -419,16 +419,51 @@ public class PlayerController : MonoBehaviour
     }
 
     //This will be called when the player dies, and just sets the player to the position/rotation from 5 secs ago
-    public void Rewind(){
-        //Weird error if there are no positions recorded, shouldn't ever happen
-        if(recordedPositions.Count <= 0){
+    public void Rewind()
+{
+        if (recordedPositions.Count <= 0)
+        {
             Debug.LogError("No recorded positions to rewind to. How did you mess this up?");
             return;
         }
 
-        //Sets the player to the position/rotation from 5 secs ago
-        transform.position = recordedPositions[0];
-        transform.rotation = recordedRotations[0];
+        StopAllCoroutines(); // Stop any existing coroutines
+        StartCoroutine(SmoothRewind());
+    }
+
+    private IEnumerator SmoothRewind()
+    {
+        Debug.Log("Rewinding...");
+
+        // Iterate backward through recorded positions
+        for (int i = recordedPositions.Count - 1; i >= 0; i--)
+        {
+            Vector3 startPos = transform.position;
+            Quaternion startRot = transform.rotation;
+            Vector3 targetPos = recordedPositions[i];
+            Quaternion targetRot = recordedRotations[i];
+
+            float duration = 0.2f; // Adjust rewind speed
+            float elapsedTime = 0f;
+
+            while (elapsedTime < duration)
+            {
+                transform.position = Vector3.Lerp(startPos, targetPos, elapsedTime / duration);
+                transform.rotation = Quaternion.Lerp(startRot, targetRot, elapsedTime / duration);
+                elapsedTime += Time.deltaTime;
+                yield return null; // Wait for next frame
+            }
+
+            // Ensure final snap to exact position
+            transform.position = targetPos;
+            transform.rotation = targetRot;
+        }
+
+        // Clear recorded positions after rewind
+        recordedPositions.Clear();
+        recordedRotations.Clear();
+
+        Debug.Log("Rewind complete.");
     }
 
 
