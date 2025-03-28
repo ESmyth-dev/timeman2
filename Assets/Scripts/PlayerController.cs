@@ -32,6 +32,12 @@ public class PlayerController : MonoBehaviour
     private bool timeSlowed;
     private bool blinkReady;
     private bool babyBombReady = true;
+    private float numberOfLives;
+
+    //List to hold the recorded positions
+    public List<Vector3> recordedPositions = new List<Vector3>();
+    //List to hold the recorded rotations
+    public List<Quaternion> recordedRotations = new List<Quaternion>();
 
     // Cooldowns
     private float slowdownDurationSeconds = 1f;
@@ -61,6 +67,7 @@ public class PlayerController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        numberOfLives = 3;
         overHeated = false;
         blinkReady = true;
         timeSlowed = false;
@@ -387,16 +394,48 @@ public class PlayerController : MonoBehaviour
         
 
     }
+    //This records the players position and rotation, then pauses for 1 sec, and then runs again
+    private IEnumerator RecordPositions(){
+        while(true)
+        {
+            //Triggers if positions list is full, and removes the oldest one (also rotation)
+            if(recordedPositions.Count < 5){
+                recordedPositions.RemoveAt(0);
+                recordedRotations.RemoveAt(0);
+            }
+
+            //Adds new positions/rotations to their lists
+            recordedPositions.Add(transform.position);
+            recordedRotations.Add(transform.rotation);
+
+            //Waits 1 sec
+            yield return new WaitForSeconds(1f);
+        }
+    }
+
+    //This will be called when the player dies, and just sets the player to the position/rotation from 5 secs ago
+    public void Rewind(){
+        //Weird error if there are no positions recorded, shouldn't ever happen
+        if(recordedPositions.Count <= 0){
+            Debug.LogError("No recorded positions to rewind to. How did you mess this up?");
+            return;
+        }
+
+        //Sets the player to the position/rotation from 5 secs ago
+        transform.position = recordedPositions[0];
+        transform.rotation = recordedRotations[0];
+    }
+
 
     public void Hit()
     {
         //sends a log message to terminal 
         Debug.Log("Player has been hit");
-        
-        if(GameManager.instance.numberOfLives> 0)
+
+        if(numberOfLives> 0)
         {
-            GameManager.instance.LoseLife();
-            DeathRewind.instance.Rewind();
+            numberOfLives--;
+            Rewind();
         }
         else
         {

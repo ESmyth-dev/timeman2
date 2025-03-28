@@ -12,6 +12,8 @@ TagManager:
   - downEnemy
   - bullet
   - Start
+  - playerBullet
+  - enemyBullet
   layers:
   - Default
   - TransparentFX
