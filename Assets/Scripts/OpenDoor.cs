@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class OpenDoor : MonoBehaviour
@@ -28,6 +27,10 @@ public class OpenDoor : MonoBehaviour
     void Update()
     {
         // if enemy count = 0, open doors with tag = end
+
+
+
+
     }
 
 
