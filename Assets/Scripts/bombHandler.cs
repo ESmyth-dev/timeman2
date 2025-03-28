@@ -52,7 +52,6 @@ public class bombHandler : MonoBehaviour
 
             
         }
-
     }
 
     private void OnTriggerEnter(Collider other)
