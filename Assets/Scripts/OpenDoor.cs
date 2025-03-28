@@ -27,8 +27,19 @@ public class OpenDoor : MonoBehaviour
     void Update()
     {
         // if enemy count = 0, open doors with tag = end
-
-
+        GameObject enemy = GameObject.Find("Enemies");
+        
+        // count how many enemies are in the enemy game object 
+        int enemyCount = enemy.transform.childCount;
+        Debug.Log("Enemy Count: " + enemyCount);
+        if (enemyCount == 0)
+        {
+            GameObject[] doors = GameObject.FindGameObjectsWithTag("Finish");
+            foreach (GameObject door in doors)
+            {
+                openDoor();
+            }
+        }
 
 
     }
