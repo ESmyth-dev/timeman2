@@ -661,6 +661,8 @@ MonoBehaviour:
   blinkSFX: {fileID: 5634767591545691478, guid: 745ff59d0d5cd974092c3b21693210dc, type: 3}
   cam: {fileID: 886996540944758549}
   gun: {fileID: 1420679215102681210}
+  recordedPositions: []
+  recordedRotations: []
 --- !u!114 &6938908292205947562
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -724,8 +726,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.3988037, y: 0.4889994, z: 0.27525234}
-  m_Center: {x: -0.013677597, y: 0.2555003, z: 0.020654202}
+  m_Size: {x: 0.7301979, y: 1.8923428, z: 0.27525234}
+  m_Center: {x: -0.014242172, y: 0.9571719, z: 0.020654202}
 --- !u!120 &4596275328410484264
 LineRenderer:
   serializedVersion: 2
