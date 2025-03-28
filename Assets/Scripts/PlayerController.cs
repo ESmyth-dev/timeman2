@@ -93,6 +93,9 @@ public class PlayerController : MonoBehaviour
 
         PostProcessVolumeObject = GameObject.Find("PostProcessVolume");
         postProcessVolume = PostProcessVolumeObject.GetComponent<PostProcessVolume>();
+
+        //Start recording positions
+        StartCoroutine(RecordPositions());
     }
 
     // Update is called once per frame
@@ -396,10 +399,12 @@ public class PlayerController : MonoBehaviour
     }
     //This records the players position and rotation, then pauses for 1 sec, and then runs again
     private IEnumerator RecordPositions(){
+        Debug.Log("Recording positions started");
         while(true)
         {
+            Debug.Log("Recording positions");
             //Triggers if positions list is full, and removes the oldest one (also rotation)
-            if(recordedPositions.Count < 5){
+            if(recordedPositions.Count > 5){
                 recordedPositions.RemoveAt(0);
                 recordedRotations.RemoveAt(0);
             }
