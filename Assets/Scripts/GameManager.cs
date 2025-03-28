@@ -33,17 +33,7 @@ public class GameManager : MonoBehaviour
         level++;
     }
 
-    public void GainLife()
-    {
-        numberOfLives++;
-        //Need to add code to repair clock on UI
-    }
 
-    public void LoseLife()
-    {
-        numberOfLives--;
-        //Need to add code to break clock on UI
-    }
 
     // Start is called before the first frame update
     void Start()
