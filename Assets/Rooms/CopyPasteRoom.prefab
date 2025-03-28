@@ -10079,8 +10079,9 @@ GameObject:
   - component: {fileID: 8196321042869075384}
   - component: {fileID: 788796914459331075}
   - component: {fileID: 5081932802577333088}
-  - component: {fileID: 8509629059107229593}
-  - component: {fileID: 7327130846965209217}
+  - component: {fileID: 8460014424402933583}
+  - component: {fileID: 2188531656366832844}
+  - component: {fileID: 8292457625597593790}
   m_Layer: 0
   m_Name: GateSmallFrameB (1)
   m_TagString: Untagged
@@ -10158,8 +10159,8 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!64 &8509629059107229593
-MeshCollider:
+--- !u!65 &8460014424402933583
+BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -10176,12 +10177,11 @@ MeshCollider:
   m_IsTrigger: 0
   m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 5
-  m_Convex: 1
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 4300000, guid: 41c20a22c931844479143387a0152c7e, type: 3}
---- !u!64 &7327130846965209217
-MeshCollider:
+  serializedVersion: 3
+  m_Size: {x: 5.0002346, y: 0.8350117, z: 0.36194357}
+  m_Center: {x: 2.4998825, y: 2.5824957, z: -0.18362491}
+--- !u!65 &2188531656366832844
+BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -10198,10 +10198,30 @@ MeshCollider:
   m_IsTrigger: 0
   m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 5
-  m_Convex: 0
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 4300000, guid: 41c20a22c931844479143387a0152c7e, type: 3}
+  serializedVersion: 3
+  m_Size: {x: 1.4087951, y: 3, z: 0.5148277}
+  m_Center: {x: 0.70416224, y: 1.5, z: -0.14750354}
+--- !u!65 &8292457625597593790
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4415444439372285494}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1.3832747, y: 3, z: 0.41551155}
+  m_Center: {x: 4.3038716, y: 1.5, z: -0.20446622}
 --- !u!1 &4454966219174050900
 GameObject:
   m_ObjectHideFlags: 0
@@ -10705,7 +10725,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: -8.386261, y: -1.8891239, z: -1.1631737}
-  m_LocalScale: {x: 1.5, y: 1.3326603, z: 1.5}
+  m_LocalScale: {x: 1.5, y: 1.5601454, z: 1.5}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 442930523081022995}
