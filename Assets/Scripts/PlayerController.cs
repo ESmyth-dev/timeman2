@@ -386,6 +386,9 @@ public class PlayerController : MonoBehaviour
 
     public void Hit()
     {
+        //sends a log message to terminal 
+        Debug.Log("Player has been hit");
+        
         if(GameManager.instance.numberOfLives> 0)
         {
             GameManager.instance.LoseLife();
