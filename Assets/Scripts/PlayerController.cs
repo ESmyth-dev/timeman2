@@ -256,6 +256,8 @@ public class PlayerController : MonoBehaviour
         if (Input.GetMouseButtonDown(1) && babyBombReady)
         {
             babyBombReady = false;
+            Image bombBackground = GameObject.Find("BombInactive").GetComponent<Image>();
+            bombBackground.enabled = true;
             StartCoroutine(babyBombCooldown());
 
             GameObject bomb = Instantiate(bombPrefab, gun.position, Quaternion.Euler(transform.rotation.x, transform.rotation.y, transform.rotation.z));
@@ -276,6 +278,8 @@ public class PlayerController : MonoBehaviour
     {
         yield return new WaitForSeconds(babyBombCooldownSeconds);
         babyBombReady = true;
+        Image bombBackground = GameObject.Find("BombInactive").GetComponent<Image>();
+        bombBackground.enabled = false;
     }
 
     public void JumpEnd()
