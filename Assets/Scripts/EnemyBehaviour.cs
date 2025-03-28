@@ -63,8 +63,12 @@ public class EnemyBehaviour : MonoBehaviour
 
         void Shoot()
         {
-            GameObject go = Instantiate(shotPrefab, gun.position, Quaternion.Euler(transform.rotation.x, transform.rotation.y, transform.rotation.z));
-            go.transform.LookAt(player.position + Vector3.up * 1f);
+            GameObject bullet = Instantiate(shotPrefab, gun.position, Quaternion.Euler(transform.rotation.x, transform.rotation.y, transform.rotation.z));
+            bullet.transform.LookAt(player.position + Vector3.up * 1f);
+
+            // set bullet's firer variable
+            ShotCollision shotScript = bullet.GetComponent<ShotCollision>();
+            shotScript.Firer = gameObject;
         }
     }
 
