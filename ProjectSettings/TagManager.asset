@@ -11,6 +11,7 @@ TagManager:
   - Enemy
   - downEnemy
   - bullet
+  - Start
   layers:
   - Default
   - TransparentFX
