@@ -7,13 +7,11 @@ using UnityEngine.AI;
 public class EnemyBehaviour : MonoBehaviour
 {
     public GameObject alive;
-    public GameObject dead;
+    public GameObject skeletonPrefab;
     public GameObject gunObject;
-    public ParticleSystem deathEffect;
     private Transform player;
     private NavMeshAgent agent;
     private Animator animator;
-
     public Transform gun;
     public GameObject shotPrefab;
     private float shootTimer = 0f;
@@ -28,8 +26,6 @@ public class EnemyBehaviour : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        dead.SetActive(false);
-        deathEffect.Stop();
         player = GameObject.Find("Player").transform;
         agent = GetComponent<NavMeshAgent>();
         animator = GetComponent<Animator>();
@@ -167,17 +163,12 @@ public class EnemyBehaviour : MonoBehaviour
     //When enemy is hit
     public void Hit()
     {
-        //Stop enemy from being able to move
-        agent.enabled = false;
-        //hide the model of the enemy
-        alive.SetActive(false);
-        //hide the model of the enemy gun
-        gunObject.SetActive(false);
-        //show the model of enemy skeleton
-        dead.SetActive(true);
-        //play death particle effect
-        deathEffect.Play();
-        //destroy the enemy after 2 seconds
-        Destroy(gameObject, 2f);
+        if (skeletonPrefab)
+        {
+            GameObject skeleton = Instantiate(skeletonPrefab, transform.position + Vector3.up * 0.5f, transform.rotation);
+            skeleton.SetActive(true);
+        }
+        
+        Destroy(gameObject);
     }
 }

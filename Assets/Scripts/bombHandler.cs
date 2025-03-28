@@ -13,9 +13,21 @@ public class bombHandler : MonoBehaviour
     private Vector3 originalScale;
     Vector3 targetPosition;
     Vector3 originalPosition;
+
+    // Audio
+    public AudioClip[] babyAudioClips;
+    private AudioClip detonateAudioClip;
+    private AudioSource audioSource;
+
     // Start is called before the first frame update
     void Start()
     {
+        babyAudioClips = Resources.LoadAll<AudioClip>("Audio/Baby");
+
+        audioSource = GetComponent<AudioSource>();
+        detonateAudioClip = Resources.Load<AudioClip>("Audio/timebombbubble");
+
+        audioSource.PlayOneShot(detonateAudioClip);
         StartCoroutine(destroySelf(6));
     }
 
@@ -30,11 +42,15 @@ public class bombHandler : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        if (!collision.collider.CompareTag("bullet"))
+        if (!collision.collider.CompareTag("bullet") && !collision.collider.CompareTag("Player"))
         {
+            Debug.Log(collision.collider.name);
+
             transform.parent = collision.transform;
             collided = true;
             GetComponent<Rigidbody>().isKinematic = true;
+
+            
         }
     }
 
@@ -42,6 +58,11 @@ public class bombHandler : MonoBehaviour
     {
         if (other.CompareTag("Enemy"))
         {
+            // Stop moving
+            collided = true;
+            GetComponent<Rigidbody>().isKinematic = true;
+
+            // Get da baddie
             Debug.Log("got da baddie");
             other.GetComponent<Animator>().SetBool("babyMode", true);
             other.GetComponent<NavMeshAgent>().enabled = false;
@@ -52,6 +73,10 @@ public class bombHandler : MonoBehaviour
             targetPosition = new Vector3(other.transform.position.x, other.transform.position.y - 0.5f, other.transform.position.z);
             StartCoroutine(ShrinkOverTime(other));
 
+            // Baby sounds
+            AudioSource enemyAudioSource = other.gameObject.GetComponent<AudioSource>();
+            int randomIndex = Random.Range(0, babyAudioClips.Length);
+            enemyAudioSource.PlayOneShot(babyAudioClips[randomIndex]);
         }
     }
 
