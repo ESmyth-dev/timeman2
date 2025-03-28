@@ -16,7 +16,7 @@ public class EnemyBehaviour : MonoBehaviour
     public GameObject shotPrefab;
     private float shootTimer = 0f;
     private float shootInterval = 1f; // Time between shots in seconds
-    private bool hasSeenPlayer = true; // Set to false if you want enemies to be alerted off the bat
+    private bool hasSeenPlayer = true; // Set to false if you want enemies to be alerted from start
 
     public enum EnemyState { Idle, Alert }
     public EnemyState state = EnemyState.Idle;
