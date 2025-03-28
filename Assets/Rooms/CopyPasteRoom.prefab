@@ -18041,6 +18041,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 6308646508050431177}
     m_Modifications:
+    - target: {fileID: 3912989975044152003, guid: 1b7aec751e1c5445a9854efe32b70cd4, type: 3}
+      propertyPath: m_TagString
+      value: EndLevel
+      objectReference: {fileID: 0}
     - target: {fileID: 5345889904427254033, guid: 1b7aec751e1c5445a9854efe32b70cd4, type: 3}
       propertyPath: m_TagString
       value: Finish
@@ -18818,6 +18822,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6433031322132576395, guid: 1b7aec751e1c5445a9854efe32b70cd4, type: 3}
+      propertyPath: m_ProvidesContacts
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6578075062197730563, guid: 1b7aec751e1c5445a9854efe32b70cd4, type: 3}
       propertyPath: m_LocalPosition.y
       value: -4.41
@@ -18873,6 +18881,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 6308646508050431177}
     m_Modifications:
+    - target: {fileID: 3912989975044152003, guid: 1b7aec751e1c5445a9854efe32b70cd4, type: 3}
+      propertyPath: m_TagString
+      value: EndLevel
+      objectReference: {fileID: 0}
     - target: {fileID: 5345889904427254033, guid: 1b7aec751e1c5445a9854efe32b70cd4, type: 3}
       propertyPath: m_TagString
       value: Finish
