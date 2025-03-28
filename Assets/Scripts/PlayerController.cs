@@ -188,14 +188,18 @@ public class PlayerController : MonoBehaviour
                 {
                     overHeated = true;                    
                 } 
-                GameObject go = Instantiate(shotPrefab, gun.position, Quaternion.Euler(transform.rotation.x, transform.rotation.y, transform.rotation.z));
-                //go.transform.rotation = transform.rotation;
+                GameObject bullet = Instantiate(shotPrefab, gun.position, Quaternion.Euler(transform.rotation.x, transform.rotation.y, transform.rotation.z));
+
+                // set bullet's firer variable
+                ShotCollision shotScript = bullet.GetComponent<ShotCollision>();
+                shotScript.Firer = gameObject;
+
                 RaycastHit[] hits = Physics.RaycastAll(cam.transform.position, cam.transform.forward);
                 for (int i = 0; i < hits.Length; i++)
                 {
                     if (hits[i].distance > 3)
                     {
-                        go.transform.LookAt(hits[i].point);
+                        bullet.transform.LookAt(hits[i].point);
                         break;
                     }
                 }
