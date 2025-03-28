@@ -430,7 +430,7 @@ MonoBehaviour:
   blinkDistance: 5
   jumpForce: 6
   shotPrefab: {fileID: 1220388901695869229, guid: 8b9d98267b265e64db13b54dadece375, type: 3}
-  bombPrefab: {fileID: 0}
+  bombPrefab: {fileID: 5796245837642863475, guid: 4b909c161b9561b4fb38c034b63edbb3, type: 3}
   blinkSFX: {fileID: 5634767591545691478, guid: 745ff59d0d5cd974092c3b21693210dc, type: 3}
   cam: {fileID: 886996540944758549}
   gun: {fileID: 1420679215102681210}
