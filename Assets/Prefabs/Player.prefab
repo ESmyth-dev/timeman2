@@ -351,6 +351,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Player
       objectReference: {fileID: 0}
+    - target: {fileID: 2153966685693844193, guid: 568900de41fc3c6439f6a95cff422d4d, type: 3}
+      propertyPath: m_TagString
+      value: Player
+      objectReference: {fileID: 0}
     - target: {fileID: 4634082184599378465, guid: 568900de41fc3c6439f6a95cff422d4d, type: 3}
       propertyPath: m_Controller
       value: 
@@ -426,6 +430,7 @@ MonoBehaviour:
   blinkDistance: 5
   jumpForce: 6
   shotPrefab: {fileID: 1220388901695869229, guid: 8b9d98267b265e64db13b54dadece375, type: 3}
+  bombPrefab: {fileID: 0}
   blinkSFX: {fileID: 5634767591545691478, guid: 745ff59d0d5cd974092c3b21693210dc, type: 3}
   cam: {fileID: 886996540944758549}
   gun: {fileID: 1420679215102681210}
