@@ -187,7 +187,7 @@ public class PlayerController : MonoBehaviour
         } else {
             if(Input.GetKeyDown(KeyCode.Space) && !isGrounded)
             {
-                if(GameManager.instance.doubleJump){
+                if(GameManager.instance.doubleJump && JumpEnd ==){
                     rb.velocity = new Vector3(rb.velocity.x, 0, rb.velocity.z);
                     rb.AddForce((transform.up * jumpForce), ForceMode.Impulse);
                     isGrounded = false;
@@ -440,8 +440,7 @@ public class PlayerController : MonoBehaviour
         }
 
         rewindAudioSource.PlayOneShot(rewindAudioClip);
-
-        StopAllCoroutines(); // Stop any existing coroutines
+        StopCoroutine(RecordPositions()); // Stop any existing coroutines
         StartCoroutine(SmoothRewind());
     }
 
@@ -478,6 +477,7 @@ public class PlayerController : MonoBehaviour
         recordedRotations.Clear();
 
         Debug.Log("Rewind complete.");
+        StartCoroutine(RecordPositions()); // Restart recording positions
     }
 
 
