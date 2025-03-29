@@ -33,6 +33,7 @@ public class PlayerController : MonoBehaviour
     private bool isGrounded;
     private Rigidbody rb;
     private bool timeSlowed;
+    private Coroutine slowTimeCoroutine;
     private bool blinkReady;
     private bool babyBombReady = true;
     private float numberOfLives;
@@ -349,7 +350,7 @@ public class PlayerController : MonoBehaviour
 
             slowTimeAudioSource.PlayOneShot(timeSlowAudioClip);
 
-            StartCoroutine(SlowTime());
+            slowTimeCoroutine = StartCoroutine(SlowTime());
         }
         
     }
@@ -448,6 +449,21 @@ public class PlayerController : MonoBehaviour
         }
 
         isRewinding = true;
+
+        // Cancel slowtime if rewinding
+        if (timeSlowed && slowTimeCoroutine != null)
+        {
+            StopCoroutine(slowTimeCoroutine);
+
+            // Unslow
+            timeSlowed = false;
+            postProcessVolume.enabled = false;
+            Time.timeScale *= slowdownFactor;
+            Time.fixedDeltaTime *= slowdownFactor;
+            speed /= slowdownFactor;
+            animator.speed /= slowdownFactor;
+        }
+
         rewindAudioSource.PlayOneShot(rewindAudioClip);
         postProcessVolume.profile = rewindProfile;
         postProcessVolume.enabled = true;
