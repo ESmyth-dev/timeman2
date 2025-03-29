@@ -36,6 +36,7 @@ public class PlayerController : MonoBehaviour
     private bool babyBombReady = true;
     private float numberOfLives;
     private bool jumpEnd = false;
+    private bool isRewinding = false;
 
     //List to hold the recorded positions
     public List<Vector3> recordedPositions = new List<Vector3>();
@@ -109,8 +110,8 @@ public class PlayerController : MonoBehaviour
         timeSlowProfile = Resources.Load<PostProcessProfile>("TimeSlowTint");
         rewindProfile = Resources.Load<PostProcessProfile>("RewindProfile");
 
-    //Start recording positions
-    StartCoroutine(RecordPositions());
+        //Start recording positions
+        StartCoroutine(RecordPositions());
     }
 
     // Update is called once per frame
@@ -451,10 +452,11 @@ public class PlayerController : MonoBehaviour
             return;
         }
 
+        isRewinding = true;
         rewindAudioSource.PlayOneShot(rewindAudioClip);
         postProcessVolume.profile = rewindProfile;
         postProcessVolume.enabled = true;
-        SetEnemyBehaviour(false);
+        SetEnemyBehaviour(false);      
 
         StopCoroutine(RecordPositions()); // Stop any existing coroutines
         StartCoroutine(SmoothRewind());
@@ -493,9 +495,17 @@ public class PlayerController : MonoBehaviour
         recordedRotations.Clear();
 
         postProcessVolume.enabled = false;
-        SetEnemyBehaviour(true);
+        StartCoroutine(EnableEnemyBehaviourAfterDelay());
+        isRewinding = false;
+
         Debug.Log("Rewind complete.");
         StartCoroutine(RecordPositions()); // Restart recording positions
+    }
+
+    private IEnumerator EnableEnemyBehaviourAfterDelay()
+    {
+        yield return new WaitForSeconds(1.5f);
+        SetEnemyBehaviour(true);
     }
 
 
@@ -507,7 +517,11 @@ public class PlayerController : MonoBehaviour
         if(numberOfLives> 0)
         {
             numberOfLives--;
-            Rewind();
+
+            if (!isRewinding)
+            {
+                Rewind();
+            }
         }
         else
         {
