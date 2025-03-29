@@ -15,6 +15,9 @@ TagManager:
   - playerBullet
   - enemyBullet
   - EndLevel
+  - StartLevel
+  - skillName
+  - skillDescription
   layers:
   - Default
   - TransparentFX
