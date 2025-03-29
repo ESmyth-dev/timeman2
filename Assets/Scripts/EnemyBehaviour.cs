@@ -79,9 +79,9 @@ public class EnemyBehaviour : MonoBehaviour
 
     IEnumerator RandomRaycastRoutine()
     {
-        while (BehaviourEnabled && player != null && agent.isActiveAndEnabled)
+        while (player != null && agent.isActiveAndEnabled)
         {
-            if (hasSeenPlayer)
+            if (hasSeenPlayer && BehaviourEnabled)
             {
                 ChooseNewDestination();
             }
@@ -91,7 +91,7 @@ public class EnemyBehaviour : MonoBehaviour
     }
 
     // choose new position on navmesh within line of sight of player
-    void ChooseNewDestination()
+    public void ChooseNewDestination()
     {
         // get random direction around player and ignore the veritcal component
         Vector3 randomDirection = Random.onUnitSphere;
@@ -179,6 +179,17 @@ public class EnemyBehaviour : MonoBehaviour
         if (skeletonPrefab)
         {
             GameObject skeleton = Instantiate(skeletonPrefab, transform.position + Vector3.up * 0.5f, transform.rotation);
+
+            if (gameObject.CompareTag("downEnemy"))
+            {
+                skeleton.transform.localScale = skeleton.transform.localScale * 0.3f;
+                skeleton.tag = "babySkeleton";
+            }
+            else if (gameObject.CompareTag("Enemy"))
+            {
+                skeleton.tag = "skeleton";
+            }
+
             skeleton.SetActive(true);
         }
         Destroy(gameObject);

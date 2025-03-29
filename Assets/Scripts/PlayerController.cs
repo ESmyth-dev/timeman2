@@ -308,7 +308,6 @@ public class PlayerController : MonoBehaviour
                 }
             }
         }
-
     }
 
     IEnumerator babyBombCooldown()
@@ -346,7 +345,7 @@ public class PlayerController : MonoBehaviour
         // Unslow
         postProcessVolume.enabled = false;
         Time.timeScale *= slowdownFactor;
-        Time.fixedDeltaTime *= slowdownFactor;
+        //Time.fixedDeltaTime *= slowdownFactor;
         speed /= slowdownFactor;
         animator.speed /= slowdownFactor;
         
@@ -366,7 +365,7 @@ public class PlayerController : MonoBehaviour
             postProcessVolume.profile = timeSlowProfile;
             postProcessVolume.enabled = true;
             Time.timeScale /= slowdownFactor;
-            Time.fixedDeltaTime /= slowdownFactor;
+            //Time.fixedDeltaTime /= slowdownFactor;
             speed *= slowdownFactor;
             animator.speed *= slowdownFactor;
             timeSlowed = true;
@@ -485,7 +484,7 @@ public class PlayerController : MonoBehaviour
             timeSlowed = false;
             postProcessVolume.enabled = false;
             Time.timeScale *= slowdownFactor;
-            Time.fixedDeltaTime *= slowdownFactor;
+            //Time.fixedDeltaTime *= slowdownFactor;
             speed /= slowdownFactor;
             animator.speed /= slowdownFactor;
         }
@@ -553,6 +552,10 @@ public class PlayerController : MonoBehaviour
 
         if(numberOfLives> 0)
         {
+            if(GameManager.instance.deathBubble){
+                // Instantiate the death bubble prefab at the player's position
+                GameObject deathBubble = Instantiate(bombPrefab, transform.position, Quaternion.identity);
+            }
             numberOfLives--;
 
             if (!isRewinding)
@@ -589,8 +592,11 @@ public class PlayerController : MonoBehaviour
             NavMeshAgent agent = enemy.GetComponent<NavMeshAgent>();
             if (agent != null && value == false)
             {
-                agent.isStopped = true;
-                agent.ResetPath();
+                agent.SetDestination(enemy.transform.position);
+            }
+            else if (agent != null && value == true)
+            {
+                behaviour.ChooseNewDestination();
             }
         }
     }
