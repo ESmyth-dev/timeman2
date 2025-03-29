@@ -323,7 +323,7 @@ public class PlayerController : MonoBehaviour
         // Unslow
         postProcessVolume.enabled = false;
         Time.timeScale *= slowdownFactor;
-        Time.fixedDeltaTime *= slowdownFactor;
+        //Time.fixedDeltaTime *= slowdownFactor;
         speed /= slowdownFactor;
         animator.speed /= slowdownFactor;
         
@@ -342,7 +342,7 @@ public class PlayerController : MonoBehaviour
             postProcessVolume.profile = timeSlowProfile;
             postProcessVolume.enabled = true;
             Time.timeScale /= slowdownFactor;
-            Time.fixedDeltaTime /= slowdownFactor;
+            //Time.fixedDeltaTime /= slowdownFactor;
             speed *= slowdownFactor;
             animator.speed *= slowdownFactor;
             timeSlowed = true;
@@ -461,7 +461,7 @@ public class PlayerController : MonoBehaviour
             timeSlowed = false;
             postProcessVolume.enabled = false;
             Time.timeScale *= slowdownFactor;
-            Time.fixedDeltaTime *= slowdownFactor;
+            //Time.fixedDeltaTime *= slowdownFactor;
             speed /= slowdownFactor;
             animator.speed /= slowdownFactor;
         }

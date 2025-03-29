@@ -20,6 +20,8 @@ TagManager:
   - skillDescription
   - floor
   - Lava
+  - skeleton
+  - babySkeleton
   layers:
   - Default
   - TransparentFX
