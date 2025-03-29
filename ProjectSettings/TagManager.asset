@@ -14,7 +14,6 @@ TagManager:
   - Start
   - playerBullet
   - enemyBullet
-  - StartLevel
   - EndLevel
   layers:
   - Default

@@ -7,6 +7,8 @@ public class OpenDoor : MonoBehaviour
     // Start is called before the first frame update
     private GameObject door;
     private bool levelEnded = false;
+
+    public GameObject player;
     void Start()
     {
         // find door with tag = start
@@ -14,7 +16,6 @@ public class OpenDoor : MonoBehaviour
         // compare tag, if tag = start then open door
         if (door.tag == "Start")
         {
-            Debug.Log("Door Opened");
             openDoor(door);
         }
     }
@@ -35,7 +36,6 @@ public class OpenDoor : MonoBehaviour
         if (enemyCount == 0 && levelEnded == false)
         {
             GameObject[] doors = GameObject.FindGameObjectsWithTag("Finish");
-            Debug.Log(doors);
             foreach (GameObject door in doors)
             {
                 openDoor(door);
@@ -45,24 +45,6 @@ public class OpenDoor : MonoBehaviour
 
     }
     
-    // collison on enter with a collider on airlock called exitLevel 
-    void OnTriggerEnter(Collider other)
-    {
-        if (other.gameObject.tag == "exitLevel")
-        {
-            closeDoor(door);
-        }
-    } 
-    
-        // collison on leace with a collider on airlock called start level
-    void OnTriggerExit(Collider other)
-    {
-        if (other.gameObject.tag == "startLevel")
-        {
-            closeDoor(door);
-        }
-    }
-
 
 
     
@@ -86,9 +68,8 @@ public class OpenDoor : MonoBehaviour
         transform.position = targetPosition;
     }
 
-    void closeDoor(GameObject door)
+    public void closeDoor(GameObject door)
     {
-        Debug.Log("Door Closing");
         // lower door slowly down from current position minus 3 on the y axis to close
         Vector3 targetPosition = door.transform.position - new Vector3(0, 3, 0);
         StartCoroutine(MoveDoor(door.transform, targetPosition, 2.0f));

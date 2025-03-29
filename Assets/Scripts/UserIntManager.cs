@@ -9,6 +9,7 @@ public class UserIntManager : MonoBehaviour
 
     private Image slowAbilityBackground;
     private Image blinkBackground;
+    private Image bombBackground;
     private GameObject abilityChoice;
 
 
@@ -20,6 +21,9 @@ public class UserIntManager : MonoBehaviour
 
         blinkBackground = GameObject.Find("BlinkInactive").GetComponent<Image>();
         blinkBackground.enabled = false;
+
+        bombBackground = GameObject.Find("BombInactive").GetComponent<Image>();
+        bombBackground.enabled = false;
 
         //choose new ability
         abilityChoice = GameObject.Find("SelectNewAbility");
