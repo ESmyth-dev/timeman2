@@ -9,6 +9,8 @@ using UnityEngine.UI;
 
 public class PlayerController : MonoBehaviour
 {
+    public string enemyPath = "CopyPasteRoom/Random Room/Preset1/Enemies";
+
     public Animator animator;
     public Slider slider;
     public LineRenderer beamLine;
@@ -67,6 +69,8 @@ public class PlayerController : MonoBehaviour
 
     private GameObject PostProcessVolumeObject;
     private PostProcessVolume postProcessVolume;
+    private PostProcessProfile timeSlowProfile;
+    private PostProcessProfile rewindProfile;
 
 
     // Start is called before the first frame update
@@ -94,7 +98,7 @@ public class PlayerController : MonoBehaviour
 
         rewindAudioClip = Resources.Load<AudioClip>("Audio/rewind");
         rewindAudioManager = audioManagers.transform.Find("RewindAudioManager").gameObject;
-        rewindAudioSource = blinkAudioManager.GetComponent<AudioSource>();
+        rewindAudioSource = rewindAudioManager.GetComponent<AudioSource>();
 
         pewAudioClip = Resources.Load<AudioClip>("Audio/Pew");
         pewAudioManager = audioManagers.transform.Find("PewAudioManager").gameObject;
@@ -102,9 +106,11 @@ public class PlayerController : MonoBehaviour
 
         PostProcessVolumeObject = GameObject.Find("PostProcessVolume");
         postProcessVolume = PostProcessVolumeObject.GetComponent<PostProcessVolume>();
+        timeSlowProfile = Resources.Load<PostProcessProfile>("TimeSlowTint");
+        rewindProfile = Resources.Load<PostProcessProfile>("RewindProfile");
 
-        //Start recording positions
-        StartCoroutine(RecordPositions());
+    //Start recording positions
+    StartCoroutine(RecordPositions());
     }
 
     // Update is called once per frame
@@ -318,6 +324,7 @@ public class PlayerController : MonoBehaviour
         // Unslow
         postProcessVolume.enabled = false;
         Time.timeScale *= slowdownFactor;
+        Time.fixedDeltaTime *= slowdownFactor;
         speed /= slowdownFactor;
         animator.speed /= slowdownFactor;
         
@@ -333,8 +340,10 @@ public class PlayerController : MonoBehaviour
     {
         if (!timeSlowed)
         {
+            postProcessVolume.profile = timeSlowProfile;
             postProcessVolume.enabled = true;
             Time.timeScale /= slowdownFactor;
+            Time.fixedDeltaTime /= slowdownFactor;
             speed *= slowdownFactor;
             animator.speed *= slowdownFactor;
             timeSlowed = true;
@@ -443,6 +452,10 @@ public class PlayerController : MonoBehaviour
         }
 
         rewindAudioSource.PlayOneShot(rewindAudioClip);
+        postProcessVolume.profile = rewindProfile;
+        postProcessVolume.enabled = true;
+        SetEnemyBehaviour(false);
+
         StopCoroutine(RecordPositions()); // Stop any existing coroutines
         StartCoroutine(SmoothRewind());
     }
@@ -459,7 +472,7 @@ public class PlayerController : MonoBehaviour
             Vector3 targetPos = recordedPositions[i];
             Quaternion targetRot = recordedRotations[i];
 
-            float duration = 0.2f; // Adjust rewind speed
+            float duration = 0.6f; // Adjust rewind speed
             float elapsedTime = 0f;
 
             while (elapsedTime < duration)
@@ -479,6 +492,8 @@ public class PlayerController : MonoBehaviour
         recordedPositions.Clear();
         recordedRotations.Clear();
 
+        postProcessVolume.enabled = false;
+        SetEnemyBehaviour(true);
         Debug.Log("Rewind complete.");
         StartCoroutine(RecordPositions()); // Restart recording positions
     }
@@ -498,6 +513,41 @@ public class PlayerController : MonoBehaviour
         {
             GameManager.instance.GameOver();
         }
+    }
+
+    private void SetEnemyBehaviour(bool value)
+    {
+        Transform enemiesParent = GameObject.Find(enemyPath)?.transform;
+
+        if (enemiesParent == null)
+        {
+            Debug.LogError("Could not find the Enemies folder at path: " + enemyPath);
+            return;
+        }
+
+        List<GameObject> enemyObjects = GetChildren(enemiesParent);
+
+        foreach (GameObject enemy in enemyObjects)
+        {
+            EnemyBehaviour behaviour = enemy.GetComponent<EnemyBehaviour>();
+            if (behaviour != null)
+            {
+                behaviour.BehaviourEnabled = value;
+            }
+        }
+    }
+
+    private List<GameObject> GetChildren(Transform parent)
+    {
+        List<GameObject> result = new List<GameObject>();
+
+        for (int i = 0; i < parent.childCount; i++)
+        {
+            Transform child = parent.GetChild(i);
+            result.Add(child.gameObject);
+        }
+
+        return result;
     }
 }
 
