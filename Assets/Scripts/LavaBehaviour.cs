@@ -8,7 +8,7 @@ public class LavaBehaviour : MonoBehaviour
         if(collision.gameObject.tag == "Player"){
             Debug.Log("Lava Hit");
 
-            collision.gameObject.GetComponent<PlayerController>().Hit();
+            collision.gameObject.GetComponent<PlayerController>().LavaHit();
         }
     }
 }

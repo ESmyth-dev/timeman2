@@ -41,8 +41,8 @@ public class PlayerController : MonoBehaviour
     private bool isRewinding = false;
     private GameManager gameManager;
 
-    private Vector3 lastPosition;
-    private Quaternion lastRotation;
+    private Vector3 lastGroundPosition;
+    private Quaternion lastGroundRotation;
 
     //List to hold the recorded positions
     public List<Vector3> recordedPositions = new List<Vector3>();
@@ -139,7 +139,7 @@ public class PlayerController : MonoBehaviour
         //Start recording positions
         Debug.Log("Recording positions");
         StartCoroutine(RecordPositions());
-        
+        StartCoroutine(RecordGroundPosition());
     }
 
     // Update is called once per frame
@@ -474,6 +474,19 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    private IEnumerator RecordGroundPosition()
+    {
+        while (true)
+        {
+            if (isGrounded)
+            {
+                lastGroundPosition = transform.position;
+                lastGroundRotation = transform.rotation;
+            }
+            yield return new WaitForSeconds(0.1f); // Adjust the interval as needed
+        }
+    }
+
     //This will be called when the player dies, and just sets the player to the position/rotation from 5 secs ago
     public void Rewind()
     {
@@ -579,6 +592,14 @@ public class PlayerController : MonoBehaviour
             }
         }else{
             GameManager.instance.GameOver();
+        }
+    }
+
+    public void LavaHit(){
+        if(numberOfLives > 0){
+            numberOfLives--;
+            transform.position = lastGroundPosition;
+            transform.rotation = lastGroundRotation;
         }
     }
 
