@@ -39,6 +39,7 @@ public class PlayerController : MonoBehaviour
     private float numberOfLives;
     private bool jumpEnd = false;
     private bool isRewinding = false;
+    public GameManager gameManager;
 
     //List to hold the recorded positions
     public List<Vector3> recordedPositions = new List<Vector3>();
@@ -75,10 +76,19 @@ public class PlayerController : MonoBehaviour
     private PostProcessProfile timeSlowProfile;
     private PostProcessProfile rewindProfile;
 
+    // pause menu
+    private bool pauseMenuActive;
+    private float gameTimeScale;
+    private Image pauseMenuBackground;
+
 
     // Start is called before the first frame update
     void Start()
     {
+        pauseMenuActive = false;
+        pauseMenuBackground = GameObject.Find("PauseMenuBackground").GetComponent<Image>();
+
+        gameManager = FindAnyObjectByType<GameManager>();
         numberOfLives = 3;
         overHeated = false;
         blinkReady = true;
@@ -163,11 +173,11 @@ public class PlayerController : MonoBehaviour
             animator.SetBool("movingLeft", false);
         }
 
-        if (Input.GetKeyDown(KeyCode.F) && !isRewinding)
+        if (Input.GetKeyDown(KeyCode.F) && !isRewinding && gameManager.blink && !pauseMenuActive)
         {
             BlinkAbility();
         }
-        if (Input.GetKeyDown(KeyCode.C) && !isRewinding)
+        if (Input.GetKeyDown(KeyCode.C) && !isRewinding && gameManager.slowTime && !pauseMenuActive)
         {
             SlowTimeAbility();
         }
@@ -183,13 +193,28 @@ public class PlayerController : MonoBehaviour
             animator.SetBool("movingBackwards", false);
         }
 
+        // pause menu
+        if (Input.GetKeyDown(KeyCode.Escape) && !pauseMenuActive)
+        {
+            pauseMenuBackground.enabled = true;
+            pauseMenuActive = true;
+            gameTimeScale = Time.timeScale;
+            Time.timeScale = 0;
+        }
+        else if (Input.GetKeyDown(KeyCode.Escape) && pauseMenuActive)
+        {
+            pauseMenuBackground.enabled = false;
+            pauseMenuActive = false;
+            Time.timeScale = gameTimeScale;
+        }
+
         if (moveDirection != Vector3.zero)
         {
             transform.Translate(moveDirection * Time.deltaTime * speed, Space.World);
         }
 
         // Jumping
-        if (Input.GetKeyDown(KeyCode.Space) && isGrounded && !isRewinding)
+        if (Input.GetKeyDown(KeyCode.Space) && isGrounded && !isRewinding && !pauseMenuActive)
         {
             jumpEnd = false;
             rb.AddForce(transform.up * jumpForce, ForceMode.Impulse);
@@ -198,7 +223,7 @@ public class PlayerController : MonoBehaviour
         } else {
             if(Input.GetKeyDown(KeyCode.Space) && !isGrounded)
             {
-                if(GameManager.instance.doubleJump && jumpEnd == false){
+                if(gameManager.doubleJump && jumpEnd == false){
                     jumpEnd = true;
                     rb.velocity = new Vector3(rb.velocity.x, 0, rb.velocity.z);
                     rb.AddForce((transform.up * jumpForce), ForceMode.Impulse);
@@ -209,7 +234,7 @@ public class PlayerController : MonoBehaviour
             }
         }
 
-        if (Input.GetMouseButtonDown(0) && !beamEnabled && !isRewinding)
+        if (Input.GetMouseButtonDown(0) && !beamEnabled && !isRewinding && !pauseMenuActive)
         {
             if (!overHeated)
             {
@@ -239,7 +264,7 @@ public class PlayerController : MonoBehaviour
             }
         }
 
-        if (Input.GetMouseButton(0) && beamEnabled && !isRewinding)
+        if (Input.GetMouseButton(0) && beamEnabled && !isRewinding && !pauseMenuActive)
         {
             if (!overHeated)
             {
@@ -267,7 +292,7 @@ public class PlayerController : MonoBehaviour
         }
 
 
-        if (Input.GetMouseButtonDown(1) && babyBombReady && !isRewinding)
+        if (Input.GetMouseButtonDown(1) && babyBombReady && !isRewinding && gameManager.timeGrenade && !pauseMenuActive)
         {
             babyBombReady = false;
             Image bombBackground = GameObject.Find("BombInactive").GetComponent<Image>();
@@ -285,7 +310,6 @@ public class PlayerController : MonoBehaviour
                 }
             }
         }
-
     }
 
     IEnumerator babyBombCooldown()
@@ -337,6 +361,7 @@ public class PlayerController : MonoBehaviour
 
     void SlowTimeAbility()
     {
+        Debug.Log("slowslow");
         if (!timeSlowed)
         {
             postProcessVolume.profile = timeSlowProfile;
@@ -530,6 +555,12 @@ public class PlayerController : MonoBehaviour
 
         if(numberOfLives > 0)
         {
+            if(GameManager.instance.deathBubble){
+                // Instantiate the death bubble prefab at the player's position
+                GameObject deathBubble = Instantiate(bombPrefab, transform.position, Quaternion.identity);
+            }
+            numberOfLives--;
+
             if (!isRewinding)
             {
                 numberOfLives--;

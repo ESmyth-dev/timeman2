@@ -10,6 +10,7 @@ public class UserIntManager : MonoBehaviour
     private Image slowAbilityBackground;
     private Image blinkBackground;
     private Image bombBackground;
+    private Image pauseMenu;
     private GameObject abilityChoice;
 
 
@@ -28,6 +29,10 @@ public class UserIntManager : MonoBehaviour
         //choose new ability
         abilityChoice = GameObject.Find("SelectNewAbility");
         abilityChoice.SetActive(false);
+
+        // pause menu
+        pauseMenu = GameObject.Find("PauseMenuBackground").GetComponent<Image>();
+        pauseMenu.enabled = false;
 
     }
 
