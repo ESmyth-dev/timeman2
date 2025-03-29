@@ -39,6 +39,7 @@ public class PlayerController : MonoBehaviour
     private float numberOfLives;
     private bool jumpEnd = false;
     private bool isRewinding = false;
+    public GameManager gameManager;
 
     //List to hold the recorded positions
     public List<Vector3> recordedPositions = new List<Vector3>();
@@ -84,9 +85,13 @@ public class PlayerController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+<<<<<<< HEAD
         pauseMenuActive = false;
         pauseMenuBackground = GameObject.Find("PauseMenuBackground").GetComponent<Image>();
 
+=======
+        gameManager = FindAnyObjectByType<GameManager>();
+>>>>>>> e2a76e4a12ec5dab45e4036e1ff198d2f0eb1995
         numberOfLives = 3;
         overHeated = false;
         blinkReady = true;
@@ -171,11 +176,19 @@ public class PlayerController : MonoBehaviour
             animator.SetBool("movingLeft", false);
         }
 
+<<<<<<< HEAD
         if (Input.GetKeyDown(KeyCode.F) && !isRewinding && !pauseMenuActive)
         {
             BlinkAbility();
         }
         if (Input.GetKeyDown(KeyCode.C) && !isRewinding && !pauseMenuActive)
+=======
+        if (Input.GetKeyDown(KeyCode.F) && !isRewinding && gameManager.blink)
+        {
+            BlinkAbility();
+        }
+        if (Input.GetKeyDown(KeyCode.C) && !isRewinding && gameManager.slowTime)
+>>>>>>> e2a76e4a12ec5dab45e4036e1ff198d2f0eb1995
         {
             SlowTimeAbility();
         }
@@ -221,7 +234,7 @@ public class PlayerController : MonoBehaviour
         } else {
             if(Input.GetKeyDown(KeyCode.Space) && !isGrounded)
             {
-                if(GameManager.instance.doubleJump && jumpEnd == false){
+                if(gameManager.doubleJump && jumpEnd == false){
                     jumpEnd = true;
                     rb.velocity = new Vector3(rb.velocity.x, 0, rb.velocity.z);
                     rb.AddForce((transform.up * jumpForce), ForceMode.Impulse);
@@ -290,7 +303,11 @@ public class PlayerController : MonoBehaviour
         }
 
 
+<<<<<<< HEAD
         if (Input.GetMouseButtonDown(1) && babyBombReady && !isRewinding && !pauseMenuActive)
+=======
+        if (Input.GetMouseButtonDown(1) && babyBombReady && !isRewinding && gameManager.timeGrenade)
+>>>>>>> e2a76e4a12ec5dab45e4036e1ff198d2f0eb1995
         {
             babyBombReady = false;
             Image bombBackground = GameObject.Find("BombInactive").GetComponent<Image>();
