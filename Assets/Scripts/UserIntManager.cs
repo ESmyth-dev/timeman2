@@ -16,6 +16,7 @@ public class UserIntManager : MonoBehaviour
     private GameObject abilityChoice;
     private GameObject MainMenu;
     private Button playButton;
+    private GameObject selectUpgrade;
 
     private float gameTimeScale;
     public bool menuActive;
@@ -23,9 +24,13 @@ public class UserIntManager : MonoBehaviour
 
     void Start()
     {
+        // main menu
         MainMenu = GameObject.Find("MainMenu");
         playButton = GameObject.Find("PlayButton").GetComponent<Button>();
         playButton.onClick.AddListener(play);
+        Time.timeScale = 0;
+        Cursor.visible = true;
+        //MainMenu.SetActive(false);
 
         // ability bar
         slowAbilityBackground = GameObject.Find("SlowInactive").GetComponent<Image>();
@@ -111,6 +116,9 @@ public class UserIntManager : MonoBehaviour
 
     public void play()
     {
+        Debug.Log("click play");
         MainMenu.SetActive(false);
+        Time.timeScale = 1;
+        Cursor.visible = false;
     }
 }

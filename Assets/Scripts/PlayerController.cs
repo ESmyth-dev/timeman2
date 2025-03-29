@@ -99,8 +99,6 @@ public class PlayerController : MonoBehaviour
 
         pauseMenuActive = false;
         UIman = GameObject.Find("GuiCanvas").GetComponent<UserIntManager>();
-        //backToGameButton = GameObject.Find("BackToGame").GetComponent<Button>();
-        //backToGameButton.onClick.AddListener(backClick);
 
         numberOfLives = 3;
         overHeated = false;
@@ -217,17 +215,6 @@ public class PlayerController : MonoBehaviour
         {
             animator.SetBool("movingBackwards", false);
         }
-
-        /* pause menu
-        if (Input.GetKeyDown(KeyCode.Escape) && !pauseMenuActive)
-        {
-            pauseMenuActive = true;
-        }
-        else if (Input.GetKeyDown(KeyCode.Escape) && pauseMenuActive)
-        {
-            pauseMenuActive = false;
-        }*/
-
         if (moveDirection != Vector3.zero)
         {
             transform.Translate(moveDirection * Time.deltaTime * speed, Space.World);
