@@ -129,13 +129,9 @@ public class PlayerController : MonoBehaviour
         timeSlowProfile = Resources.Load<PostProcessProfile>("TimeSlowTint");
         rewindProfile = Resources.Load<PostProcessProfile>("RewindProfile");
 
-        if(GameObject.Find("Lava")==null){
-            //Start recording positions
-            StartCoroutine(RecordPositions());
-        }else{
-            //If lava level use different recording positions
-            StartCoroutine(RecordPositionsLava());
-        }
+        //Start recording positions
+        Debug.Log("Recording positions");
+        StartCoroutine(RecordPositions());
         
     }
 
@@ -143,7 +139,6 @@ public class PlayerController : MonoBehaviour
     void Update()
     {
         pauseMenuActive = UIman.menuActive;
-        Debug.Log(pauseMenuActive);
 
         if (gameManager.slowDown)
         {
@@ -468,29 +463,18 @@ public class PlayerController : MonoBehaviour
     private IEnumerator RecordPositions(){
         while(true)
         {
-            //Triggers if positions list is full, and removes the oldest one (also rotation)
-            if(recordedPositions.Count > 5){
-                recordedPositions.RemoveAt(0);
-                recordedRotations.RemoveAt(0);
-            }
+                //Triggers if positions list is full, and removes the oldest one (also rotation)
+                if(recordedPositions.Count > 5){
+                    recordedPositions.RemoveAt(0);
+                    recordedRotations.RemoveAt(0);
+                }
 
-            //Adds new positions/rotations to their lists
-            recordedPositions.Add(transform.position);
-            recordedRotations.Add(transform.rotation);
+                //Adds new positions/rotations to their lists
+                recordedPositions.Add(transform.position);
+                recordedRotations.Add(transform.rotation);
 
-            //Waits 1 sec
-            yield return new WaitForSeconds(1f);
-        }
-    }
-
-    private IEnumerator RecordPositionsLava(){
-        while(true){
-            //Records last position and rotation of player standing on ground
-            if(isGrounded){
-                lastPosition = transform.position;
-                lastRotation = transform.rotation;
-            }
-            yield return new WaitForSeconds(1f);
+                //Waits 1 sec
+                yield return new WaitForSeconds(1f);
         }
     }
 
@@ -569,11 +553,6 @@ public class PlayerController : MonoBehaviour
         StartCoroutine(RecordPositions()); // Restart recording positions
     }
 
-    private void backToLastPosition(){
-        Vector3 endPoint = Vector3.Lerp(transform.position, lastPosition, 1);
-        Quaternion endRotation = Quaternion.Lerp(transform.rotation, lastRotation, 1);
-    }
-
     private IEnumerator EnableEnemyBehaviourAfterDelay()
     {
         yield return new WaitForSeconds(1f);
@@ -594,22 +573,15 @@ public class PlayerController : MonoBehaviour
         if(numberOfLives > 0)
         {
             numberOfLives--;
-            if(!GameObject.Find("Lava")){
-                if(GameManager.instance.deathBubble){
+            if(GameManager.instance.deathBubble){
                 // Instantiate the death bubble prefab at the player's position
                 GameObject deathBubble = Instantiate(bombPrefab, transform.position, Quaternion.identity);
-                }
-
-                if (!isRewinding)
-                {
-                    Rewind();
-                }
-            }else{
-                backToLastPosition();
             }
-        }
-        else
-        {
+
+            if (!isRewinding){
+                Rewind();
+            }
+        }else{
             GameManager.instance.GameOver();
         }
     }
