@@ -5,8 +5,9 @@ using UnityEngine.SceneManagement;
 
 public class CloseDoorScript : MonoBehaviour
 {
-
-    private string[] levels = { "Level1", "Level2", "LavaLevel"};
+    
+    
+    private string[] levels = { "Level1", "Level2", "LavaLevel", "Laser Room"};
 
     [SerializeField] private float sceneLoadDelay = 1.0f;
 

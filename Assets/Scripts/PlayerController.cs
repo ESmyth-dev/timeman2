@@ -13,7 +13,7 @@ public class PlayerController : MonoBehaviour
     public string enemyPath = "CopyPasteRoom/Random Room/Preset1/Enemies";
 
     public Animator animator;
-    public Slider slider;
+    private Slider slider;
     public LineRenderer beamLine;
     public float beamRange = 100f;
     public float cooldownSpeed = 0.2f;
@@ -32,13 +32,14 @@ public class PlayerController : MonoBehaviour
     public Transform gun;
     private bool isGrounded;
     private Rigidbody rb;
-    private bool timeSlowed;
+    public bool timeSlowed;
     private Coroutine slowTimeCoroutine;
     private bool blinkReady;
     private bool babyBombReady = true;
     private float numberOfLives;
     private bool jumpEnd = false;
     private bool isRewinding = false;
+    private GameManager gameManager;
 
     private Vector3 lastPosition;
     private Quaternion lastRotation;
@@ -78,10 +79,22 @@ public class PlayerController : MonoBehaviour
     private PostProcessProfile timeSlowProfile;
     private PostProcessProfile rewindProfile;
 
+    // pause menu
+    private bool pauseMenuActive;
+    private float gameTimeScale;
+    private Image pauseMenuBackground;
+    private Button exitButton;
+    private Button backToGameButton;
 
     // Start is called before the first frame update
     void Start()
     {
+        gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
+        slider = GameObject.Find("Slider").GetComponent<Slider>();
+
+        pauseMenuActive = false;
+
+        gameManager = FindAnyObjectByType<GameManager>();
         numberOfLives = 3;
         overHeated = false;
         blinkReady = true;
@@ -128,7 +141,17 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        slider.value -= cooldownSpeed * Time.deltaTime;
+        if (gameManager.slowDown)
+        {
+            slider.value -= cooldownSpeed * Time.deltaTime * 1.2f;
+
+        }
+        else
+        {
+            slider.value -= cooldownSpeed * Time.deltaTime;
+
+        }
+
         if (slider.value <= 0.1f)
         {
             overHeated = false;
@@ -172,11 +195,11 @@ public class PlayerController : MonoBehaviour
             animator.SetBool("movingLeft", false);
         }
 
-        if (Input.GetKeyDown(KeyCode.F) && !isRewinding)
+        if (Input.GetKeyDown(KeyCode.F) && !isRewinding && gameManager.blink && !pauseMenuActive)
         {
             BlinkAbility();
         }
-        if (Input.GetKeyDown(KeyCode.C) && !isRewinding)
+        if (Input.GetKeyDown(KeyCode.C) && !isRewinding && gameManager.slowTime && !pauseMenuActive)
         {
             SlowTimeAbility();
         }
@@ -192,13 +215,23 @@ public class PlayerController : MonoBehaviour
             animator.SetBool("movingBackwards", false);
         }
 
+        // pause menu
+        if (Input.GetKeyDown(KeyCode.Escape) && !pauseMenuActive)
+        {
+            pauseMenuActive = true;
+        }
+        else if (Input.GetKeyDown(KeyCode.Escape) && pauseMenuActive)
+        {
+            pauseMenuActive = false;
+        }
+
         if (moveDirection != Vector3.zero)
         {
             transform.Translate(moveDirection * Time.deltaTime * speed, Space.World);
         }
 
         // Jumping
-        if (Input.GetKeyDown(KeyCode.Space) && isGrounded && !isRewinding)
+        if (Input.GetKeyDown(KeyCode.Space) && isGrounded && !isRewinding && !pauseMenuActive)
         {
             jumpEnd = false;
             rb.AddForce(transform.up * jumpForce, ForceMode.Impulse);
@@ -207,7 +240,7 @@ public class PlayerController : MonoBehaviour
         } else {
             if(Input.GetKeyDown(KeyCode.Space) && !isGrounded)
             {
-                if(GameManager.instance.doubleJump && jumpEnd == false){
+                if(gameManager.doubleJump && jumpEnd == false){
                     jumpEnd = true;
                     rb.velocity = new Vector3(rb.velocity.x, 0, rb.velocity.z);
                     rb.AddForce((transform.up * jumpForce), ForceMode.Impulse);
@@ -218,7 +251,7 @@ public class PlayerController : MonoBehaviour
             }
         }
 
-        if (Input.GetMouseButtonDown(0) && !beamEnabled && !isRewinding)
+        if (Input.GetMouseButtonDown(0) && !beamEnabled && !isRewinding && !pauseMenuActive)
         {
             if (!overHeated)
             {
@@ -248,7 +281,7 @@ public class PlayerController : MonoBehaviour
             }
         }
 
-        if (Input.GetMouseButton(0) && beamEnabled && !isRewinding)
+        if (Input.GetMouseButton(0) && beamEnabled && !isRewinding && !pauseMenuActive)
         {
             if (!overHeated)
             {
@@ -274,9 +307,7 @@ public class PlayerController : MonoBehaviour
                 beamLight.enabled = true;
             }
         }
-
-
-        if (Input.GetMouseButtonDown(1) && babyBombReady && !isRewinding)
+        if (Input.GetMouseButtonDown(1) && babyBombReady && !isRewinding && gameManager.timeGrenade && !pauseMenuActive)
         {
             babyBombReady = false;
             Image bombBackground = GameObject.Find("BombInactive").GetComponent<Image>();
@@ -345,6 +376,7 @@ public class PlayerController : MonoBehaviour
 
     void SlowTimeAbility()
     {
+        Debug.Log("slowslow");
         if (!timeSlowed)
         {
             postProcessVolume.profile = timeSlowProfile;
@@ -483,6 +515,7 @@ public class PlayerController : MonoBehaviour
             animator.speed /= slowdownFactor;
         }
 
+
         rewindAudioSource.PlayOneShot(rewindAudioClip);
         postProcessVolume.profile = rewindProfile;
         postProcessVolume.enabled = true;
@@ -549,7 +582,12 @@ public class PlayerController : MonoBehaviour
         //sends a log message to terminal 
         Debug.Log("Player has been hit");
 
-        if(numberOfLives> 0)
+        if (isRewinding)
+        {
+            return;
+        }
+
+        if(numberOfLives > 0)
         {
             numberOfLives--;
             if(!GameObject.Find("Lava")){

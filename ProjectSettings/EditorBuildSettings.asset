@@ -20,4 +20,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Levels/Level2.unity
     guid: 90731622b48574cd5b86b061e67d2323
+  - enabled: 1
+    path: Assets/Scenes/Levels/Laser Room.unity
+    guid: c8bfadc6299034a658a26621cfc93c0b
   m_configObjects: {}

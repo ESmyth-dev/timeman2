@@ -10,7 +10,13 @@ public class UserIntManager : MonoBehaviour
     private Image slowAbilityBackground;
     private Image blinkBackground;
     private Image bombBackground;
+    private Image pauseMenuBackground;
+    private Button exitButton;
+    private Button backToGameButton;
     private GameObject abilityChoice;
+
+    private float gameTimeScale;
+    private bool menuActive;
 
 
     void Start()
@@ -29,11 +35,70 @@ public class UserIntManager : MonoBehaviour
         abilityChoice = GameObject.Find("SelectNewAbility");
         abilityChoice.SetActive(false);
 
+        // pause menu
+        menuActive = false;
+        pauseMenuBackground = GameObject.Find("PauseMenuBackground").GetComponent<Image>();
+        pauseMenuBackground.enabled = false;
+
+        exitButton = GameObject.Find("ExitGame").GetComponent<Button>();
+        backToGameButton = GameObject.Find("BackToGame").GetComponent<Button>();
+
+        exitButton.onClick.AddListener(exitClick);
+        backToGameButton.onClick.AddListener(backClick);
+
+        exitButton.gameObject.SetActive(false);
+        backToGameButton.gameObject.SetActive(false);
+
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+
+        if (Input.GetKeyDown(KeyCode.Escape) && !menuActive)
+        {
+            pauseMenuBackground.enabled = true;
+            gameTimeScale = Time.timeScale;
+            Time.timeScale = 0;
+            exitButton.gameObject.SetActive(true);
+            backToGameButton.gameObject.SetActive(true);
+            Cursor.lockState = CursorLockMode.None;
+            Cursor.visible = true;
+            menuActive = true;
+        }
+        else if (Input.GetKeyDown(KeyCode.Escape) && menuActive)
+        {
+            Debug.Log("escape");
+            pauseMenuBackground.enabled = false;
+            Time.timeScale = gameTimeScale;
+            exitButton.gameObject.SetActive(false);
+            backToGameButton.gameObject.SetActive(false);
+            Cursor.lockState = CursorLockMode.Locked;
+            Cursor.visible = false;
+            menuActive = false;
+        }
+    }
+
+    void exitClick()
+    {
+        Debug.Log("exit");
+        QuitGame();
+        Debug.Log("quit");
+    }
+    void backClick()
+    {
+        Debug.Log("back");
+        pauseMenuBackground.enabled = false;
+        Time.timeScale = gameTimeScale;
+        exitButton.gameObject.SetActive(false);
+        backToGameButton.gameObject.SetActive(false);
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
+        menuActive = false;
+    }
+
+    public void QuitGame()
+    {
+        Application.Quit();
     }
 }

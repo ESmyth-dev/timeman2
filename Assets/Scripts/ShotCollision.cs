@@ -42,7 +42,19 @@ public class ShotCollision : MonoBehaviour
 
         if(collision.gameObject.tag == "Player")
         {
-            collision.gameObject.GetComponent<PlayerController>().Hit();
+            PlayerController playerController = collision.gameObject.GetComponent<PlayerController>();
+
+            if (playerController.timeSlowed)
+            {
+                if (isEnemyBullet)
+                {
+                    collision.gameObject.GetComponent<PlayerController>().Hit();
+                }
+            }
+            else
+            {
+                collision.gameObject.GetComponent<PlayerController>().Hit();
+            }   
         }
         if((collision.gameObject.tag == "Enemy" || collision.gameObject.tag == "downEnemy") && !isEnemyBullet)
         {
