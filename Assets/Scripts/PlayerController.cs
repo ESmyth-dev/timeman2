@@ -56,6 +56,10 @@ public class PlayerController : MonoBehaviour
     private GameObject blinkAudioManager;
     private AudioSource blinkAudioSource;
 
+    private AudioClip rewindAudioClip;
+    private GameObject rewindAudioManager;
+    private AudioSource rewindAudioSource;
+
     private AudioClip pewAudioClip;
     private GameObject pewAudioManager;
     private AudioSource pewAudioSource;
@@ -85,7 +89,11 @@ public class PlayerController : MonoBehaviour
 
         blinkAudioClip = Resources.Load<AudioClip>("Audio/Blink");
         blinkAudioManager = audioManagers.transform.Find("BlinkAudioManager").gameObject;
-        blinkAudioSource = slowTimeAudioManager.GetComponent<AudioSource>();
+        blinkAudioSource = blinkAudioManager.GetComponent<AudioSource>();
+
+        rewindAudioClip = Resources.Load<AudioClip>("Audio/rewind");
+        rewindAudioManager = audioManagers.transform.Find("RewindAudioManager").gameObject;
+        rewindAudioSource = blinkAudioManager.GetComponent<AudioSource>();
 
         pewAudioClip = Resources.Load<AudioClip>("Audio/Pew");
         pewAudioManager = audioManagers.transform.Find("PewAudioManager").gameObject;
@@ -176,7 +184,7 @@ public class PlayerController : MonoBehaviour
             rb.AddForce(transform.up * jumpForce, ForceMode.Impulse);
             isGrounded = false;
             animator.SetBool("jumping", true);
-        }else{
+        } else {
             if(Input.GetKeyDown(KeyCode.Space) && !isGrounded)
             {
                 if(GameManager.instance.doubleJump){
@@ -430,6 +438,8 @@ public class PlayerController : MonoBehaviour
             Debug.LogError("No recorded positions to rewind to. How did you mess this up?");
             return;
         }
+
+        rewindAudioSource.PlayOneShot(rewindAudioClip);
 
         StopAllCoroutines(); // Stop any existing coroutines
         StartCoroutine(SmoothRewind());
