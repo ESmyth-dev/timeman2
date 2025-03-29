@@ -134,7 +134,6 @@ public class PlayerController : MonoBehaviour
     void Update()
     {
         pauseMenuActive = UIman.menuActive;
-        Debug.Log(pauseMenuActive);
 
         if (gameManager.slowDown)
         {

@@ -45,6 +45,7 @@ public class UserIntManager : MonoBehaviour
 
         exitButton.onClick.AddListener(exitClick);
         backToGameButton.onClick.AddListener(backClick);
+        Debug.Log("back listen");
 
         exitButton.gameObject.SetActive(false);
         backToGameButton.gameObject.SetActive(false);
@@ -68,7 +69,6 @@ public class UserIntManager : MonoBehaviour
         }
         else if (Input.GetKeyDown(KeyCode.Escape) && menuActive)
         {
-            Debug.Log("escape");
             pauseMenuBackground.enabled = false;
             Time.timeScale = gameTimeScale;
             exitButton.gameObject.SetActive(false);
@@ -81,9 +81,7 @@ public class UserIntManager : MonoBehaviour
 
     void exitClick()
     {
-        Debug.Log("exit");
         QuitGame();
-        Debug.Log("quit");
     }
     void backClick()
     {
@@ -100,5 +98,6 @@ public class UserIntManager : MonoBehaviour
     public void QuitGame()
     {
         Application.Quit();
+        Debug.Log("quit");
     }
 }
