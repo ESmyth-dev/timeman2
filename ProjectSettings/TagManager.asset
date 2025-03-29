@@ -18,6 +18,7 @@ TagManager:
   - StartLevel
   - skillName
   - skillDescription
+  - floor
   layers:
   - Default
   - TransparentFX

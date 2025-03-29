@@ -306,13 +306,15 @@ public class PlayerController : MonoBehaviour
         animator.SetBool("falling", true);
     }
 
-    void OnCollisionStay()
+    void OnCollisionStay(Collision collision)
     {
-        if (!animator.GetBool("jumping"))
-        {
-            isGrounded = true;
-            animator.SetBool("onGround", true);
+        if (collision.gameObject.CompareTag("floor")){
+            if (!animator.GetBool("jumping"))
+            {
+                isGrounded = true;
+                animator.SetBool("onGround", true);
 
+            }
         }
     }
 
