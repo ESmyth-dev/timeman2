@@ -35,6 +35,7 @@ public class PlayerController : MonoBehaviour
     private bool blinkReady;
     private bool babyBombReady = true;
     private float numberOfLives;
+    private bool jumpEnd = false;
 
     //List to hold the recorded positions
     public List<Vector3> recordedPositions = new List<Vector3>();
@@ -183,13 +184,15 @@ public class PlayerController : MonoBehaviour
         // Jumping
         if (Input.GetKeyDown(KeyCode.Space) && isGrounded)
         {
+            jumpEnd = false;
             rb.AddForce(transform.up * jumpForce, ForceMode.Impulse);
             isGrounded = false;
             animator.SetBool("jumping", true);
         } else {
             if(Input.GetKeyDown(KeyCode.Space) && !isGrounded)
             {
-                if(GameManager.instance.doubleJump){
+                if(GameManager.instance.doubleJump && jumpEnd == false){
+                    jumpEnd = true;
                     rb.velocity = new Vector3(rb.velocity.x, 0, rb.velocity.z);
                     rb.AddForce((transform.up * jumpForce), ForceMode.Impulse);
                     isGrounded = false;
@@ -385,7 +388,7 @@ public class PlayerController : MonoBehaviour
 
         if (blinkReady && blinkVector != Vector3.zero)
         {
-            if (Physics.Raycast(transform.position + transform.up * 0.5f, blinkVector, out RaycastHit hit, blinkDistance, LayerMask.GetMask("Level")))
+            if (Physics.Raycast(transform.position + transform.up * 0.5f, blinkVector, out RaycastHit hit, blinkDistance, LayerMask.GetMask(new string[] {"LevelLineOfSight", "Level"})))
             {
                 Debug.Log("Obstacle detected! shorter teleport");
                 transform.position += blinkVector * (hit.distance - 1.5f);
@@ -445,8 +448,8 @@ public class PlayerController : MonoBehaviour
 
         rewindAudioSource.PlayOneShot(rewindAudioClip);
         SetEnemyBehaviour(false);
-
-        StopAllCoroutines(); // Stop any existing coroutines
+ // Stop any existing coroutines
+        StopCoroutine(RecordPositions()); // Stop any existing coroutines
         StartCoroutine(SmoothRewind());
     }
 
@@ -484,6 +487,7 @@ public class PlayerController : MonoBehaviour
 
         SetEnemyBehaviour(true);
         Debug.Log("Rewind complete.");
+        StartCoroutine(RecordPositions()); // Restart recording positions
     }
 
 
