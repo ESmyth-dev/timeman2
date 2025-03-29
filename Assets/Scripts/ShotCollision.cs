@@ -44,7 +44,7 @@ public class ShotCollision : MonoBehaviour
         {
             collision.gameObject.GetComponent<PlayerController>().Hit();
         }
-        if(collision.gameObject.tag == "Enemy" && !isEnemyBullet)
+        if(collision.gameObject.tag == "Enemy" || collision.gameObject.tag == "downEnemy" && !isEnemyBullet)
         {
             collision.gameObject.GetComponent<EnemyBehaviour>().Hit();
         }

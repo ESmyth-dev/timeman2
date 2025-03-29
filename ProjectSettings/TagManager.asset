@@ -19,6 +19,8 @@ TagManager:
   - skillName
   - skillDescription
   - floor
+  - skeleton
+  - babySkeleton
   layers:
   - Default
   - TransparentFX

@@ -179,6 +179,17 @@ public class EnemyBehaviour : MonoBehaviour
         if (skeletonPrefab)
         {
             GameObject skeleton = Instantiate(skeletonPrefab, transform.position + Vector3.up * 0.5f, transform.rotation);
+
+            if (gameObject.CompareTag("downEnemy"))
+            {
+                skeleton.transform.localScale = skeleton.transform.localScale * 0.3f;
+                skeleton.tag = "babySkeleton";
+            }
+            else if (gameObject.CompareTag("Enemy"))
+            {
+                skeleton.tag = "skeleton";
+            }
+
             skeleton.SetActive(true);
         }
         Destroy(gameObject);
