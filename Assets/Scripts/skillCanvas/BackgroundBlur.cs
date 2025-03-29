@@ -10,7 +10,7 @@ public class BackgroundBlur : MonoBehaviour
     {
         // Capture the screen and apply blur
         var image = GetComponent<Image>();
-        image.material = new Material(Shader.Find("UI/Blur"));
+        //image.material = new Material(Shader.Find("UI/Blur"));
         image.material.SetFloat("_Size", blurAmount);
         image.color = new Color(1, 1, 1, 0.7f); // Translucent
     }
