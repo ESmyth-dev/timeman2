@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.Rendering.PostProcessing;
 
 public class EnemyBehaviour : MonoBehaviour
 {
@@ -10,8 +11,12 @@ public class EnemyBehaviour : MonoBehaviour
     public GameObject skeletonPrefab;
     public GameObject gunObject;
     private Transform player;
+    public float slowDown;
     private NavMeshAgent agent;
     private Animator animator;
+    public int slowdownDurationSeconds = 5;
+    public int slowdownCooldownSeconds = 3;
+    public bool timeSlowed = false;
     public Transform gun;
     public GameObject shotPrefab;
     private float shootTimer = 0f;
@@ -37,6 +42,19 @@ public class EnemyBehaviour : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        Debug.Log(FindAnyObjectByType<PlayerController>().timeSlowed);
+        Debug.Log(timeSlowed);
+        if (FindAnyObjectByType<PlayerController>().timeSlowed && !timeSlowed)
+        {
+            GetComponent<NavMeshAgent>().speed = GetComponent<NavMeshAgent>().speed * slowDown;
+            GetComponent<NavMeshAgent>().angularSpeed = GetComponent<NavMeshAgent>().angularSpeed * slowDown;
+            GetComponent<Animator>().speed = GetComponent<Animator>().speed * slowDown;
+            shootInterval = shootInterval / slowDown;
+            timeSlowed = true;
+            Debug.Log("Brother I am slow as hell");
+            StartCoroutine(SlowTime());
+        }
+
         if (!hasSeenPlayer)
         {
             hasSeenPlayer = HasLineOfSightToPlayer();
@@ -212,5 +230,29 @@ public class EnemyBehaviour : MonoBehaviour
             }
         }
         return false;
+    }
+
+    IEnumerator SlowTime()
+    {
+        //yield on a new YieldInstruction that waits for 5 seconds.
+        yield return new WaitForSeconds(slowdownDurationSeconds);
+
+        // Unslow
+        GetComponent<NavMeshAgent>().speed = GetComponent<NavMeshAgent>().speed / slowDown;
+        GetComponent<NavMeshAgent>().angularSpeed = GetComponent<NavMeshAgent>().angularSpeed / slowDown;
+        GetComponent<Animator>().speed = GetComponent<Animator>().speed / slowDown;
+        shootInterval = shootInterval * slowDown;
+        //postProcessVolume.enabled = false;
+        //Time.timeScale *= slowdownFactor;
+        //Time.fixedDeltaTime *= slowdownFactor;
+        //speed /= slowdownFactor;
+        //animator.speed /= slowdownFactor;
+
+        // wait another 5 seconds to use the slow time ability again
+        yield return new WaitForSeconds(slowdownCooldownSeconds);
+        timeSlowed = false;
+        //Image slowAbilityBackground = GameObject.Find("SlowInactive").GetComponent<Image>();
+        //slowAbilityBackground.enabled = false;
+
     }
 }

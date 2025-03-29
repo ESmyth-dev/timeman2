@@ -10,7 +10,7 @@ public class GameManager : MonoBehaviour
     public bool bulletRicochet = false;
     public bool bulletPierce = false;
     public bool timeGrenade = false;
-    public bool timePulse = false;
+    public bool timePulse = false;  
     public bool doubleJump = false;
     public bool blink = true;
     public bool slowTime = true;

@@ -50,7 +50,7 @@ public class PlayerController : MonoBehaviour
     public List<Quaternion> recordedRotations = new List<Quaternion>();
 
     // Cooldowns
-    private float slowdownDurationSeconds = 1f;
+    private float slowdownDurationSeconds = 5f;
     private float slowdownCooldownSeconds = 10f;
     private float blinkCooldownSeconds = 0.5f;
     private float babyBombCooldownSeconds = 5f;
@@ -87,15 +87,22 @@ public class PlayerController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
-        slider = GameObject.Find("Slider").GetComponent<Slider>();
+        if (GameManager.instance != null)
+        {
+            gameManager = GameManager.instance;
+        }
+        else
+        {
+            Debug.Log("ERROR: NO GAMEMANGER. Making new one temporarily");
+            gameManager = new GameManager();
+        }
+
+
+            slider = GameObject.Find("Slider").GetComponent<Slider>();
 
         pauseMenuActive = false;
         UIman = GameObject.Find("GuiCanvas").GetComponent<UserIntManager>();
-        //backToGameButton = GameObject.Find("BackToGame").GetComponent<Button>();
-        //backToGameButton.onClick.AddListener(backClick);
 
-        gameManager = FindAnyObjectByType<GameManager>();
         numberOfLives = 3;
         overHeated = false;
         blinkReady = true;
@@ -213,17 +220,6 @@ public class PlayerController : MonoBehaviour
         {
             animator.SetBool("movingBackwards", false);
         }
-
-        /* pause menu
-        if (Input.GetKeyDown(KeyCode.Escape) && !pauseMenuActive)
-        {
-            pauseMenuActive = true;
-        }
-        else if (Input.GetKeyDown(KeyCode.Escape) && pauseMenuActive)
-        {
-            pauseMenuActive = false;
-        }*/
-
         if (moveDirection != Vector3.zero)
         {
             transform.Translate(moveDirection * Time.deltaTime * speed, Space.World);
@@ -360,14 +356,14 @@ public class PlayerController : MonoBehaviour
 
         // Unslow
         postProcessVolume.enabled = false;
-        Time.timeScale *= slowdownFactor;
+        timeSlowed = false;
+        //Time.timeScale *= slowdownFactor;
         //Time.fixedDeltaTime *= slowdownFactor;
-        speed /= slowdownFactor;
-        animator.speed /= slowdownFactor;
-        
+        //speed /= slowdownFactor;
+        //animator.speed /= slowdownFactor;
+
         // wait another 5 seconds to use the slow time ability again
         yield return new WaitForSeconds(slowdownCooldownSeconds);
-        timeSlowed = false;
         Image slowAbilityBackground = GameObject.Find("SlowInactive").GetComponent<Image>();
         slowAbilityBackground.enabled = false;
 
@@ -380,10 +376,10 @@ public class PlayerController : MonoBehaviour
         {
             postProcessVolume.profile = timeSlowProfile;
             postProcessVolume.enabled = true;
-            Time.timeScale /= slowdownFactor;
+            //Time.timeScale /= slowdownFactor;
             //Time.fixedDeltaTime /= slowdownFactor;
-            speed *= slowdownFactor;
-            animator.speed *= slowdownFactor;
+            //speed *= slowdownFactor;
+            //animator.speed *= slowdownFactor;
             timeSlowed = true;
 
             Image slowAbilityBackground = GameObject.Find("SlowInactive").GetComponent<Image>();
@@ -497,10 +493,10 @@ public class PlayerController : MonoBehaviour
             // Unslow
             timeSlowed = false;
             postProcessVolume.enabled = false;
-            Time.timeScale *= slowdownFactor;
+            //Time.timeScale *= slowdownFactor;
             //Time.fixedDeltaTime *= slowdownFactor;
-            speed /= slowdownFactor;
-            animator.speed /= slowdownFactor;
+            //speed /= slowdownFactor;
+            //animator.speed /= slowdownFactor;
         }
 
 

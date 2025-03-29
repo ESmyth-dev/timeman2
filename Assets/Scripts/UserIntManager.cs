@@ -14,6 +14,9 @@ public class UserIntManager : MonoBehaviour
     private Button exitButton;
     private Button backToGameButton;
     private GameObject abilityChoice;
+    private GameObject MainMenu;
+    private Button playButton;
+    private GameObject selectUpgrade;
 
     private float gameTimeScale;
     public bool menuActive;
@@ -21,6 +24,14 @@ public class UserIntManager : MonoBehaviour
 
     void Start()
     {
+        // main menu
+        MainMenu = GameObject.Find("MainMenu");
+        playButton = GameObject.Find("PlayButton").GetComponent<Button>();
+        playButton.onClick.AddListener(play);
+        Time.timeScale = 0;
+        Cursor.visible = true;
+        //MainMenu.SetActive(false);
+
         // ability bar
         slowAbilityBackground = GameObject.Find("SlowInactive").GetComponent<Image>();
         slowAbilityBackground.enabled = false;
@@ -45,9 +56,12 @@ public class UserIntManager : MonoBehaviour
 
         exitButton.onClick.AddListener(exitClick);
         backToGameButton.onClick.AddListener(backClick);
+        Debug.Log("back listen");
 
         exitButton.gameObject.SetActive(false);
         backToGameButton.gameObject.SetActive(false);
+
+
 
     }
 
@@ -68,7 +82,6 @@ public class UserIntManager : MonoBehaviour
         }
         else if (Input.GetKeyDown(KeyCode.Escape) && menuActive)
         {
-            Debug.Log("escape");
             pauseMenuBackground.enabled = false;
             Time.timeScale = gameTimeScale;
             exitButton.gameObject.SetActive(false);
@@ -81,9 +94,7 @@ public class UserIntManager : MonoBehaviour
 
     void exitClick()
     {
-        Debug.Log("exit");
         QuitGame();
-        Debug.Log("quit");
     }
     void backClick()
     {
@@ -100,5 +111,14 @@ public class UserIntManager : MonoBehaviour
     public void QuitGame()
     {
         Application.Quit();
+        Debug.Log("quit");
+    }
+
+    public void play()
+    {
+        Debug.Log("click play");
+        MainMenu.SetActive(false);
+        Time.timeScale = 1;
+        Cursor.visible = false;
     }
 }
