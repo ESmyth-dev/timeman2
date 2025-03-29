@@ -121,7 +121,17 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        slider.value -= cooldownSpeed * Time.deltaTime;
+        if (gameManager.slowDown)
+        {
+            slider.value -= cooldownSpeed * Time.deltaTime * 1.2f;
+
+        }
+        else
+        {
+            slider.value -= cooldownSpeed * Time.deltaTime;
+
+        }
+
         if (slider.value <= 0.1f)
         {
             overHeated = false;
