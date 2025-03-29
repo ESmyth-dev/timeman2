@@ -13,7 +13,7 @@ public class PlayerController : MonoBehaviour
     public string enemyPath = "CopyPasteRoom/Random Room/Preset1/Enemies";
 
     public Animator animator;
-    public Slider slider;
+    private Slider slider;
     public LineRenderer beamLine;
     public float beamRange = 100f;
     public float cooldownSpeed = 0.2f;
@@ -39,7 +39,7 @@ public class PlayerController : MonoBehaviour
     private float numberOfLives;
     private bool jumpEnd = false;
     private bool isRewinding = false;
-    public GameManager gameManager;
+    private GameManager gameManager;
 
     //List to hold the recorded positions
     public List<Vector3> recordedPositions = new List<Vector3>();
@@ -86,6 +86,9 @@ public class PlayerController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
+        slider = GameObject.Find("Slider").GetComponent<Slider>();
+
         pauseMenuActive = false;
         pauseMenuBackground = GameObject.Find("PauseMenuBackground").GetComponent<Image>();
         exitButton = GameObject.Find("ExitGame").GetComponent<Button>();
