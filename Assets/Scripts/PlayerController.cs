@@ -129,55 +129,55 @@ public class PlayerController : MonoBehaviour
         forward = Vector3.ProjectOnPlane(forward, Vector3.up).normalized;
         right = Vector3.ProjectOnPlane(right, Vector3.up).normalized;
 
-        if (Input.GetKey(KeyCode.W))
+        if (Input.GetKey(KeyCode.W) && !isRewinding)
         {
             animator.SetBool("movingForwards", true);
             moveDirection += forward;
         }
 
-        if (Input.GetKeyUp(KeyCode.W))
+        if (Input.GetKeyUp(KeyCode.W) && !isRewinding)
         {
             animator.SetBool("movingForwards", false);
         }
 
-        if (Input.GetKey(KeyCode.D))
+        if (Input.GetKey(KeyCode.D) && !isRewinding)
         {
             animator.SetBool("movingRight", true);
             moveDirection += right;
         }
 
-        if (Input.GetKeyUp(KeyCode.D))
+        if (Input.GetKeyUp(KeyCode.D) && !isRewinding)
         {
             animator.SetBool("movingRight", false);
         }
 
-        if (Input.GetKey(KeyCode.A))
+        if (Input.GetKey(KeyCode.A) && !isRewinding)
         {
             animator.SetBool("movingLeft", true);
             moveDirection -= right;
         }
 
-        if (Input.GetKeyUp(KeyCode.A))
+        if (Input.GetKeyUp(KeyCode.A) && !isRewinding)
         {
             animator.SetBool("movingLeft", false);
         }
 
-        if (Input.GetKeyDown(KeyCode.F))
+        if (Input.GetKeyDown(KeyCode.F) && !isRewinding)
         {
             BlinkAbility();
         }
-        if (Input.GetKeyDown(KeyCode.C))
+        if (Input.GetKeyDown(KeyCode.C) && !isRewinding)
         {
             SlowTimeAbility();
         }
 
-        if (Input.GetKey(KeyCode.S))
+        if (Input.GetKey(KeyCode.S) && !isRewinding)
         {
             animator.SetBool("movingBackwards", true);
             moveDirection -= forward;
         }
 
-        if (Input.GetKeyUp(KeyCode.S))
+        if (Input.GetKeyUp(KeyCode.S) && !isRewinding)
         {
             animator.SetBool("movingBackwards", false);
         }
@@ -188,7 +188,7 @@ public class PlayerController : MonoBehaviour
         }
 
         // Jumping
-        if (Input.GetKeyDown(KeyCode.Space) && isGrounded)
+        if (Input.GetKeyDown(KeyCode.Space) && isGrounded && !isRewinding)
         {
             jumpEnd = false;
             rb.AddForce(transform.up * jumpForce, ForceMode.Impulse);
@@ -208,7 +208,7 @@ public class PlayerController : MonoBehaviour
             }
         }
 
-        if (Input.GetMouseButtonDown(0) && !beamEnabled)
+        if (Input.GetMouseButtonDown(0) && !beamEnabled && !isRewinding)
         {
             if (!overHeated)
             {
@@ -238,7 +238,7 @@ public class PlayerController : MonoBehaviour
             }
         }
 
-        if (Input.GetMouseButton(0) && beamEnabled)
+        if (Input.GetMouseButton(0) && beamEnabled && !isRewinding)
         {
             if (!overHeated)
             {
@@ -265,14 +265,8 @@ public class PlayerController : MonoBehaviour
             }
         }
 
-        if (Input.GetMouseButtonUp(0) && beamEnabled)
-        {
-            beamLine.enabled = false;
-            beamLight.enabled = false;
-        }
 
-
-        if (Input.GetMouseButtonDown(1) && babyBombReady)
+        if (Input.GetMouseButtonDown(1) && babyBombReady && !isRewinding)
         {
             babyBombReady = false;
             Image bombBackground = GameObject.Find("BombInactive").GetComponent<Image>();
@@ -505,7 +499,7 @@ public class PlayerController : MonoBehaviour
 
     private IEnumerator EnableEnemyBehaviourAfterDelay()
     {
-        yield return new WaitForSeconds(1.5f);
+        yield return new WaitForSeconds(1f);
         SetEnemyBehaviour(true);
     }
 
