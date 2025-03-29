@@ -21,7 +21,6 @@ public class EnemyBehaviour : MonoBehaviour
     public enum EnemyState { Idle, Alert }
     public EnemyState state = EnemyState.Idle;
 
-
     public bool BehaviourEnabled = true;
 
     // Start is called before the first frame update
