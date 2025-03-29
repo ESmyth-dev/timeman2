@@ -84,15 +84,24 @@ public class PlayerController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
-        slider = GameObject.Find("Slider").GetComponent<Slider>();
+        if (GameManager.instance != null)
+        {
+            gameManager = GameManager.instance;
+        }
+        else
+        {
+            Debug.Log("ERROR: NO GAMEMANGER. Making new one temporarily");
+            gameManager = new GameManager();
+        }
+
+
+            slider = GameObject.Find("Slider").GetComponent<Slider>();
 
         pauseMenuActive = false;
         UIman = GameObject.Find("GuiCanvas").GetComponent<UserIntManager>();
         //backToGameButton = GameObject.Find("BackToGame").GetComponent<Button>();
         //backToGameButton.onClick.AddListener(backClick);
 
-        gameManager = FindAnyObjectByType<GameManager>();
         numberOfLives = 3;
         overHeated = false;
         blinkReady = true;

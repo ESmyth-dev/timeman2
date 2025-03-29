@@ -14,6 +14,8 @@ public class UserIntManager : MonoBehaviour
     private Button exitButton;
     private Button backToGameButton;
     private GameObject abilityChoice;
+    private GameObject MainMenu;
+    private Button playButton;
 
     private float gameTimeScale;
     public bool menuActive;
@@ -21,6 +23,10 @@ public class UserIntManager : MonoBehaviour
 
     void Start()
     {
+        MainMenu = GameObject.Find("MainMenu");
+        playButton = GameObject.Find("PlayButton").GetComponent<Button>();
+        playButton.onClick.AddListener(play);
+
         // ability bar
         slowAbilityBackground = GameObject.Find("SlowInactive").GetComponent<Image>();
         slowAbilityBackground.enabled = false;
@@ -49,6 +55,8 @@ public class UserIntManager : MonoBehaviour
 
         exitButton.gameObject.SetActive(false);
         backToGameButton.gameObject.SetActive(false);
+
+
 
     }
 
@@ -99,5 +107,10 @@ public class UserIntManager : MonoBehaviour
     {
         Application.Quit();
         Debug.Log("quit");
+    }
+
+    public void play()
+    {
+        MainMenu.SetActive(false);
     }
 }
