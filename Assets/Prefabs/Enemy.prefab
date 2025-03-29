@@ -299,6 +299,8 @@ MonoBehaviour:
   alive: {fileID: 3076717987791807372}
   skeletonPrefab: {fileID: 5995202781283623485, guid: 5375780e0b1b5db41a910a47ad43010c, type: 3}
   gunObject: {fileID: 8183421381253828233}
+  slowDown: 0.1
+  timeSlowed: 0
   gun: {fileID: 8852540643076527155}
   shotPrefab: {fileID: 1220388901695869229, guid: 8b9d98267b265e64db13b54dadece375, type: 3}
   state: 0
