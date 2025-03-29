@@ -4,6 +4,7 @@ using Unity.VisualScripting;
 using UnityEditor;
 //5using UnityEditor.PackageManager;
 using UnityEngine;
+using UnityEngine.AI;
 using UnityEngine.Rendering.PostProcessing;
 using UnityEngine.UI;
 
@@ -547,6 +548,13 @@ public class PlayerController : MonoBehaviour
             if (behaviour != null)
             {
                 behaviour.BehaviourEnabled = value;
+            }
+
+            NavMeshAgent agent = enemy.GetComponent<NavMeshAgent>();
+            if (agent != null && value == false)
+            {
+                agent.isStopped = true;
+                agent.ResetPath();
             }
         }
     }
