@@ -137,7 +137,6 @@ public class PlayerController : MonoBehaviour
         rewindProfile = Resources.Load<PostProcessProfile>("RewindProfile");
 
         //Start recording positions
-        Debug.Log("Recording positions");
         StartCoroutine(RecordPositions());
         StartCoroutine(RecordGroundPosition());
     }

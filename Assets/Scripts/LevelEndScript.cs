@@ -6,7 +6,27 @@ using UnityEngine.SceneManagement;
 public class CloseDoorScript : MonoBehaviour
 {
 
-    private string[] levels = { "Level1", "Level2", "LavaLevel", "Laser Room", "Outside"};
+    //private string[] levels = { "Level1", "Level2", "LavaLevel", "Laser Room", "Outside"};
+    private string[] levels;
+
+    void Awake()
+    {
+        levels = GetLevelsInBuild();
+        Debug.Log("Levels in build: " + string.Join(", ", levels));
+    }
+    
+    private string[] GetLevelsInBuild()
+    {
+        int sceneCount = UnityEngine.SceneManagement.SceneManager.sceneCountInBuildSettings;
+        string[] scenes = new string[sceneCount];
+
+        Debug.Log("Scene count in build settings: " + sceneCount);
+        for (int i = 0; i < sceneCount; i++)
+        {
+            scenes[i] = System.IO.Path.GetFileNameWithoutExtension(UnityEngine.SceneManagement.SceneUtility.GetScenePathByBuildIndex(i));
+        }
+        return scenes;
+    }
 
     [SerializeField] private float sceneLoadDelay = 1.0f;
 
