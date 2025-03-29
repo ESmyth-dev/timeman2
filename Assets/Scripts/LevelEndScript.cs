@@ -2,12 +2,32 @@ using System.Collections;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using System.Linq;
 
 
 public class CloseDoorScript : MonoBehaviour
 {
 
-    private string[] levels = { "Level1", "Level2", "LavaLevel", "Laser Room"};
+    //private string[] levels = { "Level1", "Level2", "LavaLevel", "Laser Room", "Outside"};
+    private string[] levels;
+
+    void Awake()
+    {
+        levels = GetLevelsInBuild();
+    }
+    
+    private string[] GetLevelsInBuild()
+    {
+        int sceneCount = UnityEngine.SceneManagement.SceneManager.sceneCountInBuildSettings;
+        string[] scenes = new string[sceneCount];
+
+        Debug.Log("Scene count in build settings: " + sceneCount);
+        for (int i = 0; i < sceneCount; i++)
+        {
+            scenes[i] = System.IO.Path.GetFileNameWithoutExtension(UnityEngine.SceneManagement.SceneUtility.GetScenePathByBuildIndex(i));
+        }
+        return scenes;
+    }
 
     [SerializeField] private float sceneLoadDelay = 1.0f;
     GameObject skillsCanvas;
@@ -75,7 +95,17 @@ public class CloseDoorScript : MonoBehaviour
 
     private void LoadNextLevel()
     {
+        // deenable currennt scene  folder 
+        string currentSceneName = SceneManager.GetActiveScene().name;
+        Debug.Log("Current scene: " + currentSceneName);
+
+
+
+        // Load a random scene from the levels array
         int nextSceneIndex = Random.Range(0, levels.Length);
+        Debug.Log("Loading next scene: " + levels[nextSceneIndex]);
         SceneManager.LoadScene(levels[nextSceneIndex]);
+
+
     }
 }

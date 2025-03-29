@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class UserIntManager : MonoBehaviour
 {
@@ -14,6 +15,10 @@ public class UserIntManager : MonoBehaviour
     private Button exitButton;
     private Button backToGameButton;
     private GameObject abilityChoice;
+    private GameObject MainMenu;
+    private Button playButton;
+    private GameObject selectUpgrade;
+    private GameObject p;
 
     private float gameTimeScale;
     public bool menuActive;
@@ -21,6 +26,23 @@ public class UserIntManager : MonoBehaviour
 
     void Start()
     {
+        // main menu
+        MainMenu = GameObject.Find("MainMenu");
+        playButton = GameObject.Find("PlayButton").GetComponent<Button>();
+        playButton.onClick.AddListener(play);
+
+        if (SceneManager.GetActiveScene().name != "HomePage")
+        {
+            MainMenu.SetActive(false);
+        }    
+        else
+        {
+            Time.timeScale = 0;
+            Cursor.visible = true;
+        }
+
+        //MainMenu.SetActive(false);
+
         // ability bar
         slowAbilityBackground = GameObject.Find("SlowInactive").GetComponent<Image>();
         slowAbilityBackground.enabled = false;
@@ -50,6 +72,11 @@ public class UserIntManager : MonoBehaviour
         exitButton.gameObject.SetActive(false);
         backToGameButton.gameObject.SetActive(false);
 
+        p = GameObject.Find("PauseMenu");
+        p.SetActive(false);
+
+
+
     }
 
     // Update is called once per frame
@@ -61,8 +88,8 @@ public class UserIntManager : MonoBehaviour
             pauseMenuBackground.enabled = true;
             gameTimeScale = Time.timeScale;
             Time.timeScale = 0;
-            exitButton.gameObject.SetActive(true);
-            backToGameButton.gameObject.SetActive(true);
+            //exitButton.gameObject.SetActive(true);
+            //backToGameButton.gameObject.SetActive(true);
             Cursor.lockState = CursorLockMode.None;
             Cursor.visible = true;
             menuActive = true;
@@ -71,8 +98,8 @@ public class UserIntManager : MonoBehaviour
         {
             pauseMenuBackground.enabled = false;
             Time.timeScale = gameTimeScale;
-            exitButton.gameObject.SetActive(false);
-            backToGameButton.gameObject.SetActive(false);
+            //exitButton.gameObject.SetActive(false);
+            //backToGameButton.gameObject.SetActive(false);
             Cursor.lockState = CursorLockMode.Locked;
             Cursor.visible = false;
             menuActive = false;
@@ -99,5 +126,14 @@ public class UserIntManager : MonoBehaviour
     {
         Application.Quit();
         Debug.Log("quit");
+    }
+
+    public void play()
+    {
+        Debug.Log("click play");
+        MainMenu.SetActive(false);
+        Time.timeScale = 1;
+        Cursor.visible = false;
+        SceneManager.LoadScene("Level1");
     }
 }
