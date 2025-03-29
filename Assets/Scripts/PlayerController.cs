@@ -85,13 +85,11 @@ public class PlayerController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-<<<<<<< HEAD
+
         pauseMenuActive = false;
         pauseMenuBackground = GameObject.Find("PauseMenuBackground").GetComponent<Image>();
 
-=======
         gameManager = FindAnyObjectByType<GameManager>();
->>>>>>> e2a76e4a12ec5dab45e4036e1ff198d2f0eb1995
         numberOfLives = 3;
         overHeated = false;
         blinkReady = true;
@@ -176,19 +174,11 @@ public class PlayerController : MonoBehaviour
             animator.SetBool("movingLeft", false);
         }
 
-<<<<<<< HEAD
-        if (Input.GetKeyDown(KeyCode.F) && !isRewinding && !pauseMenuActive)
+        if (Input.GetKeyDown(KeyCode.F) && !isRewinding && gameManager.blink && !pauseMenuActive)
         {
             BlinkAbility();
         }
-        if (Input.GetKeyDown(KeyCode.C) && !isRewinding && !pauseMenuActive)
-=======
-        if (Input.GetKeyDown(KeyCode.F) && !isRewinding && gameManager.blink)
-        {
-            BlinkAbility();
-        }
-        if (Input.GetKeyDown(KeyCode.C) && !isRewinding && gameManager.slowTime)
->>>>>>> e2a76e4a12ec5dab45e4036e1ff198d2f0eb1995
+        if (Input.GetKeyDown(KeyCode.C) && !isRewinding && gameManager.slowTime && !pauseMenuActive)
         {
             SlowTimeAbility();
         }
@@ -302,12 +292,7 @@ public class PlayerController : MonoBehaviour
             }
         }
 
-
-<<<<<<< HEAD
-        if (Input.GetMouseButtonDown(1) && babyBombReady && !isRewinding && !pauseMenuActive)
-=======
-        if (Input.GetMouseButtonDown(1) && babyBombReady && !isRewinding && gameManager.timeGrenade)
->>>>>>> e2a76e4a12ec5dab45e4036e1ff198d2f0eb1995
+        if (Input.GetMouseButtonDown(1) && babyBombReady && !isRewinding && gameManager.timeGrenade && !pauseMenuActive)
         {
             babyBombReady = false;
             Image bombBackground = GameObject.Find("BombInactive").GetComponent<Image>();

@@ -34,6 +34,9 @@ public class UserIntManager : MonoBehaviour
         pauseMenu = GameObject.Find("PauseMenuBackground").GetComponent<Image>();
         pauseMenu.enabled = false;
 
+        
+
+
     }
 
     // Update is called once per frame
