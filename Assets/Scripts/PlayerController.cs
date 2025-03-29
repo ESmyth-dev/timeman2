@@ -69,6 +69,8 @@ public class PlayerController : MonoBehaviour
 
     private GameObject PostProcessVolumeObject;
     private PostProcessVolume postProcessVolume;
+    private PostProcessProfile timeSlowProfile;
+    private PostProcessProfile rewindProfile;
 
 
     // Start is called before the first frame update
@@ -96,7 +98,7 @@ public class PlayerController : MonoBehaviour
 
         rewindAudioClip = Resources.Load<AudioClip>("Audio/rewind");
         rewindAudioManager = audioManagers.transform.Find("RewindAudioManager").gameObject;
-        rewindAudioSource = blinkAudioManager.GetComponent<AudioSource>();
+        rewindAudioSource = rewindAudioManager.GetComponent<AudioSource>();
 
         pewAudioClip = Resources.Load<AudioClip>("Audio/Pew");
         pewAudioManager = audioManagers.transform.Find("PewAudioManager").gameObject;
@@ -104,9 +106,11 @@ public class PlayerController : MonoBehaviour
 
         PostProcessVolumeObject = GameObject.Find("PostProcessVolume");
         postProcessVolume = PostProcessVolumeObject.GetComponent<PostProcessVolume>();
+        timeSlowProfile = Resources.Load<PostProcessProfile>("TimeSlowTint");
+        rewindProfile = Resources.Load<PostProcessProfile>("RewindProfile");
 
-        //Start recording positions
-        StartCoroutine(RecordPositions());
+    //Start recording positions
+    StartCoroutine(RecordPositions());
     }
 
     // Update is called once per frame
@@ -336,6 +340,7 @@ public class PlayerController : MonoBehaviour
     {
         if (!timeSlowed)
         {
+            postProcessVolume.profile = timeSlowProfile;
             postProcessVolume.enabled = true;
             Time.timeScale /= slowdownFactor;
             Time.fixedDeltaTime /= slowdownFactor;
@@ -447,8 +452,10 @@ public class PlayerController : MonoBehaviour
         }
 
         rewindAudioSource.PlayOneShot(rewindAudioClip);
+        postProcessVolume.profile = rewindProfile;
+        postProcessVolume.enabled = true;
         SetEnemyBehaviour(false);
- // Stop any existing coroutines
+
         StopCoroutine(RecordPositions()); // Stop any existing coroutines
         StartCoroutine(SmoothRewind());
     }
@@ -485,6 +492,7 @@ public class PlayerController : MonoBehaviour
         recordedPositions.Clear();
         recordedRotations.Clear();
 
+        postProcessVolume.enabled = false;
         SetEnemyBehaviour(true);
         Debug.Log("Rewind complete.");
         StartCoroutine(RecordPositions()); // Restart recording positions
