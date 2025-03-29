@@ -32,7 +32,7 @@ public class PlayerController : MonoBehaviour
     public Transform gun;
     private bool isGrounded;
     private Rigidbody rb;
-    private bool timeSlowed;
+    public bool timeSlowed;
     private Coroutine slowTimeCoroutine;
     private bool blinkReady;
     private bool babyBombReady = true;
@@ -76,10 +76,18 @@ public class PlayerController : MonoBehaviour
     private PostProcessProfile timeSlowProfile;
     private PostProcessProfile rewindProfile;
 
+    // pause menu
+    private bool pauseMenuActive;
+    private float gameTimeScale;
+    private Image pauseMenuBackground;
+
 
     // Start is called before the first frame update
     void Start()
     {
+        pauseMenuActive = false;
+        pauseMenuBackground = GameObject.Find("PauseMenuBackground").GetComponent<Image>();
+
         gameManager = FindAnyObjectByType<GameManager>();
         numberOfLives = 3;
         overHeated = false;
@@ -175,11 +183,11 @@ public class PlayerController : MonoBehaviour
             animator.SetBool("movingLeft", false);
         }
 
-        if (Input.GetKeyDown(KeyCode.F) && !isRewinding && gameManager.blink)
+        if (Input.GetKeyDown(KeyCode.F) && !isRewinding && gameManager.blink && !pauseMenuActive)
         {
             BlinkAbility();
         }
-        if (Input.GetKeyDown(KeyCode.C) && !isRewinding && gameManager.slowTime)
+        if (Input.GetKeyDown(KeyCode.C) && !isRewinding && gameManager.slowTime && !pauseMenuActive)
         {
             SlowTimeAbility();
         }
@@ -195,13 +203,28 @@ public class PlayerController : MonoBehaviour
             animator.SetBool("movingBackwards", false);
         }
 
+        // pause menu
+        if (Input.GetKeyDown(KeyCode.Escape) && !pauseMenuActive)
+        {
+            pauseMenuBackground.enabled = true;
+            pauseMenuActive = true;
+            gameTimeScale = Time.timeScale;
+            Time.timeScale = 0;
+        }
+        else if (Input.GetKeyDown(KeyCode.Escape) && pauseMenuActive)
+        {
+            pauseMenuBackground.enabled = false;
+            pauseMenuActive = false;
+            Time.timeScale = gameTimeScale;
+        }
+
         if (moveDirection != Vector3.zero)
         {
             transform.Translate(moveDirection * Time.deltaTime * speed, Space.World);
         }
 
         // Jumping
-        if (Input.GetKeyDown(KeyCode.Space) && isGrounded && !isRewinding)
+        if (Input.GetKeyDown(KeyCode.Space) && isGrounded && !isRewinding && !pauseMenuActive)
         {
             jumpEnd = false;
             rb.AddForce(transform.up * jumpForce, ForceMode.Impulse);
@@ -221,7 +244,7 @@ public class PlayerController : MonoBehaviour
             }
         }
 
-        if (Input.GetMouseButtonDown(0) && !beamEnabled && !isRewinding)
+        if (Input.GetMouseButtonDown(0) && !beamEnabled && !isRewinding && !pauseMenuActive)
         {
             if (!overHeated)
             {
@@ -251,7 +274,7 @@ public class PlayerController : MonoBehaviour
             }
         }
 
-        if (Input.GetMouseButton(0) && beamEnabled && !isRewinding)
+        if (Input.GetMouseButton(0) && beamEnabled && !isRewinding && !pauseMenuActive)
         {
             if (!overHeated)
             {
@@ -277,9 +300,7 @@ public class PlayerController : MonoBehaviour
                 beamLight.enabled = true;
             }
         }
-
-
-        if (Input.GetMouseButtonDown(1) && babyBombReady && !isRewinding && gameManager.timeGrenade)
+        if (Input.GetMouseButtonDown(1) && babyBombReady && !isRewinding && gameManager.timeGrenade && !pauseMenuActive)
         {
             babyBombReady = false;
             Image bombBackground = GameObject.Find("BombInactive").GetComponent<Image>();
@@ -348,6 +369,7 @@ public class PlayerController : MonoBehaviour
 
     void SlowTimeAbility()
     {
+        Debug.Log("slowslow");
         if (!timeSlowed)
         {
             postProcessVolume.profile = timeSlowProfile;
@@ -477,6 +499,7 @@ public class PlayerController : MonoBehaviour
             animator.speed /= slowdownFactor;
         }
 
+
         rewindAudioSource.PlayOneShot(rewindAudioClip);
         postProcessVolume.profile = rewindProfile;
         postProcessVolume.enabled = true;
@@ -538,7 +561,7 @@ public class PlayerController : MonoBehaviour
         //sends a log message to terminal 
         Debug.Log("Player has been hit");
 
-        if(numberOfLives> 0)
+        if(numberOfLives > 0)
         {
             if(GameManager.instance.deathBubble){
                 // Instantiate the death bubble prefab at the player's position
@@ -548,6 +571,8 @@ public class PlayerController : MonoBehaviour
 
             if (!isRewinding)
             {
+                numberOfLives--;
+
                 Rewind();
             }
         }
