@@ -32,7 +32,7 @@ public class PlayerController : MonoBehaviour
     public Transform gun;
     private bool isGrounded;
     private Rigidbody rb;
-    private bool timeSlowed;
+    public bool timeSlowed;
     private Coroutine slowTimeCoroutine;
     private bool blinkReady;
     private bool babyBombReady = true;
@@ -466,6 +466,7 @@ public class PlayerController : MonoBehaviour
             animator.speed /= slowdownFactor;
         }
 
+
         rewindAudioSource.PlayOneShot(rewindAudioClip);
         postProcessVolume.profile = rewindProfile;
         postProcessVolume.enabled = true;
@@ -527,12 +528,12 @@ public class PlayerController : MonoBehaviour
         //sends a log message to terminal 
         Debug.Log("Player has been hit");
 
-        if(numberOfLives> 0)
+        if(numberOfLives > 0)
         {
-            numberOfLives--;
-
             if (!isRewinding)
             {
+                numberOfLives--;
+
                 Rewind();
             }
         }
