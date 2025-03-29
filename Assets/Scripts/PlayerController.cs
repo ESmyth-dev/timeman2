@@ -80,13 +80,20 @@ public class PlayerController : MonoBehaviour
     private bool pauseMenuActive;
     private float gameTimeScale;
     private Image pauseMenuBackground;
-
+    private Button exitButton;
+    private Button backToGameButton;
 
     // Start is called before the first frame update
     void Start()
     {
         pauseMenuActive = false;
         pauseMenuBackground = GameObject.Find("PauseMenuBackground").GetComponent<Image>();
+        exitButton = GameObject.Find("ExitGame").GetComponent<Button>();
+        backToGameButton = GameObject.Find("BackToGame").GetComponent<Button>();
+
+        pauseMenuBackground.enabled = false;
+        exitButton.gameObject.SetActive(false);
+        backToGameButton.gameObject.SetActive(false);
 
         gameManager = FindAnyObjectByType<GameManager>();
         numberOfLives = 3;
@@ -196,16 +203,11 @@ public class PlayerController : MonoBehaviour
         // pause menu
         if (Input.GetKeyDown(KeyCode.Escape) && !pauseMenuActive)
         {
-            pauseMenuBackground.enabled = true;
             pauseMenuActive = true;
-            gameTimeScale = Time.timeScale;
-            Time.timeScale = 0;
         }
         else if (Input.GetKeyDown(KeyCode.Escape) && pauseMenuActive)
         {
-            pauseMenuBackground.enabled = false;
             pauseMenuActive = false;
-            Time.timeScale = gameTimeScale;
         }
 
         if (moveDirection != Vector3.zero)
