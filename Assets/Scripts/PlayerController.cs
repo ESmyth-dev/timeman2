@@ -530,7 +530,7 @@ public class PlayerController : MonoBehaviour
         {
             if(GameManager.instance.deathBubble){
                 // Instantiate the death bubble prefab at the player's position
-                GameObject bubble = Instantiate(GameManager.instance.deathBubblePrefab, transform.position, Quaternion.identity);
+                GameObject deathBubble = Instantiate(bombPrefab, transform.position, Quaternion.identity);
             }
             numberOfLives--;
 
