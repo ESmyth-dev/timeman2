@@ -16,7 +16,7 @@ public class UserIntManager : MonoBehaviour
     private GameObject abilityChoice;
 
     private float gameTimeScale;
-    private bool menuActive;
+    public bool menuActive;
 
 
     void Start()
