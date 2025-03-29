@@ -563,8 +563,11 @@ public class PlayerController : MonoBehaviour
             NavMeshAgent agent = enemy.GetComponent<NavMeshAgent>();
             if (agent != null && value == false)
             {
-                agent.isStopped = true;
-                agent.ResetPath();
+                agent.SetDestination(enemy.transform.position);
+            }
+            else if (agent != null && value == true)
+            {
+                behaviour.ChooseNewDestination();
             }
         }
     }
