@@ -23,39 +23,28 @@ public class CameraController : MonoBehaviour
         float mouseX = Input.GetAxis("Mouse X") * mouseSensitivity;
         float mouseY = Input.GetAxis("Mouse Y") * mouseSensitivity;
 
-        // rotate the player and camera horizontally when mouse moves horizontally
         horizontalRotation += mouseX;
-        verticalRotation += mouseY;
-        verticalRotation = Mathf.Clamp(verticalRotation, -60f, 60f); // limit up/down look angles
+        verticalRotation -= mouseY;
+        verticalRotation = Mathf.Clamp(verticalRotation, -60f, 60f);
 
-        //playerBody.Rotate(Vector3.up * mouseX);
-        playerBody.rotation = Quaternion.Euler(0f, horizontalRotation + 180, 0f);
+        playerBody.rotation = Quaternion.Euler(0f, horizontalRotation, 0f);
         cameraPivot.rotation = Quaternion.Euler(verticalRotation, horizontalRotation, 0f);
 
-        // position the camera behind the pivot object
-        Vector3 cameraOffset = new Vector3(0, 0, cameraDistance);
+        Vector3 desiredPosition = cameraPivot.position - cameraPivot.forward * cameraDistance;
 
+        //Raycast from camera pivot outward
         RaycastHit hit;
-        Vector3 targetPosition;
-        Vector3 desiredPosition = cameraPivot.position + cameraPivot.rotation * cameraOffset;
-        LayerMask wallLayers = LayerMask.GetMask("level");
-
-        if (Physics.Raycast(desiredPosition, playerBody.position - desiredPosition, out hit, (playerBody.position - desiredPosition).magnitude, wallLayers))
+        LayerMask wallLayers = LayerMask.GetMask("LevelLineOfSight");
+        if (Physics.Raycast(cameraPivot.position, (desiredPosition - cameraPivot.position).normalized, out hit, cameraDistance, wallLayers))
         {
-            targetPosition = (hit.point - playerBody.position) * 0.8f + playerBody.position;
-            /* 
-               Note that I move the camera to 80% of the distance
-               to the point where an obstruction has been found
-               to help keep the sides of the frustrum from still clipping through the wall
-            */
+            //Move camera to hit point, slightly forward to avoid intersection
+            cameraTransform.position = hit.point + hit.normal * 0.2f;
         }
         else
         {
-            targetPosition = desiredPosition;
+            cameraTransform.position = desiredPosition;
         }
 
-
-        cameraTransform.position = targetPosition;
-        cameraTransform.LookAt(cameraPivot);
+        cameraTransform.rotation = Quaternion.LookRotation(cameraPivot.forward, Vector3.up);
     }
 }
