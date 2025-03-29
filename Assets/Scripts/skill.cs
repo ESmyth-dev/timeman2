@@ -2,12 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class skill : MonoBehaviour
+public class Skill : MonoBehaviour
 {
     //name
     public string skillName;
     //icon
-    public Sprite skillIcon;
+    public Texture skillTexture;
     //description
     public string skillDescription;
     //keybind
