@@ -2,10 +2,15 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
+
 public class CloseDoorScript : MonoBehaviour
 {
+
+    private string[] levels = { "Level1" };
+
     [SerializeField] private float sceneLoadDelay = 1.0f;
-    [SerializeField] private string nextSceneName = "Level2- Ben Test";
+
+    
     private bool levelEnded = false;
 
     private void OnTriggerEnter(Collider other)
@@ -33,7 +38,7 @@ public class CloseDoorScript : MonoBehaviour
 
         // Load scene after delay
         yield return new WaitForSeconds(sceneLoadDelay);
-        SceneManager.LoadScene(nextSceneName);
+        LoadNextLevel();
     }
 
     private IEnumerator MoveDoor(Transform doorTransform, Vector3 targetPosition, float duration)
@@ -48,5 +53,11 @@ public class CloseDoorScript : MonoBehaviour
             yield return null;
         }
         doorTransform.position = targetPosition;
+    }
+
+    private void LoadNextLevel()
+    {
+        int nextSceneIndex = Random.Range(0, levels.Length);
+        SceneManager.LoadScene(levels[nextSceneIndex]);
     }
 }
