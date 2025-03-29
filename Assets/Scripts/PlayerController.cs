@@ -78,6 +78,8 @@ public class PlayerController : MonoBehaviour
 
     // pause menu
     private bool pauseMenuActive;
+    private Button backToGameButton;
+    private UserIntManager UIman;
 
     // Start is called before the first frame update
     void Start()
@@ -86,6 +88,9 @@ public class PlayerController : MonoBehaviour
         slider = GameObject.Find("Slider").GetComponent<Slider>();
 
         pauseMenuActive = false;
+        UIman = GameObject.Find("GuiCanvas").GetComponent<UserIntManager>();
+        //backToGameButton = GameObject.Find("BackToGame").GetComponent<Button>();
+        //backToGameButton.onClick.AddListener(backClick);
 
         gameManager = FindAnyObjectByType<GameManager>();
         numberOfLives = 3;
@@ -128,6 +133,9 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        pauseMenuActive = UIman.menuActive;
+        Debug.Log(pauseMenuActive);
+
         if (gameManager.slowDown)
         {
             slider.value -= cooldownSpeed * Time.deltaTime * 1.2f;
@@ -202,7 +210,7 @@ public class PlayerController : MonoBehaviour
             animator.SetBool("movingBackwards", false);
         }
 
-        // pause menu
+        /* pause menu
         if (Input.GetKeyDown(KeyCode.Escape) && !pauseMenuActive)
         {
             pauseMenuActive = true;
@@ -210,7 +218,7 @@ public class PlayerController : MonoBehaviour
         else if (Input.GetKeyDown(KeyCode.Escape) && pauseMenuActive)
         {
             pauseMenuActive = false;
-        }
+        }*/
 
         if (moveDirection != Vector3.zero)
         {
