@@ -78,10 +78,6 @@ public class PlayerController : MonoBehaviour
 
     // pause menu
     private bool pauseMenuActive;
-    private float gameTimeScale;
-    private Image pauseMenuBackground;
-    private Button exitButton;
-    private Button backToGameButton;
 
     // Start is called before the first frame update
     void Start()
