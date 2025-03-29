@@ -555,6 +555,11 @@ public class PlayerController : MonoBehaviour
         //sends a log message to terminal 
         Debug.Log("Player has been hit");
 
+        if (isRewinding)
+        {
+            return;
+        }
+
         if(numberOfLives > 0)
         {
             if(GameManager.instance.deathBubble){
@@ -562,13 +567,7 @@ public class PlayerController : MonoBehaviour
                 GameObject deathBubble = Instantiate(bombPrefab, transform.position, Quaternion.identity);
             }
             numberOfLives--;
-
-            if (!isRewinding)
-            {
-                numberOfLives--;
-
-                Rewind();
-            }
+            Rewind();
         }
         else
         {
