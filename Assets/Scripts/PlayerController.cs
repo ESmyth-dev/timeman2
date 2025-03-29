@@ -33,6 +33,7 @@ public class PlayerController : MonoBehaviour
     private bool blinkReady;
     private bool babyBombReady = true;
     private float numberOfLives;
+    private bool jumpEnd = false;
 
     //List to hold the recorded positions
     public List<Vector3> recordedPositions = new List<Vector3>();
@@ -181,13 +182,15 @@ public class PlayerController : MonoBehaviour
         // Jumping
         if (Input.GetKeyDown(KeyCode.Space) && isGrounded)
         {
+            jumpEnd = false;
             rb.AddForce(transform.up * jumpForce, ForceMode.Impulse);
             isGrounded = false;
             animator.SetBool("jumping", true);
         } else {
             if(Input.GetKeyDown(KeyCode.Space) && !isGrounded)
             {
-                if(GameManager.instance.doubleJump && JumpEnd == false){
+                if(GameManager.instance.doubleJump && jumpEnd == false){
+                    jumpEnd = true;
                     rb.velocity = new Vector3(rb.velocity.x, 0, rb.velocity.z);
                     rb.AddForce((transform.up * jumpForce), ForceMode.Impulse);
                     isGrounded = false;
