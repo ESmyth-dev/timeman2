@@ -12,8 +12,9 @@ public class GameManager : MonoBehaviour
     public bool timeGrenade = false;
     public bool timePulse = false;
     public bool doubleJump = false;
-    public bool blink = false;
-    public bool slowTime = false;
+    public bool blink = true;
+    public bool slowTime = true;
+    public bool slowDown = false;
 
     public bool deathBubble = false;
 
