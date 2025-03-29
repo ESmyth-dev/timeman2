@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class UserIntManager : MonoBehaviour
 {
@@ -28,8 +29,17 @@ public class UserIntManager : MonoBehaviour
         MainMenu = GameObject.Find("MainMenu");
         playButton = GameObject.Find("PlayButton").GetComponent<Button>();
         playButton.onClick.AddListener(play);
-        Time.timeScale = 0;
-        Cursor.visible = true;
+
+        if (SceneManager.GetActiveScene().name != "HomePage")
+        {
+            MainMenu.SetActive(false);
+        }    
+        else
+        {
+            Time.timeScale = 0;
+            Cursor.visible = true;
+        }
+
         //MainMenu.SetActive(false);
 
         // ability bar
@@ -120,5 +130,6 @@ public class UserIntManager : MonoBehaviour
         MainMenu.SetActive(false);
         Time.timeScale = 1;
         Cursor.visible = false;
+        SceneManager.LoadScene("Level1");
     }
 }
