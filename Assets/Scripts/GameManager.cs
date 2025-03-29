@@ -60,7 +60,7 @@ public class GameManager : MonoBehaviour
         slowTimeSkill.skillDescription = "Slow down time to a crawl while maintaining your own ability to move at full speed with the power of time magic.";
         skills.Add(slowTimeSkill);
         timeGrenadeSkill.skillName = "Baby Time Bomb";
-        timeGrenadeSkill.skillDescription = "Send out a sphere of pure time force, sending all those it touches back in time, turning them into small incapacitated children";
+        timeGrenadeSkill.skillDescription = "Send out a sphere of pure time force, sending all those it touches back in time, turning them into small incapacitated children.";
         skills.Add(timeGrenadeSkill);
         Debug.Log(skills.Count);
     }
