@@ -5,7 +5,7 @@ using UnityEngine.SceneManagement;
 public class CloseDoorScript : MonoBehaviour
 {
     [SerializeField] private float sceneLoadDelay = 1.0f;
-    [SerializeField] private string nextSceneName = "Level1";
+    [SerializeField] private string nextSceneName = "Level2- Ben Test";
     private bool levelEnded = false;
 
     private void OnTriggerEnter(Collider other)
