@@ -10,10 +10,12 @@ public class ShotCollision : MonoBehaviour
     public int ricochetCount = 1;
     private int ricochets;
     private bool isEnemyBullet = true;
+    PlayerController playerController;
 
     // Start is called before the first frame update
     void Start()
     {
+        playerController = FindAnyObjectByType<PlayerController>();
         direction = transform.forward;
         ricochets = 0;
         if (Firer != null && Firer.CompareTag("Player"))
@@ -29,7 +31,15 @@ public class ShotCollision : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        transform.position += transform.forward * Time.deltaTime * 10f;
+        if (playerController.timeSlowed)
+        {
+            transform.position += transform.forward * Time.deltaTime * 1f;
+
+        }
+        else
+        {
+            transform.position += transform.forward * Time.deltaTime * 10f;
+        }
     }
 
     private void OnCollisionEnter(Collision collision)
@@ -49,11 +59,13 @@ public class ShotCollision : MonoBehaviour
                 if (isEnemyBullet)
                 {
                     collision.gameObject.GetComponent<PlayerController>().Hit();
+                    Destroy(this.gameObject);
                 }
             }
             else
             {
                 collision.gameObject.GetComponent<PlayerController>().Hit();
+                Destroy(this.gameObject);
             }   
         }
         if((collision.gameObject.tag == "Enemy" || collision.gameObject.tag == "downEnemy") && !isEnemyBullet)
