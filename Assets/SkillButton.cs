@@ -1,30 +1,33 @@
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
+using TMPro;
 
 public class SkillButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
-    private GameObject descriptionBox;
-    private GameObject nameBox;
+    private TMP_Text descriptionBox;
+    private TMP_Text nameBox;
     private Image skillImage;
     [SerializeField]public string skillName;
     [TextArea][SerializeField] public string skillDescription;
 
     private void Start()
     {
-        descriptionBox = FindChildWithTag(this.gameObject, "skillDescription");
-        nameBox = FindChildWithTag(this.gameObject, "skillName");
-        descriptionBox.SetActive(false);
+        descriptionBox = transform.parent.GetComponentInChildren<TMP_Text>();
+        nameBox = GetComponentInChildren<TMP_Text>();
+        nameBox.text = skillName;
+        descriptionBox.text = "";
+        RawImage image = GetComponentInChildren<RawImage>();
     }
 
     public void OnPointerEnter(PointerEventData eventData)
     {
-        descriptionBox.SetActive(true);
+        descriptionBox.text = skillDescription;
     }
 
     public void OnPointerExit(PointerEventData eventData)
     {
-        descriptionBox.SetActive(false);
+        descriptionBox.text = "";
     }
 
     // Call this when button is clicked
