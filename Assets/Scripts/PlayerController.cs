@@ -40,6 +40,9 @@ public class PlayerController : MonoBehaviour
     private bool jumpEnd = false;
     private bool isRewinding = false;
 
+    private Vector3 lastPosition;
+    private Quaternion lastRotation;
+
     //List to hold the recorded positions
     public List<Vector3> recordedPositions = new List<Vector3>();
     //List to hold the recorded rotations
@@ -112,8 +115,14 @@ public class PlayerController : MonoBehaviour
         timeSlowProfile = Resources.Load<PostProcessProfile>("TimeSlowTint");
         rewindProfile = Resources.Load<PostProcessProfile>("RewindProfile");
 
-        //Start recording positions
-        StartCoroutine(RecordPositions());
+        if(GameObject.Find("Lava")==null){
+            //Start recording positions
+            StartCoroutine(RecordPositions());
+        }else{
+            //If lava level use different recording positions
+            StartCoroutine(RecordPositionsLava());
+        }
+        
     }
 
     // Update is called once per frame
@@ -421,10 +430,8 @@ public class PlayerController : MonoBehaviour
     }
     //This records the players position and rotation, then pauses for 1 sec, and then runs again
     private IEnumerator RecordPositions(){
-        Debug.Log("Recording positions started");
         while(true)
         {
-            Debug.Log("Recording positions");
             //Triggers if positions list is full, and removes the oldest one (also rotation)
             if(recordedPositions.Count > 5){
                 recordedPositions.RemoveAt(0);
@@ -440,9 +447,20 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    private IEnumerator RecordPositionsLava(){
+        while(true){
+            //Records last position and rotation of player standing on ground
+            if(isGrounded){
+                lastPosition = transform.position;
+                lastRotation = transform.rotation;
+            }
+            yield return new WaitForSeconds(1f);
+        }
+    }
+
     //This will be called when the player dies, and just sets the player to the position/rotation from 5 secs ago
     public void Rewind()
-{
+    {
         if (recordedPositions.Count <= 0)
         {
             Debug.LogError("No recorded positions to rewind to. How did you mess this up?");
@@ -514,6 +532,11 @@ public class PlayerController : MonoBehaviour
         StartCoroutine(RecordPositions()); // Restart recording positions
     }
 
+    private void backToLastPosition(){
+        Vector3 endPoint = Vector3.Lerp(transform.position, lastPosition, 1);
+        Quaternion endRotation = Quaternion.Lerp(transform.rotation, lastRotation, 1);
+    }
+
     private IEnumerator EnableEnemyBehaviourAfterDelay()
     {
         yield return new WaitForSeconds(1f);
@@ -528,15 +551,19 @@ public class PlayerController : MonoBehaviour
 
         if(numberOfLives> 0)
         {
-            if(GameManager.instance.deathBubble){
+            numberOfLives--;
+            if(!GameObject.Find("Lava")){
+                if(GameManager.instance.deathBubble){
                 // Instantiate the death bubble prefab at the player's position
                 GameObject deathBubble = Instantiate(bombPrefab, transform.position, Quaternion.identity);
-            }
-            numberOfLives--;
+                }
 
-            if (!isRewinding)
-            {
-                Rewind();
+                if (!isRewinding)
+                {
+                    Rewind();
+                }
+            }else{
+                backToLastPosition();
             }
         }
         else
