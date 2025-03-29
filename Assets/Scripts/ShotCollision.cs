@@ -59,11 +59,13 @@ public class ShotCollision : MonoBehaviour
                 if (isEnemyBullet)
                 {
                     collision.gameObject.GetComponent<PlayerController>().Hit();
+                    Destroy(this.gameObject);
                 }
             }
             else
             {
                 collision.gameObject.GetComponent<PlayerController>().Hit();
+                Destroy(this.gameObject);
             }   
         }
         if((collision.gameObject.tag == "Enemy" || collision.gameObject.tag == "downEnemy") && !isEnemyBullet)

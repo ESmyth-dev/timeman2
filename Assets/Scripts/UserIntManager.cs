@@ -16,7 +16,7 @@ public class UserIntManager : MonoBehaviour
     private GameObject abilityChoice;
 
     private float gameTimeScale;
-    private bool menuActive;
+    public bool menuActive;
 
 
     void Start()
@@ -38,12 +38,16 @@ public class UserIntManager : MonoBehaviour
         // pause menu
         menuActive = false;
         pauseMenuBackground = GameObject.Find("PauseMenuBackground").GetComponent<Image>();
+        pauseMenuBackground.enabled = false;
 
         exitButton = GameObject.Find("ExitGame").GetComponent<Button>();
         backToGameButton = GameObject.Find("BackToGame").GetComponent<Button>();
 
         exitButton.onClick.AddListener(exitClick);
         backToGameButton.onClick.AddListener(backClick);
+
+        exitButton.gameObject.SetActive(false);
+        backToGameButton.gameObject.SetActive(false);
 
     }
 

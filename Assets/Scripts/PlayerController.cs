@@ -78,10 +78,8 @@ public class PlayerController : MonoBehaviour
 
     // pause menu
     private bool pauseMenuActive;
-    private float gameTimeScale;
-    private Image pauseMenuBackground;
-    private Button exitButton;
     private Button backToGameButton;
+    private UserIntManager UIman;
 
     // Start is called before the first frame update
     void Start()
@@ -90,13 +88,9 @@ public class PlayerController : MonoBehaviour
         slider = GameObject.Find("Slider").GetComponent<Slider>();
 
         pauseMenuActive = false;
-        pauseMenuBackground = GameObject.Find("PauseMenuBackground").GetComponent<Image>();
-        exitButton = GameObject.Find("ExitGame").GetComponent<Button>();
-        backToGameButton = GameObject.Find("BackToGame").GetComponent<Button>();
-
-        pauseMenuBackground.enabled = false;
-        exitButton.gameObject.SetActive(false);
-        backToGameButton.gameObject.SetActive(false);
+        UIman = GameObject.Find("GuiCanvas").GetComponent<UserIntManager>();
+        //backToGameButton = GameObject.Find("BackToGame").GetComponent<Button>();
+        //backToGameButton.onClick.AddListener(backClick);
 
         gameManager = FindAnyObjectByType<GameManager>();
         numberOfLives = 3;
@@ -139,6 +133,9 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        pauseMenuActive = UIman.menuActive;
+        Debug.Log(pauseMenuActive);
+
         if (gameManager.slowDown)
         {
             slider.value -= cooldownSpeed * Time.deltaTime * 1.2f;
@@ -213,7 +210,7 @@ public class PlayerController : MonoBehaviour
             animator.SetBool("movingBackwards", false);
         }
 
-        // pause menu
+        /* pause menu
         if (Input.GetKeyDown(KeyCode.Escape) && !pauseMenuActive)
         {
             pauseMenuActive = true;
@@ -221,7 +218,7 @@ public class PlayerController : MonoBehaviour
         else if (Input.GetKeyDown(KeyCode.Escape) && pauseMenuActive)
         {
             pauseMenuActive = false;
-        }
+        }*/
 
         if (moveDirection != Vector3.zero)
         {
@@ -491,7 +488,7 @@ public class PlayerController : MonoBehaviour
         isRewinding = true;
 
         // Cancel slowtime if rewinding
-        if (timeSlowed && slowTimeCoroutine != null)
+        if (timeSlowed && slowTimeCoroutine != null && Time.timeScale < 1f)
         {
             StopCoroutine(slowTimeCoroutine);
 
@@ -566,6 +563,11 @@ public class PlayerController : MonoBehaviour
         //sends a log message to terminal 
         Debug.Log("Player has been hit");
 
+        if (isRewinding)
+        {
+            return;
+        }
+
         if(numberOfLives > 0)
         {
             if(GameManager.instance.deathBubble){
@@ -573,13 +575,7 @@ public class PlayerController : MonoBehaviour
                 GameObject deathBubble = Instantiate(bombPrefab, transform.position, Quaternion.identity);
             }
             numberOfLives--;
-
-            if (!isRewinding)
-            {
-                numberOfLives--;
-
-                Rewind();
-            }
+            Rewind();
         }
         else
         {
