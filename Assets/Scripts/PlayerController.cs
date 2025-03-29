@@ -32,7 +32,7 @@ public class PlayerController : MonoBehaviour
     public Transform gun;
     private bool isGrounded;
     private Rigidbody rb;
-    private bool timeSlowed;
+    public bool timeSlowed;
     private Coroutine slowTimeCoroutine;
     private bool blinkReady;
     private bool babyBombReady = true;
@@ -85,7 +85,6 @@ public class PlayerController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-
         pauseMenuActive = false;
         pauseMenuBackground = GameObject.Find("PauseMenuBackground").GetComponent<Image>();
 
@@ -291,7 +290,6 @@ public class PlayerController : MonoBehaviour
                 beamLight.enabled = true;
             }
         }
-
         if (Input.GetMouseButtonDown(1) && babyBombReady && !isRewinding && gameManager.timeGrenade && !pauseMenuActive)
         {
             babyBombReady = false;
@@ -491,6 +489,7 @@ public class PlayerController : MonoBehaviour
             animator.speed /= slowdownFactor;
         }
 
+
         rewindAudioSource.PlayOneShot(rewindAudioClip);
         postProcessVolume.profile = rewindProfile;
         postProcessVolume.enabled = true;
@@ -552,7 +551,7 @@ public class PlayerController : MonoBehaviour
         //sends a log message to terminal 
         Debug.Log("Player has been hit");
 
-        if(numberOfLives> 0)
+        if(numberOfLives > 0)
         {
             if(GameManager.instance.deathBubble){
                 // Instantiate the death bubble prefab at the player's position
@@ -562,6 +561,8 @@ public class PlayerController : MonoBehaviour
 
             if (!isRewinding)
             {
+                numberOfLives--;
+
                 Rewind();
             }
         }
