@@ -484,7 +484,7 @@ public class PlayerController : MonoBehaviour
         isRewinding = true;
 
         // Cancel slowtime if rewinding
-        if (timeSlowed && slowTimeCoroutine != null)
+        if (timeSlowed && slowTimeCoroutine != null && Time.timeScale < 1f)
         {
             StopCoroutine(slowTimeCoroutine);
 
