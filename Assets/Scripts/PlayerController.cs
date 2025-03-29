@@ -90,13 +90,6 @@ public class PlayerController : MonoBehaviour
         slider = GameObject.Find("Slider").GetComponent<Slider>();
 
         pauseMenuActive = false;
-        pauseMenuBackground = GameObject.Find("PauseMenuBackground").GetComponent<Image>();
-        exitButton = GameObject.Find("ExitGame").GetComponent<Button>();
-        backToGameButton = GameObject.Find("BackToGame").GetComponent<Button>();
-
-        pauseMenuBackground.enabled = false;
-        exitButton.gameObject.SetActive(false);
-        backToGameButton.gameObject.SetActive(false);
 
         gameManager = FindAnyObjectByType<GameManager>();
         numberOfLives = 3;
