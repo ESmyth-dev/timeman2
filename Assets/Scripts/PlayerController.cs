@@ -4,6 +4,7 @@ using Unity.VisualScripting;
 using UnityEditor;
 //5using UnityEditor.PackageManager;
 using UnityEngine;
+using UnityEngine.AI;
 using UnityEngine.Rendering.PostProcessing;
 using UnityEngine.UI;
 
@@ -32,10 +33,12 @@ public class PlayerController : MonoBehaviour
     private bool isGrounded;
     private Rigidbody rb;
     private bool timeSlowed;
+    private Coroutine slowTimeCoroutine;
     private bool blinkReady;
     private bool babyBombReady = true;
     private float numberOfLives;
     private bool jumpEnd = false;
+    private bool isRewinding = false;
 
     //List to hold the recorded positions
     public List<Vector3> recordedPositions = new List<Vector3>();
@@ -109,8 +112,8 @@ public class PlayerController : MonoBehaviour
         timeSlowProfile = Resources.Load<PostProcessProfile>("TimeSlowTint");
         rewindProfile = Resources.Load<PostProcessProfile>("RewindProfile");
 
-    //Start recording positions
-    StartCoroutine(RecordPositions());
+        //Start recording positions
+        StartCoroutine(RecordPositions());
     }
 
     // Update is called once per frame
@@ -127,55 +130,55 @@ public class PlayerController : MonoBehaviour
         forward = Vector3.ProjectOnPlane(forward, Vector3.up).normalized;
         right = Vector3.ProjectOnPlane(right, Vector3.up).normalized;
 
-        if (Input.GetKey(KeyCode.W))
+        if (Input.GetKey(KeyCode.W) && !isRewinding)
         {
             animator.SetBool("movingForwards", true);
             moveDirection += forward;
         }
 
-        if (Input.GetKeyUp(KeyCode.W))
+        if (Input.GetKeyUp(KeyCode.W) && !isRewinding)
         {
             animator.SetBool("movingForwards", false);
         }
 
-        if (Input.GetKey(KeyCode.D))
+        if (Input.GetKey(KeyCode.D) && !isRewinding)
         {
             animator.SetBool("movingRight", true);
             moveDirection += right;
         }
 
-        if (Input.GetKeyUp(KeyCode.D))
+        if (Input.GetKeyUp(KeyCode.D) && !isRewinding)
         {
             animator.SetBool("movingRight", false);
         }
 
-        if (Input.GetKey(KeyCode.A))
+        if (Input.GetKey(KeyCode.A) && !isRewinding)
         {
             animator.SetBool("movingLeft", true);
             moveDirection -= right;
         }
 
-        if (Input.GetKeyUp(KeyCode.A))
+        if (Input.GetKeyUp(KeyCode.A) && !isRewinding)
         {
             animator.SetBool("movingLeft", false);
         }
 
-        if (Input.GetKeyDown(KeyCode.F))
+        if (Input.GetKeyDown(KeyCode.F) && !isRewinding)
         {
             BlinkAbility();
         }
-        if (Input.GetKeyDown(KeyCode.C))
+        if (Input.GetKeyDown(KeyCode.C) && !isRewinding)
         {
             SlowTimeAbility();
         }
 
-        if (Input.GetKey(KeyCode.S))
+        if (Input.GetKey(KeyCode.S) && !isRewinding)
         {
             animator.SetBool("movingBackwards", true);
             moveDirection -= forward;
         }
 
-        if (Input.GetKeyUp(KeyCode.S))
+        if (Input.GetKeyUp(KeyCode.S) && !isRewinding)
         {
             animator.SetBool("movingBackwards", false);
         }
@@ -186,7 +189,7 @@ public class PlayerController : MonoBehaviour
         }
 
         // Jumping
-        if (Input.GetKeyDown(KeyCode.Space) && isGrounded)
+        if (Input.GetKeyDown(KeyCode.Space) && isGrounded && !isRewinding)
         {
             jumpEnd = false;
             rb.AddForce(transform.up * jumpForce, ForceMode.Impulse);
@@ -206,7 +209,7 @@ public class PlayerController : MonoBehaviour
             }
         }
 
-        if (Input.GetMouseButtonDown(0) && !beamEnabled)
+        if (Input.GetMouseButtonDown(0) && !beamEnabled && !isRewinding)
         {
             if (!overHeated)
             {
@@ -236,7 +239,7 @@ public class PlayerController : MonoBehaviour
             }
         }
 
-        if (Input.GetMouseButton(0) && beamEnabled)
+        if (Input.GetMouseButton(0) && beamEnabled && !isRewinding)
         {
             if (!overHeated)
             {
@@ -263,14 +266,8 @@ public class PlayerController : MonoBehaviour
             }
         }
 
-        if (Input.GetMouseButtonUp(0) && beamEnabled)
-        {
-            beamLine.enabled = false;
-            beamLight.enabled = false;
-        }
 
-
-        if (Input.GetMouseButtonDown(1) && babyBombReady)
+        if (Input.GetMouseButtonDown(1) && babyBombReady && !isRewinding)
         {
             babyBombReady = false;
             Image bombBackground = GameObject.Find("BombInactive").GetComponent<Image>();
@@ -306,13 +303,15 @@ public class PlayerController : MonoBehaviour
         animator.SetBool("falling", true);
     }
 
-    void OnCollisionStay()
+    void OnCollisionStay(Collision collision)
     {
-        if (!animator.GetBool("jumping"))
-        {
-            isGrounded = true;
-            animator.SetBool("onGround", true);
+        if (collision.gameObject.CompareTag("floor")){
+            if (!animator.GetBool("jumping"))
+            {
+                isGrounded = true;
+                animator.SetBool("onGround", true);
 
+            }
         }
     }
 
@@ -324,7 +323,7 @@ public class PlayerController : MonoBehaviour
         // Unslow
         postProcessVolume.enabled = false;
         Time.timeScale *= slowdownFactor;
-        Time.fixedDeltaTime *= slowdownFactor;
+        //Time.fixedDeltaTime *= slowdownFactor;
         speed /= slowdownFactor;
         animator.speed /= slowdownFactor;
         
@@ -343,7 +342,7 @@ public class PlayerController : MonoBehaviour
             postProcessVolume.profile = timeSlowProfile;
             postProcessVolume.enabled = true;
             Time.timeScale /= slowdownFactor;
-            Time.fixedDeltaTime /= slowdownFactor;
+            //Time.fixedDeltaTime /= slowdownFactor;
             speed *= slowdownFactor;
             animator.speed *= slowdownFactor;
             timeSlowed = true;
@@ -353,7 +352,7 @@ public class PlayerController : MonoBehaviour
 
             slowTimeAudioSource.PlayOneShot(timeSlowAudioClip);
 
-            StartCoroutine(SlowTime());
+            slowTimeCoroutine = StartCoroutine(SlowTime());
         }
         
     }
@@ -451,10 +450,26 @@ public class PlayerController : MonoBehaviour
             return;
         }
 
+        isRewinding = true;
+
+        // Cancel slowtime if rewinding
+        if (timeSlowed && slowTimeCoroutine != null)
+        {
+            StopCoroutine(slowTimeCoroutine);
+
+            // Unslow
+            timeSlowed = false;
+            postProcessVolume.enabled = false;
+            Time.timeScale *= slowdownFactor;
+            //Time.fixedDeltaTime *= slowdownFactor;
+            speed /= slowdownFactor;
+            animator.speed /= slowdownFactor;
+        }
+
         rewindAudioSource.PlayOneShot(rewindAudioClip);
         postProcessVolume.profile = rewindProfile;
         postProcessVolume.enabled = true;
-        SetEnemyBehaviour(false);
+        SetEnemyBehaviour(false);      
 
         StopCoroutine(RecordPositions()); // Stop any existing coroutines
         StartCoroutine(SmoothRewind());
@@ -493,9 +508,17 @@ public class PlayerController : MonoBehaviour
         recordedRotations.Clear();
 
         postProcessVolume.enabled = false;
-        SetEnemyBehaviour(true);
+        StartCoroutine(EnableEnemyBehaviourAfterDelay());
+        isRewinding = false;
+
         Debug.Log("Rewind complete.");
         StartCoroutine(RecordPositions()); // Restart recording positions
+    }
+
+    private IEnumerator EnableEnemyBehaviourAfterDelay()
+    {
+        yield return new WaitForSeconds(1f);
+        SetEnemyBehaviour(true);
     }
 
 
@@ -507,7 +530,11 @@ public class PlayerController : MonoBehaviour
         if(numberOfLives> 0)
         {
             numberOfLives--;
-            Rewind();
+
+            if (!isRewinding)
+            {
+                Rewind();
+            }
         }
         else
         {
@@ -533,6 +560,16 @@ public class PlayerController : MonoBehaviour
             if (behaviour != null)
             {
                 behaviour.BehaviourEnabled = value;
+            }
+
+            NavMeshAgent agent = enemy.GetComponent<NavMeshAgent>();
+            if (agent != null && value == false)
+            {
+                agent.SetDestination(enemy.transform.position);
+            }
+            else if (agent != null && value == true)
+            {
+                behaviour.ChooseNewDestination();
             }
         }
     }

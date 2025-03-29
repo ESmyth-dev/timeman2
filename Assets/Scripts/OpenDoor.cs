@@ -23,6 +23,8 @@ public class OpenDoor : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        GameObject[] enemies = GameObject.FindGameObjectsWithTag("Enemy");
+        int enemyCount = enemies.Length;
         // if enemy count = 0, open doors with tag = end
         GameObject enemy = GameObject.Find("Enemies");
         
@@ -32,7 +34,8 @@ public class OpenDoor : MonoBehaviour
             return;
         }
         // count how many enemies are in the enemy game object 
-        int enemyCount = enemy.transform.childCount;
+
+        
         if (enemyCount == 0 && levelEnded == false)
         {
             GameObject[] doors = GameObject.FindGameObjectsWithTag("Finish");
@@ -42,6 +45,8 @@ public class OpenDoor : MonoBehaviour
             }
             levelEnded = true;
         }
+
+        
 
     }
     
