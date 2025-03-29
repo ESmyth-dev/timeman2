@@ -1,6 +1,7 @@
 using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using System.Linq;
 
 
 public class CloseDoorScript : MonoBehaviour
@@ -12,7 +13,6 @@ public class CloseDoorScript : MonoBehaviour
     void Awake()
     {
         levels = GetLevelsInBuild();
-        Debug.Log("Levels in build: " + string.Join(", ", levels));
     }
     
     private string[] GetLevelsInBuild()
@@ -78,7 +78,17 @@ public class CloseDoorScript : MonoBehaviour
 
     private void LoadNextLevel()
     {
+        // deenable currennt scene  folder 
+        string currentSceneName = SceneManager.GetActiveScene().name;
+        Debug.Log("Current scene: " + currentSceneName);
+
+
+
+        // Load a random scene from the levels array
         int nextSceneIndex = Random.Range(0, levels.Length);
+        Debug.Log("Loading next scene: " + levels[nextSceneIndex]);
         SceneManager.LoadScene(levels[nextSceneIndex]);
+
+
     }
 }

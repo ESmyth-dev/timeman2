@@ -42,8 +42,6 @@ public class EnemyBehaviour : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Debug.Log(FindAnyObjectByType<PlayerController>().timeSlowed);
-        Debug.Log(timeSlowed);
         if (FindAnyObjectByType<PlayerController>().timeSlowed && !timeSlowed)
         {
             GetComponent<NavMeshAgent>().speed = GetComponent<NavMeshAgent>().speed * slowDown;
