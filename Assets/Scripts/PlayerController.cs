@@ -47,7 +47,7 @@ public class PlayerController : MonoBehaviour
     public List<Quaternion> recordedRotations = new List<Quaternion>();
 
     // Cooldowns
-    private float slowdownDurationSeconds = 1f;
+    private float slowdownDurationSeconds = 5f;
     private float slowdownCooldownSeconds = 10f;
     private float blinkCooldownSeconds = 0.5f;
     private float babyBombCooldownSeconds = 5f;
@@ -359,14 +359,14 @@ public class PlayerController : MonoBehaviour
 
         // Unslow
         postProcessVolume.enabled = false;
-        Time.timeScale *= slowdownFactor;
+        timeSlowed = false;
+        //Time.timeScale *= slowdownFactor;
         //Time.fixedDeltaTime *= slowdownFactor;
-        speed /= slowdownFactor;
-        animator.speed /= slowdownFactor;
-        
+        //speed /= slowdownFactor;
+        //animator.speed /= slowdownFactor;
+
         // wait another 5 seconds to use the slow time ability again
         yield return new WaitForSeconds(slowdownCooldownSeconds);
-        timeSlowed = false;
         Image slowAbilityBackground = GameObject.Find("SlowInactive").GetComponent<Image>();
         slowAbilityBackground.enabled = false;
 
@@ -379,10 +379,10 @@ public class PlayerController : MonoBehaviour
         {
             postProcessVolume.profile = timeSlowProfile;
             postProcessVolume.enabled = true;
-            Time.timeScale /= slowdownFactor;
+            //Time.timeScale /= slowdownFactor;
             //Time.fixedDeltaTime /= slowdownFactor;
-            speed *= slowdownFactor;
-            animator.speed *= slowdownFactor;
+            //speed *= slowdownFactor;
+            //animator.speed *= slowdownFactor;
             timeSlowed = true;
 
             Image slowAbilityBackground = GameObject.Find("SlowInactive").GetComponent<Image>();
@@ -498,10 +498,10 @@ public class PlayerController : MonoBehaviour
             // Unslow
             timeSlowed = false;
             postProcessVolume.enabled = false;
-            Time.timeScale *= slowdownFactor;
+            //Time.timeScale *= slowdownFactor;
             //Time.fixedDeltaTime *= slowdownFactor;
-            speed /= slowdownFactor;
-            animator.speed /= slowdownFactor;
+            //speed /= slowdownFactor;
+            //animator.speed /= slowdownFactor;
         }
 
 
