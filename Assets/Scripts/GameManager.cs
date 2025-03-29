@@ -15,6 +15,8 @@ public class GameManager : MonoBehaviour
     public bool blink = false;
     public bool slowTime = false;
 
+    public bool deathBubble = false;
+
     void Awake()
     {
         if (instance == null)

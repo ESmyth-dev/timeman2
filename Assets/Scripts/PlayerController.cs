@@ -287,7 +287,6 @@ public class PlayerController : MonoBehaviour
                 }
             }
         }
-
     }
 
     IEnumerator babyBombCooldown()
@@ -531,6 +530,10 @@ public class PlayerController : MonoBehaviour
 
         if(numberOfLives> 0)
         {
+            if(GameManager.instance.deathBubble){
+                // Instantiate the death bubble prefab at the player's position
+                GameObject deathBubble = Instantiate(bombPrefab, transform.position, Quaternion.identity);
+            }
             numberOfLives--;
 
             if (!isRewinding)
