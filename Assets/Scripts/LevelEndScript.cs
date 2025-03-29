@@ -6,7 +6,7 @@ using UnityEngine.SceneManagement;
 public class CloseDoorScript : MonoBehaviour
 {
 
-    private string[] levels = { "Level1", "Level2", "LavaLevel", "Laser Room"};
+    private string[] levels = { "Level1", "Level2", "LavaLevel", "Laser Room", "Outside"};
 
     [SerializeField] private float sceneLoadDelay = 1.0f;
 
@@ -39,7 +39,7 @@ public class CloseDoorScript : MonoBehaviour
         // Load scene after delay
         yield return new WaitForSeconds(sceneLoadDelay);
         LoadNextLevel();
-        
+
     }
 
     private IEnumerator MoveDoor(Transform doorTransform, Vector3 targetPosition, float duration)

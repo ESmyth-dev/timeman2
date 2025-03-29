@@ -41,6 +41,9 @@ public class PlayerController : MonoBehaviour
     private bool isRewinding = false;
     private GameManager gameManager;
 
+    private Vector3 lastGroundPosition;
+    private Quaternion lastGroundRotation;
+
     //List to hold the recorded positions
     public List<Vector3> recordedPositions = new List<Vector3>();
     //List to hold the recorded rotations
@@ -134,7 +137,9 @@ public class PlayerController : MonoBehaviour
         rewindProfile = Resources.Load<PostProcessProfile>("RewindProfile");
 
         //Start recording positions
+        Debug.Log("Recording positions");
         StartCoroutine(RecordPositions());
+        StartCoroutine(RecordGroundPosition());
     }
 
     // Update is called once per frame
@@ -452,28 +457,39 @@ public class PlayerController : MonoBehaviour
     }
     //This records the players position and rotation, then pauses for 1 sec, and then runs again
     private IEnumerator RecordPositions(){
-        Debug.Log("Recording positions started");
         while(true)
         {
-            Debug.Log("Recording positions");
-            //Triggers if positions list is full, and removes the oldest one (also rotation)
-            if(recordedPositions.Count > 5){
-                recordedPositions.RemoveAt(0);
-                recordedRotations.RemoveAt(0);
+                //Triggers if positions list is full, and removes the oldest one (also rotation)
+                if(recordedPositions.Count > 5){
+                    recordedPositions.RemoveAt(0);
+                    recordedRotations.RemoveAt(0);
+                }
+
+                //Adds new positions/rotations to their lists
+                recordedPositions.Add(transform.position);
+                recordedRotations.Add(transform.rotation);
+
+                //Waits 1 sec
+                yield return new WaitForSeconds(1f);
+        }
+    }
+
+    private IEnumerator RecordGroundPosition()
+    {
+        while (true)
+        {
+            if (isGrounded)
+            {
+                lastGroundPosition = transform.position;
+                lastGroundRotation = transform.rotation;
             }
-
-            //Adds new positions/rotations to their lists
-            recordedPositions.Add(transform.position);
-            recordedRotations.Add(transform.rotation);
-
-            //Waits 1 sec
-            yield return new WaitForSeconds(1f);
+            yield return new WaitForSeconds(0.1f); // Adjust the interval as needed
         }
     }
 
     //This will be called when the player dies, and just sets the player to the position/rotation from 5 secs ago
     public void Rewind()
-{
+    {
         if (recordedPositions.Count <= 0)
         {
             Debug.LogError("No recorded positions to rewind to. How did you mess this up?");
@@ -565,16 +581,25 @@ public class PlayerController : MonoBehaviour
 
         if(numberOfLives > 0)
         {
+            numberOfLives--;
             if(GameManager.instance.deathBubble){
                 // Instantiate the death bubble prefab at the player's position
                 GameObject deathBubble = Instantiate(bombPrefab, transform.position, Quaternion.identity);
             }
-            numberOfLives--;
-            Rewind();
-        }
-        else
-        {
+
+            if (!isRewinding){
+                Rewind();
+            }
+        }else{
             GameManager.instance.GameOver();
+        }
+    }
+
+    public void LavaHit(){
+        if(numberOfLives > 0){
+            numberOfLives--;
+            transform.position = lastGroundPosition;
+            transform.rotation = lastGroundRotation;
         }
     }
 
