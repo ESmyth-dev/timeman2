@@ -7,6 +7,7 @@ using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.Rendering.PostProcessing;
 using UnityEngine.UI;
+using UnityEngine.Video;
 
 public class PlayerController : MonoBehaviour
 {
@@ -150,7 +151,7 @@ public class PlayerController : MonoBehaviour
     {
         pauseMenuActive = UIman.menuActive;
 
-        if (gameManager.slowDown)
+        if (gameManager.gunCooldownSkill.isUnlocked)
         {
             slider.value -= cooldownSpeed * Time.deltaTime * 1.2f;
 
@@ -160,6 +161,8 @@ public class PlayerController : MonoBehaviour
             slider.value -= cooldownSpeed * Time.deltaTime;
 
         }
+
+
 
         if (slider.value <= 0.1f)
         {
@@ -204,11 +207,11 @@ public class PlayerController : MonoBehaviour
             animator.SetBool("movingLeft", false);
         }
 
-        if (Input.GetKeyDown(KeyCode.F) && !isRewinding && gameManager.blink && !pauseMenuActive)
+        if (Input.GetKeyDown(KeyCode.F) && !isRewinding && gameManager.blinkSkill.isUnlocked && !pauseMenuActive)
         {
             BlinkAbility();
         }
-        if (Input.GetKeyDown(KeyCode.C) && !isRewinding && gameManager.slowTime && !pauseMenuActive)
+        if (Input.GetKeyDown(KeyCode.C) && !isRewinding && gameManager.slowTimeSkill.isUnlocked && !pauseMenuActive)
         {
             SlowTimeAbility();
         }
@@ -238,7 +241,7 @@ public class PlayerController : MonoBehaviour
         } else {
             if(Input.GetKeyDown(KeyCode.Space) && !isGrounded)
             {
-                if(gameManager.doubleJump && jumpEnd == false){
+                if(gameManager.doubleJumpSkill.isUnlocked && jumpEnd == false){
                     jumpEnd = true;
                     rb.velocity = new Vector3(rb.velocity.x, 0, rb.velocity.z);
                     rb.AddForce((transform.up * jumpForce), ForceMode.Impulse);
@@ -305,7 +308,7 @@ public class PlayerController : MonoBehaviour
                 beamLight.enabled = true;
             }
         }
-        if (Input.GetMouseButtonDown(1) && babyBombReady && !isRewinding && gameManager.timeGrenade && !pauseMenuActive)
+        if (Input.GetMouseButtonDown(1) && babyBombReady && !isRewinding && gameManager.timeGrenadeSkill.isUnlocked && !pauseMenuActive)
         {
             babyBombReady = false;
             Image bombBackground = GameObject.Find("BombInactive").GetComponent<Image>();
@@ -349,6 +352,18 @@ public class PlayerController : MonoBehaviour
                 animator.SetBool("onGround", true);
 
             }
+        }
+    }
+
+
+
+    void OnCollision(Collision collision)
+    {
+        Debug.Log("Collision with: " + collision.gameObject.name);
+        if (collision.gameObject.CompareTag("Laser"))
+        {
+            Debug.Log("Player has been hit by a laser");
+            Hit();
         }
     }
 
@@ -603,8 +618,42 @@ public class PlayerController : MonoBehaviour
             if (!isRewinding){
                 Rewind();
             }
-        }else{
-            GameManager.instance.GameOver();
+        } else {
+            //GameManager.instance.GameOver();
+            Death();
+        }
+    }
+
+    public void Death()
+    {
+        isRewinding = true; // Disable player behaviour
+
+        GameObject guiCanvas = GameObject.Find("GuiCanvas");
+        if (guiCanvas != null)
+        {
+            guiCanvas.SetActive(false);
+        }
+
+        GameObject deathVideoPlayerObj = GameObject.Find("DeathVideoPlayer");
+        VideoPlayer deathVideoPlayer = deathVideoPlayerObj.GetComponent<VideoPlayer>();
+
+        Camera mainCamera = GetComponentInChildren<Camera>();
+        deathVideoPlayer.targetCamera = mainCamera;
+
+        VideoClip[] deathClips = Resources.LoadAll<VideoClip>("DeathVideos");
+
+        int randomIndex = Random.Range(0, deathClips.Length);
+        deathVideoPlayer.clip = deathClips[randomIndex];
+        deathVideoPlayer.Play();
+    }
+
+
+
+    public void LavaHit(){
+        if(numberOfLives > 0){
+            numberOfLives--;
+            transform.position = lastGroundPosition;
+            transform.rotation = lastGroundRotation;
         }
     }
 
