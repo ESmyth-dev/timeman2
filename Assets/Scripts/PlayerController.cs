@@ -166,10 +166,8 @@ public class PlayerController : MonoBehaviour
     private void OnParticleCollision(GameObject particleSystemGO)
     {
         // Check if the colliding particle's GameObject has the "Laser" tag
-        if (particleSystemGO.CompareTag("Laser"))
-        {
-            Hit();
-        }
+        Hit();
+    
     }
 
 
