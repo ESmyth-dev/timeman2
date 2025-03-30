@@ -144,17 +144,9 @@ public class PlayerController : MonoBehaviour
         rewindProfile = Resources.Load<PostProcessProfile>("RewindProfile");
 
         //Start recording positions
-<<<<<<< Updated upstream
         recordPositionsCoroutine = StartCoroutine(RecordPositions());
         recordGroundCoroutine = StartCoroutine(RecordGroundPosition());
 
-=======
-        StartCoroutine(RecordPositions());
-        if(GameObject.Find("Lava")){
-            Debug.Log("Lava found, setting lastGroundPosition to lava position");
-            StartCoroutine(RecordGroundPosition());
-        }
->>>>>>> Stashed changes
     }
 
     private void OnTriggerEnter(Collider other)
