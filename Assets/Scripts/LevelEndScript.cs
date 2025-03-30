@@ -87,7 +87,7 @@ public class CloseDoorScript : MonoBehaviour
         Debug.Log($"You have {NoOfSkills} skills in the pool.");
         for(int i = 0; i<skillsList.Count; i++)
         {
-            Debug.Log(skillsList[i]);
+            Debug.Log(skillsList[i].skillName);
         }
         int skillIndex1 = UnityEngine.Random.Range(0, NoOfSkills);
         Skill skill1 = skillsList[skillIndex1];
