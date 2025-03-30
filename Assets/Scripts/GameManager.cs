@@ -16,6 +16,8 @@ public class GameManager : MonoBehaviour
     public Skill doubleJumpSkill = new Skill();
     public Skill timeGrenadeSkill = new Skill();
     public Skill gunCooldownSkill = new Skill();
+    public Skill ricochetSkill = new Skill();
+    public Skill beamSkill = new Skill();
     public List<Skill> skills = new List<Skill>();
 
 
@@ -66,6 +68,14 @@ public class GameManager : MonoBehaviour
         doubleJumpSkill.skillName = "Double Jump";
         doubleJumpSkill.skillDescription = "Bend space time itself using powerful time magic to allow you to propel yourself while in mid air!";
         skills.Add(doubleJumpSkill);
+
+        ricochetSkill.skillName = "Bullet Richochet";
+        ricochetSkill.skillDescription = "Use time fracture potential energy to allow your bullets to ricochet off a surface.";
+        skills.Add(ricochetSkill);
+
+        beamSkill.skillName = "Enable Beam Mode";
+        beamSkill.skillDescription = "Switch your gun from blast mode to a constant beam, it was on a button, you just didn't notice it until now.";
+        skills.Add(beamSkill);
 
 
     }

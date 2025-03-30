@@ -7,7 +7,7 @@ public class ShotCollision : MonoBehaviour
     public GameObject Firer = null;
 
     private Vector3 direction;
-    public int ricochetCount = 1;
+    public int ricochetCount;
     private int ricochets;
     private bool isEnemyBullet = true;
     PlayerController playerController;
@@ -15,6 +15,10 @@ public class ShotCollision : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        if (GameManager.instance.ricochetSkill.isUnlocked)
+        {
+            ricochetCount = 1;
+        }
         playerController = FindAnyObjectByType<PlayerController>();
         direction = transform.forward;
         ricochets = 0;
