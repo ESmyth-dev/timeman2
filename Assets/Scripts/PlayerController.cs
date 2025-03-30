@@ -652,6 +652,9 @@ public class PlayerController : MonoBehaviour
 
         if(numberOfLives > 0)
         {
+            GameObject lifeGui = GameObject.Find("Life" + numberOfLives);
+            lifeGui.SetActive(false);
+
             numberOfLives--;
             if(GameManager.instance.deathBubble){
                 // Instantiate the death bubble prefab at the player's position
