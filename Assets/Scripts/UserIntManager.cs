@@ -10,8 +10,11 @@ public class UserIntManager : MonoBehaviour
 
     //abilities
     private Image slowAbilityBackground;
+    private GameObject slow;
     private Image blinkBackground;
+    private GameObject blink;
     private Image bombBackground;
+    private GameObject bomb;
 
     //pause menu
     private Image pauseMenuBackground;
@@ -28,18 +31,29 @@ public class UserIntManager : MonoBehaviour
     private float gameTimeScale;
     public bool menuActive;
 
+    private List<Skill> skills;
+    public bool hideBlind;
+    public bool hideTime;
+    public bool hideBomb;
+
+    CanvasGroup s;
+    CanvasGroup bl;
+    CanvasGroup bo;
 
     void Start()
     {
-
+        hideBlind = false;
+        hideBomb = false;
+        hideTime = false;
+        
         if (SceneManager.GetActiveScene().name == "HomePage")
         {
-            MainMenu = GameObject.Find("MainMenu");
-            playButton = GameObject.Find("PlayButton").GetComponent<Button>();
-            playButton.onClick.AddListener(play);
-            Time.timeScale = 0;
-            Cursor.visible = true;
-            Cursor.lockState = CursorLockMode.None;
+            //MainMenu = GameObject.Find("MainMenu");
+            //playButton = GameObject.Find("PlayButton").GetComponent<Button>();
+            //playButton.onClick.AddListener(play);
+            //Time.timeScale = 0;
+            //Cursor.visible = true;
+            //Cursor.lockState = CursorLockMode.None;
         }    
         else
         {
@@ -53,12 +67,22 @@ public class UserIntManager : MonoBehaviour
         // ability bar
         slowAbilityBackground = GameObject.Find("SlowInactive").GetComponent<Image>();
         slowAbilityBackground.enabled = false;
+        slow = GameObject.Find("SlowTime");
+        s = slow.GetComponent<CanvasGroup>();
+        s.alpha = 0;
+
 
         blinkBackground = GameObject.Find("BlinkInactive").GetComponent<Image>();
         blinkBackground.enabled = false;
+        blink = GameObject.Find("Blink");
+        bl = blink.GetComponent<CanvasGroup>();
+        bl.alpha = 0;
 
         bombBackground = GameObject.Find("BombInactive").GetComponent<Image>();
         bombBackground.enabled = false;
+        bomb = GameObject.Find("BabyBomb");
+        bo = bomb.GetComponent<CanvasGroup>();
+        bo.alpha = 0;
 
         // pause menu
         menuActive = false;
@@ -85,6 +109,44 @@ public class UserIntManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        skills = GameManager.instance.skills;
+        foreach (Skill sp in skills)
+        {
+            if (sp.skillName == "Blink")
+            {
+                hideBlind = true;
+                bl.alpha = 0;
+            }
+            else
+            {
+                hideBlind = false;
+                bl.alpha = 1;
+            }
+
+            if (sp.skillName == "Slow Time")
+            {
+                hideTime = true;
+                s.alpha = 0;
+            }
+            else
+            {
+                hideTime = false;
+                s.alpha = 1;
+            }
+
+            if (sp.skillName == "Baby Time Bomb")
+            {
+                hideBomb = true;
+                bo.alpha = 0;
+            }
+            else
+            {
+                hideBomb = false;
+                bo.alpha = 1;
+            }
+
+            
+        }
 
         if (Input.GetKeyDown(KeyCode.Escape) && !menuActive)
         {

@@ -7,7 +7,6 @@ namespace Lightbug.LaserMachine
 {
 
 
-
 public class LaserMachine : MonoBehaviour {
 
     struct LaserElement 
@@ -40,7 +39,6 @@ public class LaserMachine : MonoBehaviour {
     bool m_assignLaserMaterial;
     bool m_assignSparks;
   		
-    
 
     void OnEnable()
     {
@@ -50,7 +48,6 @@ public class LaserMachine : MonoBehaviour {
         m_currentProperties.m_initialTimingPhase = Mathf.Clamp01(m_currentProperties.m_initialTimingPhase);
         m_time = m_currentProperties.m_initialTimingPhase * m_currentProperties.m_intervalTime;
         
-
         float angleStep = m_currentProperties.m_angularRange / laserCount;        
 
         m_assignSparks = m_data.m_laserSparks != null;
@@ -102,8 +99,10 @@ public class LaserMachine : MonoBehaviour {
                 {
                 GameObject sparks = Instantiate(m_data.m_laserSparks);
                 sparks.transform.SetParent(newObj.transform);
-                sparks.SetActive(false);
+                sparks.tag = "Laser";
+                sparks.SetActive(true);
                 element.sparks = sparks;
+
                 }
 
                 element.transform = newObj.transform;
@@ -157,8 +156,6 @@ public class LaserMachine : MonoBehaviour {
                     // You could also add code to damage the player here
                 }
             }
-
-
 
 
 
