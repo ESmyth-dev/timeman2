@@ -443,7 +443,7 @@ public class PlayerController : MonoBehaviour
         yield return new WaitForSeconds(slowdownCooldownSeconds);
         Image slowAbilityBackground = GameObject.Find("SlowInactive").GetComponent<Image>();
         var tempColor = slowAbilityBackground.color;
-        tempColor.a = 0.2f;
+        tempColor.a = 1f;
         slowAbilityBackground.color = tempColor;
         timeSlowedCooldown = false;
 
