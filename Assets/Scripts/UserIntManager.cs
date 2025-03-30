@@ -69,20 +69,20 @@ public class UserIntManager : MonoBehaviour
 
         // ability bar
         slowAbilityBackground = GameObject.Find("SlowInactive").GetComponent<Image>();
-        slowAbilityBackground.enabled = false;
+        slowAbilityBackground.enabled = true;
         slow = GameObject.Find("SlowTime");
         s = slow.GetComponent<CanvasGroup>();
         s.alpha = 0;
 
 
         blinkBackground = GameObject.Find("BlinkInactive").GetComponent<Image>();
-        blinkBackground.enabled = false;
+        blinkBackground.enabled = true;
         blink = GameObject.Find("Blink");
         bl = blink.GetComponent<CanvasGroup>();
         bl.alpha = 0;
 
         bombBackground = GameObject.Find("BombInactive").GetComponent<Image>();
-        bombBackground.enabled = false;
+        bombBackground.enabled = true;
         bomb = GameObject.Find("BabyBomb");
         bo = bomb.GetComponent<CanvasGroup>();
         bo.alpha = 0;
