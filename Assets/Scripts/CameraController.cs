@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class CameraController : MonoBehaviour
 {
-    [SerializeField] float mouseSensitivity = 2f;
+    [SerializeField] public float mouseSensitivity = 2f;
     [SerializeField] Transform cameraPivot; // empty object used for rotation
     [SerializeField] Transform playerBody; // the gladitor object (to rotate with horizontal input)
     [SerializeField] Transform cameraTransform; // reference to the actual camera
