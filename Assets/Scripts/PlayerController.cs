@@ -39,7 +39,6 @@ public class PlayerController : MonoBehaviour
     private Coroutine slowTimeCoroutine;
     private bool blinkReady;
     private bool babyBombReady = true;
-    private float numberOfLives;
     private bool jumpEnd = false;
     private bool isRewinding = false;
     private GameManager gameManager;
@@ -109,13 +108,20 @@ public class PlayerController : MonoBehaviour
             beamEnabled = true;
         }
 
+        // Show correct amount of lives in gui
+        for (int i = 3; i > GameManager.instance.numberOfLives; i--)
+        {
+            GameObject lifeGui = GameObject.Find("Life" + i);
+            lifeGui.SetActive(false);
+        }
+        
+
 
         slider = GameObject.Find("Slider").GetComponent<Slider>();
 
         pauseMenuActive = false;
         UIman = GameObject.Find("GuiCanvas").GetComponent<UserIntManager>();
 
-        numberOfLives = 3;
         overHeated = false;
         blinkReady = true;
         timeSlowed = false;
@@ -174,7 +180,11 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        pauseMenuActive = UIman.menuActive;
+        if (UIman != null)
+        {
+            pauseMenuActive = UIman.menuActive;
+        }
+        
 
         if (gameManager.gunCooldownSkill.isUnlocked)
         {
@@ -650,12 +660,12 @@ public class PlayerController : MonoBehaviour
             return;
         }
 
-        if(numberOfLives > 0)
+        if(GameManager.instance.numberOfLives > 0)
         {
-            GameObject lifeGui = GameObject.Find("Life" + numberOfLives);
+            GameObject lifeGui = GameObject.Find("Life" + GameManager.instance.numberOfLives);
             lifeGui.SetActive(false);
 
-            numberOfLives--;
+            GameManager.instance.numberOfLives--;
             if(GameManager.instance.deathBubble){
                 // Instantiate the death bubble prefab at the player's position
                 GameObject deathBubble = Instantiate(bombPrefab, transform.position, Quaternion.identity);
@@ -713,15 +723,14 @@ public class PlayerController : MonoBehaviour
 
         Destroy(GameManager.instance.gameObject);
 
-        // reload Level1 scene
         SceneManager.LoadScene("Level1");
     }
 
 
 
     public void LavaHit(){
-        if(numberOfLives > 0){
-            numberOfLives--;
+        if(GameManager.instance.numberOfLives > 0){
+            GameManager.instance.numberOfLives--;
             transform.position = lastGroundPosition;
             transform.rotation = lastGroundRotation;
         }

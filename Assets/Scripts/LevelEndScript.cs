@@ -15,7 +15,9 @@ public class CloseDoorScript : MonoBehaviour
 
     void Awake()
     {
-       levels = GetLevelsInBuild();
+       levels = GetLevelsInBuild()
+            .Where(level => level != "HomePage")
+            .ToArray();
     }
     
     private string[] GetLevelsInBuild()
