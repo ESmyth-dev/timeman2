@@ -24,7 +24,7 @@ public class SkillCanvasPopulator : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {  
-        description = GameObject.Find("description").transform;
+        description = GameObject.Find("Description").transform;
     }
 
     // Update is called once per frame
