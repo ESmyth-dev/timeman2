@@ -7,6 +7,7 @@ using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.Rendering.PostProcessing;
 using UnityEngine.UI;
+using UnityEngine.Video;
 
 public class PlayerController : MonoBehaviour
 {
@@ -33,6 +34,7 @@ public class PlayerController : MonoBehaviour
     private bool isGrounded;
     private Rigidbody rb;
     public bool timeSlowed;
+    public bool timeSlowedCooldown;
     private Coroutine slowTimeCoroutine;
     private bool blinkReady;
     private bool babyBombReady = true;
@@ -98,7 +100,7 @@ public class PlayerController : MonoBehaviour
         }
 
 
-            slider = GameObject.Find("Slider").GetComponent<Slider>();
+        slider = GameObject.Find("Slider").GetComponent<Slider>();
 
         pauseMenuActive = false;
         UIman = GameObject.Find("GuiCanvas").GetComponent<UserIntManager>();
@@ -107,6 +109,7 @@ public class PlayerController : MonoBehaviour
         overHeated = false;
         blinkReady = true;
         timeSlowed = false;
+        timeSlowedCooldown = false;
         animator.applyRootMotion = false;
         rb = GetComponent<Rigidbody>();
 
@@ -138,7 +141,11 @@ public class PlayerController : MonoBehaviour
 
         //Start recording positions
         StartCoroutine(RecordPositions());
-        StartCoroutine(RecordGroundPosition());
+        if(GameObject.Find("Lava")){
+            Debug.Log("Lava found, setting lastGroundPosition to lava position");
+            StartCoroutine(RecordGroundPosition());
+        }
+
     }
 
     // Update is called once per frame
@@ -156,6 +163,8 @@ public class PlayerController : MonoBehaviour
             slider.value -= cooldownSpeed * Time.deltaTime;
 
         }
+
+
 
         if (slider.value <= 0.1f)
         {
@@ -348,6 +357,18 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+
+
+    void OnCollision(Collision collision)
+    {
+        Debug.Log("Collision with: " + collision.gameObject.name);
+        if (collision.gameObject.CompareTag("Laser"))
+        {
+            Debug.Log("Player has been hit by a laser");
+            Hit();
+        }
+    }
+
     IEnumerator SlowTime()
     {
         //yield on a new YieldInstruction that waits for 5 seconds.
@@ -365,13 +386,14 @@ public class PlayerController : MonoBehaviour
         yield return new WaitForSeconds(slowdownCooldownSeconds);
         Image slowAbilityBackground = GameObject.Find("SlowInactive").GetComponent<Image>();
         slowAbilityBackground.enabled = false;
+        timeSlowedCooldown = false;
 
     }
 
     void SlowTimeAbility()
     {
         Debug.Log("slowslow");
-        if (!timeSlowed)
+        if (!timeSlowedCooldown)
         {
             postProcessVolume.profile = timeSlowProfile;
             postProcessVolume.enabled = true;
@@ -380,6 +402,7 @@ public class PlayerController : MonoBehaviour
             //speed *= slowdownFactor;
             //animator.speed *= slowdownFactor;
             timeSlowed = true;
+            timeSlowedCooldown = true;
 
             Image slowAbilityBackground = GameObject.Find("SlowInactive").GetComponent<Image>();
             slowAbilityBackground.enabled = true;
@@ -517,7 +540,8 @@ public class PlayerController : MonoBehaviour
         postProcessVolume.enabled = true;
         SetEnemyBehaviour(false);      
 
-        StopCoroutine(RecordPositions()); // Stop any existing coroutines
+        StopCoroutine(RecordPositions());
+        StopCoroutine(RecordGroundPosition()); // Stop any existing coroutines
         StartCoroutine(SmoothRewind());
     }
 
@@ -525,9 +549,17 @@ public class PlayerController : MonoBehaviour
     {
         Debug.Log("Rewinding...");
 
+        if(GameObject.Find("Lava")){
+            Debug.Log("Lava found, setting lastGroundPosition to lava position");
+            recordedPositions[0] = lastGroundPosition;
+            recordedRotations[0] = lastGroundRotation;
+        }
+
         // Iterate backward through recorded positions
         for (int i = recordedPositions.Count - 1; i >= 0; i--)
         {
+
+            Debug.Log("Rewinding to position: " + recordedPositions[i]);
             Vector3 startPos = transform.position;
             Quaternion startRot = transform.rotation;
             Vector3 targetPos = recordedPositions[i];
@@ -558,7 +590,8 @@ public class PlayerController : MonoBehaviour
         isRewinding = false;
 
         Debug.Log("Rewind complete.");
-        StartCoroutine(RecordPositions()); // Restart recording positions
+        StartCoroutine(RecordPositions());
+        StartCoroutine(RecordGroundPosition()); // Restart recording positions
     }
 
     private IEnumerator EnableEnemyBehaviourAfterDelay()
@@ -589,10 +622,36 @@ public class PlayerController : MonoBehaviour
             if (!isRewinding){
                 Rewind();
             }
-        }else{
-            GameManager.instance.GameOver();
+        } else {
+            //GameManager.instance.GameOver();
+            Death();
         }
     }
+
+    public void Death()
+    {
+        isRewinding = true; // Disable player behaviour
+
+        GameObject guiCanvas = GameObject.Find("GuiCanvas");
+        if (guiCanvas != null)
+        {
+            guiCanvas.SetActive(false);
+        }
+
+        GameObject deathVideoPlayerObj = GameObject.Find("DeathVideoPlayer");
+        VideoPlayer deathVideoPlayer = deathVideoPlayerObj.GetComponent<VideoPlayer>();
+
+        Camera mainCamera = GetComponentInChildren<Camera>();
+        deathVideoPlayer.targetCamera = mainCamera;
+
+        VideoClip[] deathClips = Resources.LoadAll<VideoClip>("DeathVideos");
+
+        int randomIndex = Random.Range(0, deathClips.Length);
+        deathVideoPlayer.clip = deathClips[randomIndex];
+        deathVideoPlayer.Play();
+    }
+
+
 
     public void LavaHit(){
         if(numberOfLives > 0){

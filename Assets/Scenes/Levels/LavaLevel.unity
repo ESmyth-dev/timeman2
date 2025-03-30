@@ -199,7 +199,7 @@ BoxCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
@@ -493,7 +493,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3410664066178085539, guid: f50565cb8113b4eb48cdf27bee260f21, type: 3}
       propertyPath: m_TagString
-      value: floor
+      value: Lava
       objectReference: {fileID: 0}
     - target: {fileID: 3540675330806442297, guid: f50565cb8113b4eb48cdf27bee260f21, type: 3}
       propertyPath: m_Layer
@@ -596,7 +596,10 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
-    m_RemovedGameObjects: []
+    m_RemovedGameObjects:
+    - {fileID: 2232428565556830777, guid: f50565cb8113b4eb48cdf27bee260f21, type: 3}
+    - {fileID: 6475073407859536716, guid: f50565cb8113b4eb48cdf27bee260f21, type: 3}
+    - {fileID: 6321702548572730246, guid: f50565cb8113b4eb48cdf27bee260f21, type: 3}
     m_AddedGameObjects: []
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 3410664066178085539, guid: f50565cb8113b4eb48cdf27bee260f21, type: 3}
