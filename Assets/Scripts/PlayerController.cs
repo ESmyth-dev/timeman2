@@ -42,6 +42,7 @@ public class PlayerController : MonoBehaviour
     private bool jumpEnd = false;
     private bool isRewinding = false;
     private GameManager gameManager;
+    public bool CheatMode = false;
 
     private Vector3 lastGroundPosition;
     private Quaternion lastGroundRotation;
@@ -210,6 +211,15 @@ public class PlayerController : MonoBehaviour
         forward = Vector3.ProjectOnPlane(forward, Vector3.up).normalized;
         right = Vector3.ProjectOnPlane(right, Vector3.up).normalized;
 
+        if (Input.GetKey(KeyCode.P))
+        {
+            gameManager.timeGrenadeSkill.isUnlocked = true;
+            gameManager.ricochetSkill.isUnlocked = true;
+            gameManager.doubleJumpSkill.isUnlocked = true;
+            gameManager.blinkSkill.isUnlocked = true;
+            gameManager.slowTimeSkill.isUnlocked = true;
+        }
+
         if (Input.GetKey(KeyCode.W) && !isRewinding)
         {
             animator.SetBool("movingForwards", true);
@@ -243,7 +253,7 @@ public class PlayerController : MonoBehaviour
             animator.SetBool("movingLeft", false);
         }
 
-        if (Input.GetKeyDown(KeyCode.F) && !isRewinding && gameManager.blinkSkill.isUnlocked && !pauseMenuActive)
+        if (Input.GetKeyDown(KeyCode.F) && !isRewinding && !pauseMenuActive && gameManager.blinkSkill.isUnlocked)
         {
             BlinkAbility();
         }
