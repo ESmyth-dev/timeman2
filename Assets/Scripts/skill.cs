@@ -10,6 +10,7 @@ public class Skill
     public Texture skillTexture;
     //description
     public string skillDescription;
+    public bool isUnlocked = false;
     //keybind
     public KeyCode keybind;
 }
