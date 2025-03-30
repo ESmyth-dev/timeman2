@@ -13,12 +13,12 @@ public class uiController : MonoBehaviour
 
     void Start()
     {
-        // ability bar
-        slowAbilityBackground = GameObject.Find("SlowInactive").GetComponent<Image>();
-        slowAbilityBackground.enabled = false;
+        //// ability bar
+        //slowAbilityBackground = GameObject.Find("SlowInactive").GetComponent<Image>();
+        //slowAbilityBackground.enabled = false;
 
-        blinkBackground = GameObject.Find("BlinkInactive").GetComponent<Image>();
-        blinkBackground.enabled = false;
+        //blinkBackground = GameObject.Find("BlinkInactive").GetComponent<Image>();
+        //blinkBackground.enabled = false;
     }
 
     // Update is called once per frame

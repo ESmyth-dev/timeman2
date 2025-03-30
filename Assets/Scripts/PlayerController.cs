@@ -369,7 +369,9 @@ public class PlayerController : MonoBehaviour
         {
             babyBombReady = false;
             Image bombBackground = GameObject.Find("BombInactive").GetComponent<Image>();
-            bombBackground.enabled = true;
+            var tempColor = bombBackground.color;
+            tempColor.a = 0.2f;
+            bombBackground.color = tempColor;
             StartCoroutine(babyBombCooldown());
 
             GameObject bomb = Instantiate(bombPrefab, gun.position, Quaternion.Euler(transform.rotation.x, transform.rotation.y, transform.rotation.z));
@@ -390,7 +392,9 @@ public class PlayerController : MonoBehaviour
         yield return new WaitForSeconds(babyBombCooldownSeconds);
         babyBombReady = true;
         Image bombBackground = GameObject.Find("BombInactive").GetComponent<Image>();
-        bombBackground.enabled = false;
+        var tempColor = bombBackground.color;
+        tempColor.a = 1f;
+        bombBackground.color = tempColor;
     }
 
     public void JumpEnd()
@@ -438,7 +442,9 @@ public class PlayerController : MonoBehaviour
         // wait another 5 seconds to use the slow time ability again
         yield return new WaitForSeconds(slowdownCooldownSeconds);
         Image slowAbilityBackground = GameObject.Find("SlowInactive").GetComponent<Image>();
-        slowAbilityBackground.enabled = false;
+        var tempColor = slowAbilityBackground.color;
+        tempColor.a = 0.2f;
+        slowAbilityBackground.color = tempColor;
         timeSlowedCooldown = false;
 
     }
@@ -458,7 +464,9 @@ public class PlayerController : MonoBehaviour
             timeSlowedCooldown = true;
 
             Image slowAbilityBackground = GameObject.Find("SlowInactive").GetComponent<Image>();
-            slowAbilityBackground.enabled = true;
+            var tempColor = slowAbilityBackground.color;
+            tempColor.a = 0.2f;
+            slowAbilityBackground.color = tempColor;
 
             slowTimeAudioSource.PlayOneShot(timeSlowAudioClip);
 
@@ -470,7 +478,9 @@ public class PlayerController : MonoBehaviour
     {
         yield return new WaitForSeconds(blinkCooldownSeconds);
         Image blinkBackground = GameObject.Find("BlinkInactive").GetComponent<Image>();
-        blinkBackground.enabled = false;
+        var tempColor = blinkBackground.color;
+        tempColor.a = 1f;
+        blinkBackground.color = tempColor;
         blinkReady = true;
     }
 
@@ -521,7 +531,9 @@ public class PlayerController : MonoBehaviour
                 Instantiate(blinkSFX, effectVector, effectRotation);
             }
             Image blinkBackground = GameObject.Find("BlinkInactive").GetComponent<Image>();
-            blinkBackground.enabled = true;
+            var tempColor = blinkBackground.color;
+            tempColor.a = 0.2f;
+            blinkBackground.color = tempColor;
             blinkReady = false;
             blinkAudioSource.PlayOneShot(blinkAudioClip);
             StartCoroutine(blinkCooldown());
