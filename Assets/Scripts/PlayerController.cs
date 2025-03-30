@@ -6,6 +6,7 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.Rendering.PostProcessing;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using UnityEngine.Video;
 
@@ -86,6 +87,10 @@ public class PlayerController : MonoBehaviour
     private Button backToGameButton;
     private UserIntManager UIman;
 
+    //Coroutines
+    private Coroutine recordPositionsCoroutine;
+    private Coroutine recordGroundCoroutine;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -97,6 +102,11 @@ public class PlayerController : MonoBehaviour
         {
             Debug.Log("ERROR: NO GAMEMANGER. Making new one temporarily");
             gameManager = new GameManager();
+        }
+
+        if (GameManager.instance.beamSkill.isUnlocked)
+        {
+            beamEnabled = true;
         }
 
 
@@ -140,13 +150,28 @@ public class PlayerController : MonoBehaviour
         rewindProfile = Resources.Load<PostProcessProfile>("RewindProfile");
 
         //Start recording positions
-        StartCoroutine(RecordPositions());
-        if(GameObject.Find("Lava")){
-            Debug.Log("Lava found, setting lastGroundPosition to lava position");
-            StartCoroutine(RecordGroundPosition());
-        }
-
+        recordPositionsCoroutine = StartCoroutine(RecordPositions());
+        recordGroundCoroutine = StartCoroutine(RecordGroundPosition());
     }
+
+    private void OnTriggerEnter(Collider other)
+        {
+            // Check if collided object has the "laser" tag
+            if (other.CompareTag("Laser"))
+            {
+                Hit();
+            }
+        }
+   
+    private void OnParticleCollision(GameObject particleSystemGO)
+    {
+        // Check if the colliding particle's GameObject has the "Laser" tag
+        if (particleSystemGO.CompareTag("Laser"))
+        {
+            Hit();
+        }
+    }
+
 
     // Update is called once per frame
     void Update()
@@ -165,7 +190,8 @@ public class PlayerController : MonoBehaviour
         }
 
 
-
+        // get player colldier, if colldier iteracts with with player, check the tag of colldier, if collider is "laser" then call Hit()
+        
         if (slider.value <= 0.1f)
         {
             overHeated = false;
@@ -264,6 +290,7 @@ public class PlayerController : MonoBehaviour
                     overHeated = true;                    
                 } 
                 GameObject bullet = Instantiate(shotPrefab, gun.position, Quaternion.Euler(transform.rotation.x, transform.rotation.y, transform.rotation.z));
+                
 
                 // set bullet's firer variable
                 ShotCollision shotScript = bullet.GetComponent<ShotCollision>();
@@ -289,7 +316,6 @@ public class PlayerController : MonoBehaviour
             if (!overHeated)
             {
                 slider.value += beamFillSpeed * Time.deltaTime;
-                Debug.Log("Click");
                 if (slider.value >= 1f)
                 {
                     overHeated = true;
@@ -300,7 +326,11 @@ public class PlayerController : MonoBehaviour
                     if (hits[i].distance > 3)
                     {
                         beamLine.SetPosition(0, gun.position);
-                        beamLine.SetPosition(1, hits[i].point); 
+                        beamLine.SetPosition(1, hits[i].point);
+                        if ((hits[i].collider.gameObject.tag == "Enemy" || hits[i].collider.gameObject.tag == "downEnemy"))
+                        {
+                            hits[i].collider.gameObject.GetComponent<EnemyBehaviour>().Hit();
+                        }
                         beamLight.transform.position = gun.position;
                         beamLight.transform.rotation = gun.rotation;
                         break;
@@ -308,8 +338,15 @@ public class PlayerController : MonoBehaviour
                 }
                 beamLine.enabled = true;
                 beamLight.enabled = true;
+
             }
         }
+
+        if(Input.GetMouseButtonUp(0) && beamEnabled && !isRewinding && !pauseMenuActive)
+        {
+            beamLine.enabled = false;
+        }
+
         if (Input.GetMouseButtonDown(1) && babyBombReady && !isRewinding && gameManager.timeGrenadeSkill.isUnlocked && !pauseMenuActive)
         {
             babyBombReady = false;
@@ -491,6 +528,7 @@ public class PlayerController : MonoBehaviour
                 recordedPositions.Add(transform.position);
                 recordedRotations.Add(transform.rotation);
 
+                Debug.Log("Recording position: " + transform.position);
                 //Waits 1 sec
                 yield return new WaitForSeconds(1f);
         }
@@ -540,8 +578,11 @@ public class PlayerController : MonoBehaviour
         postProcessVolume.enabled = true;
         SetEnemyBehaviour(false);      
 
-        StopCoroutine(RecordPositions());
-        StopCoroutine(RecordGroundPosition()); // Stop any existing coroutines
+        Debug.Log("Stopping position recording before rewind");
+        StopCoroutine(recordPositionsCoroutine);
+        recordPositionsCoroutine = null;
+        StopCoroutine(recordGroundCoroutine);
+        recordGroundCoroutine = null;
         StartCoroutine(SmoothRewind());
     }
 
@@ -590,8 +631,8 @@ public class PlayerController : MonoBehaviour
         isRewinding = false;
 
         Debug.Log("Rewind complete.");
-        StartCoroutine(RecordPositions());
-        StartCoroutine(RecordGroundPosition()); // Restart recording positions
+        recordPositionsCoroutine = StartCoroutine(RecordPositions());
+        recordGroundCoroutine = StartCoroutine(RecordGroundPosition());
     }
 
     private IEnumerator EnableEnemyBehaviourAfterDelay()
@@ -641,6 +682,8 @@ public class PlayerController : MonoBehaviour
         GameObject deathVideoPlayerObj = GameObject.Find("DeathVideoPlayer");
         VideoPlayer deathVideoPlayer = deathVideoPlayerObj.GetComponent<VideoPlayer>();
 
+        deathVideoPlayer.loopPointReached += ResetGameAfterDeath; // Reset the game when you die
+
         Camera mainCamera = GetComponentInChildren<Camera>();
         deathVideoPlayer.targetCamera = mainCamera;
 
@@ -649,6 +692,17 @@ public class PlayerController : MonoBehaviour
         int randomIndex = Random.Range(0, deathClips.Length);
         deathVideoPlayer.clip = deathClips[randomIndex];
         deathVideoPlayer.Play();
+    }
+
+
+    private void ResetGameAfterDeath(VideoPlayer vp)
+    {
+        vp.loopPointReached -= ResetGameAfterDeath;
+
+        Destroy(GameManager.instance.gameObject);
+
+        // reload Level1 scene
+        SceneManager.LoadScene("Level1");
     }
 
 
