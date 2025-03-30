@@ -7,6 +7,7 @@ using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.Rendering.PostProcessing;
 using UnityEngine.UI;
+using UnityEngine.Video;
 
 public class PlayerController : MonoBehaviour
 {
@@ -589,10 +590,36 @@ public class PlayerController : MonoBehaviour
             if (!isRewinding){
                 Rewind();
             }
-        }else{
-            GameManager.instance.GameOver();
+        } else {
+            //GameManager.instance.GameOver();
+            Death();
         }
     }
+
+    public void Death()
+    {
+        isRewinding = true; // Disable player behaviour
+
+        GameObject guiCanvas = GameObject.Find("GuiCanvas");
+        if (guiCanvas != null)
+        {
+            guiCanvas.SetActive(false);
+        }
+
+        GameObject deathVideoPlayerObj = GameObject.Find("DeathVideoPlayer");
+        VideoPlayer deathVideoPlayer = deathVideoPlayerObj.GetComponent<VideoPlayer>();
+
+        Camera mainCamera = GetComponentInChildren<Camera>();
+        deathVideoPlayer.targetCamera = mainCamera;
+
+        VideoClip[] deathClips = Resources.LoadAll<VideoClip>("DeathVideos");
+
+        int randomIndex = Random.Range(0, deathClips.Length);
+        deathVideoPlayer.clip = deathClips[randomIndex];
+        deathVideoPlayer.Play();
+    }
+
+
 
     public void LavaHit(){
         if(numberOfLives > 0){
