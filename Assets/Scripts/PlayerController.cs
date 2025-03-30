@@ -6,6 +6,7 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.Rendering.PostProcessing;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using UnityEngine.Video;
 
@@ -161,6 +162,16 @@ public class PlayerController : MonoBehaviour
                 Hit();
             }
         }
+   
+    private void OnParticleCollision(GameObject particleSystemGO)
+    {
+        // Check if the colliding particle's GameObject has the "Laser" tag
+        if (particleSystemGO.CompareTag("Laser"))
+        {
+            Hit();
+        }
+    }
+
 
     // Update is called once per frame
     void Update()
@@ -671,6 +682,8 @@ public class PlayerController : MonoBehaviour
         GameObject deathVideoPlayerObj = GameObject.Find("DeathVideoPlayer");
         VideoPlayer deathVideoPlayer = deathVideoPlayerObj.GetComponent<VideoPlayer>();
 
+        deathVideoPlayer.loopPointReached += ResetGameAfterDeath; // Reset the game when you die
+
         Camera mainCamera = GetComponentInChildren<Camera>();
         deathVideoPlayer.targetCamera = mainCamera;
 
@@ -679,6 +692,27 @@ public class PlayerController : MonoBehaviour
         int randomIndex = Random.Range(0, deathClips.Length);
         deathVideoPlayer.clip = deathClips[randomIndex];
         deathVideoPlayer.Play();
+    }
+
+
+    private void ResetGameAfterDeath(VideoPlayer vp)
+    {
+        vp.loopPointReached -= ResetGameAfterDeath;
+
+        Destroy(GameManager.instance.gameObject);
+
+        // reload Level1 scene
+        SceneManager.LoadScene("Level1");
+    }
+
+
+
+    public void LavaHit(){
+        if(numberOfLives > 0){
+            numberOfLives--;
+            transform.position = lastGroundPosition;
+            transform.rotation = lastGroundRotation;
+        }
     }
 
     private void SetEnemyBehaviour(bool value)
