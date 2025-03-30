@@ -34,6 +34,7 @@ public class PlayerController : MonoBehaviour
     private bool isGrounded;
     private Rigidbody rb;
     public bool timeSlowed;
+    public bool timeSlowedCooldown;
     private Coroutine slowTimeCoroutine;
     private bool blinkReady;
     private bool babyBombReady = true;
@@ -108,6 +109,7 @@ public class PlayerController : MonoBehaviour
         overHeated = false;
         blinkReady = true;
         timeSlowed = false;
+        timeSlowedCooldown = false;
         animator.applyRootMotion = false;
         rb = GetComponent<Rigidbody>();
 
@@ -384,13 +386,14 @@ public class PlayerController : MonoBehaviour
         yield return new WaitForSeconds(slowdownCooldownSeconds);
         Image slowAbilityBackground = GameObject.Find("SlowInactive").GetComponent<Image>();
         slowAbilityBackground.enabled = false;
+        timeSlowedCooldown = false;
 
     }
 
     void SlowTimeAbility()
     {
         Debug.Log("slowslow");
-        if (!timeSlowed)
+        if (!timeSlowedCooldown)
         {
             postProcessVolume.profile = timeSlowProfile;
             postProcessVolume.enabled = true;
@@ -399,6 +402,7 @@ public class PlayerController : MonoBehaviour
             //speed *= slowdownFactor;
             //animator.speed *= slowdownFactor;
             timeSlowed = true;
+            timeSlowedCooldown = true;
 
             Image slowAbilityBackground = GameObject.Find("SlowInactive").GetComponent<Image>();
             slowAbilityBackground.enabled = true;
