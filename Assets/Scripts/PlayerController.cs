@@ -214,7 +214,7 @@ public class PlayerController : MonoBehaviour
         if (Input.GetKey(KeyCode.P))
         {
             gameManager.timeGrenadeSkill.isUnlocked = true;
-            gameManager.ricochetSkill.isUnlocked = true;
+            gameManager.beamSkill.isUnlocked = true;
             gameManager.doubleJumpSkill.isUnlocked = true;
             gameManager.blinkSkill.isUnlocked = true;
             gameManager.slowTimeSkill.isUnlocked = true;
