@@ -22,6 +22,9 @@ TagManager:
   - Lava
   - skeleton
   - babySkeleton
+  - slow
+  - blink
+  - bomb
   layers:
   - Default
   - TransparentFX
