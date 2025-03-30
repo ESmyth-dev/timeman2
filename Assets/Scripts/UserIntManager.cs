@@ -8,16 +8,21 @@ public class UserIntManager : MonoBehaviour
 {
     // Start is called before the first frame update
 
+    //abilities
     private Image slowAbilityBackground;
     private Image blinkBackground;
     private Image bombBackground;
+
+    //pause menu
     private Image pauseMenuBackground;
     private Button exitButton;
     private Button backToGameButton;
-    private GameObject abilityChoice;
+
+    //main menu
     private GameObject MainMenu;
     private Button playButton;
-    private GameObject selectUpgrade;
+
+    //
     private GameObject p;
 
     private float gameTimeScale;
@@ -26,19 +31,21 @@ public class UserIntManager : MonoBehaviour
 
     void Start()
     {
-        // main menu
-        MainMenu = GameObject.Find("MainMenu");
-        playButton = GameObject.Find("PlayButton").GetComponent<Button>();
-        playButton.onClick.AddListener(play);
 
-        if (SceneManager.GetActiveScene().name != "HomePage")
+        if (SceneManager.GetActiveScene().name == "HomePage")
         {
-            MainMenu.SetActive(false);
+            MainMenu = GameObject.Find("MainMenu");
+            playButton = GameObject.Find("PlayButton").GetComponent<Button>();
+            playButton.onClick.AddListener(play);
+            Time.timeScale = 0;
+            Cursor.visible = true;
+            Cursor.lockState = CursorLockMode.None;
         }    
         else
         {
-            Time.timeScale = 0;
-            Cursor.visible = true;
+            //MainMenu = GameObject.Find("MainMenu");
+            //MainMenu.SetActive(false);
+            //playButton.gameObject.SetActive(false);
         }
 
         //MainMenu.SetActive(false);
@@ -52,10 +59,6 @@ public class UserIntManager : MonoBehaviour
 
         bombBackground = GameObject.Find("BombInactive").GetComponent<Image>();
         bombBackground.enabled = false;
-
-        //choose new ability
-        abilityChoice = GameObject.Find("SelectNewAbility");
-        abilityChoice.SetActive(false);
 
         // pause menu
         menuActive = false;
@@ -72,8 +75,8 @@ public class UserIntManager : MonoBehaviour
         exitButton.gameObject.SetActive(false);
         backToGameButton.gameObject.SetActive(false);
 
-        p = GameObject.Find("PauseMenu");
-        p.SetActive(false);
+        //p = GameObject.Find("PauseMenu");
+        //p.SetActive(false);
 
 
 
@@ -85,21 +88,21 @@ public class UserIntManager : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.Escape) && !menuActive)
         {
-            pauseMenuBackground.enabled = true;
-            gameTimeScale = Time.timeScale;
-            Time.timeScale = 0;
-            //exitButton.gameObject.SetActive(true);
-            //backToGameButton.gameObject.SetActive(true);
-            Cursor.lockState = CursorLockMode.None;
-            Cursor.visible = true;
-            menuActive = true;
+            pauseMenuBackground.enabled = true; // show pause menu background
+            gameTimeScale = Time.timeScale;     // save time scale
+            Time.timeScale = 0;                 // pause game
+            exitButton.gameObject.SetActive(true);  // show exit button
+            backToGameButton.gameObject.SetActive(true);    // show back button
+            Cursor.lockState = CursorLockMode.None; // allow cursor to move
+            Cursor.visible = true;  // show cursor
+            menuActive = true;  // tracks if the pause menu is active
         }
         else if (Input.GetKeyDown(KeyCode.Escape) && menuActive)
         {
             pauseMenuBackground.enabled = false;
             Time.timeScale = gameTimeScale;
-            //exitButton.gameObject.SetActive(false);
-            //backToGameButton.gameObject.SetActive(false);
+            exitButton.gameObject.SetActive(false);
+            backToGameButton.gameObject.SetActive(false);
             Cursor.lockState = CursorLockMode.Locked;
             Cursor.visible = false;
             menuActive = false;
@@ -132,8 +135,10 @@ public class UserIntManager : MonoBehaviour
     {
         Debug.Log("click play");
         MainMenu.SetActive(false);
+        playButton.gameObject.SetActive(false);
         Time.timeScale = 1;
         Cursor.visible = false;
+        Cursor.lockState = CursorLockMode.Locked;
         SceneManager.LoadScene("Level1");
     }
 }
