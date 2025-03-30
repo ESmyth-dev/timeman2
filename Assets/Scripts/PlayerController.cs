@@ -692,6 +692,17 @@ public class PlayerController : MonoBehaviour
         int randomIndex = Random.Range(0, deathClips.Length);
         deathVideoPlayer.clip = deathClips[randomIndex];
         deathVideoPlayer.Play();
+
+        // show text
+        GameObject gameOverRawImage = GameObject.Find("GameOverRawImage");
+        if (gameOverRawImage != null)
+        {
+            RawImage rawImage = gameOverRawImage.GetComponent<RawImage>();
+            if (rawImage != null)
+            {
+                rawImage.enabled = true;
+            }
+        }
     }
 
 
