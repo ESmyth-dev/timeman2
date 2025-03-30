@@ -372,8 +372,6 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-
-
     void OnCollision(Collision collision)
     {
         Debug.Log("Collision with: " + collision.gameObject.name);
@@ -425,8 +423,7 @@ public class PlayerController : MonoBehaviour
             slowTimeAudioSource.PlayOneShot(timeSlowAudioClip);
 
             slowTimeCoroutine = StartCoroutine(SlowTime());
-        }
-        
+        } 
     }
 
     IEnumerator blinkCooldown()
@@ -506,7 +503,6 @@ public class PlayerController : MonoBehaviour
                 recordedPositions.Add(transform.position);
                 recordedRotations.Add(transform.rotation);
 
-                Debug.Log("Recording position: " + transform.position);
                 //Waits 1 sec
                 yield return new WaitForSeconds(1f);
         }
@@ -516,7 +512,7 @@ public class PlayerController : MonoBehaviour
     {
         while (true)
         {
-            if (isGrounded)
+            if (isGrounded=CheckIfGrounded())
             {
                 lastGroundPosition = transform.position;
                 lastGroundRotation = transform.rotation;
@@ -569,7 +565,6 @@ public class PlayerController : MonoBehaviour
         Debug.Log("Rewinding...");
 
         if(GameObject.Find("Lava")){
-            Debug.Log("Lava found, setting lastGroundPosition to lava position");
             recordedPositions[0] = lastGroundPosition;
             recordedRotations[0] = lastGroundRotation;
         }
@@ -577,8 +572,6 @@ public class PlayerController : MonoBehaviour
         // Iterate backward through recorded positions
         for (int i = recordedPositions.Count - 1; i >= 0; i--)
         {
-
-            Debug.Log("Rewinding to position: " + recordedPositions[i]);
             Vector3 startPos = transform.position;
             Quaternion startRot = transform.rotation;
             Vector3 targetPos = recordedPositions[i];
@@ -622,9 +615,6 @@ public class PlayerController : MonoBehaviour
 
     public void Hit()
     {
-        //sends a log message to terminal 
-        Debug.Log("Player has been hit");
-
         if (isRewinding)
         {
             return;
@@ -713,6 +703,19 @@ public class PlayerController : MonoBehaviour
         }
 
         return result;
+    }
+
+    private bool CheckIfGrounded(){
+
+        int layerMask = ~LayerMask.GetMask("LavaLayer");
+        // Check if the player is grounded by casting a ray downwards
+        RaycastHit hit;
+        if (Physics.Raycast(transform.position, Vector3.down, out hit, 0.5f, layerMask))
+        {
+            Debug.Log("Grounded: " + hit.collider.gameObject.name);
+            return true;
+        }
+        return false;
     }
 }
 
