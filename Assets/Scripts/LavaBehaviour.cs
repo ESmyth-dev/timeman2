@@ -4,11 +4,11 @@ using UnityEngine;
 
 public class LavaBehaviour : MonoBehaviour
 {
-    private void OnCollisionEnter(Collision collision){
-        if(collision.gameObject.tag == "Player"){
+    private void OnTriggerEnter(Collider collider){
+        if(collider.gameObject.tag == "Player"){
             Debug.Log("Lava Hit");
 
-            collision.gameObject.GetComponent<PlayerController>().LavaHit();
+            collider.gameObject.GetComponent<PlayerController>().Hit();
         }
     }
 }

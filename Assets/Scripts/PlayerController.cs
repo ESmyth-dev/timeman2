@@ -98,7 +98,7 @@ public class PlayerController : MonoBehaviour
         }
 
 
-            slider = GameObject.Find("Slider").GetComponent<Slider>();
+        slider = GameObject.Find("Slider").GetComponent<Slider>();
 
         pauseMenuActive = false;
         UIman = GameObject.Find("GuiCanvas").GetComponent<UserIntManager>();
@@ -138,7 +138,11 @@ public class PlayerController : MonoBehaviour
 
         //Start recording positions
         StartCoroutine(RecordPositions());
-        StartCoroutine(RecordGroundPosition());
+        if(GameObject.Find("Lava")){
+            Debug.Log("Lava found, setting lastGroundPosition to lava position");
+            StartCoroutine(RecordGroundPosition());
+        }
+
     }
 
     // Update is called once per frame
@@ -517,7 +521,8 @@ public class PlayerController : MonoBehaviour
         postProcessVolume.enabled = true;
         SetEnemyBehaviour(false);      
 
-        StopCoroutine(RecordPositions()); // Stop any existing coroutines
+        StopCoroutine(RecordPositions());
+        StopCoroutine(RecordGroundPosition()); // Stop any existing coroutines
         StartCoroutine(SmoothRewind());
     }
 
@@ -525,9 +530,17 @@ public class PlayerController : MonoBehaviour
     {
         Debug.Log("Rewinding...");
 
+        if(GameObject.Find("Lava")){
+            Debug.Log("Lava found, setting lastGroundPosition to lava position");
+            recordedPositions[0] = lastGroundPosition;
+            recordedRotations[0] = lastGroundRotation;
+        }
+
         // Iterate backward through recorded positions
         for (int i = recordedPositions.Count - 1; i >= 0; i--)
         {
+
+            Debug.Log("Rewinding to position: " + recordedPositions[i]);
             Vector3 startPos = transform.position;
             Quaternion startRot = transform.rotation;
             Vector3 targetPos = recordedPositions[i];
@@ -558,7 +571,8 @@ public class PlayerController : MonoBehaviour
         isRewinding = false;
 
         Debug.Log("Rewind complete.");
-        StartCoroutine(RecordPositions()); // Restart recording positions
+        StartCoroutine(RecordPositions());
+        StartCoroutine(RecordGroundPosition()); // Restart recording positions
     }
 
     private IEnumerator EnableEnemyBehaviourAfterDelay()
@@ -591,14 +605,6 @@ public class PlayerController : MonoBehaviour
             }
         }else{
             GameManager.instance.GameOver();
-        }
-    }
-
-    public void LavaHit(){
-        if(numberOfLives > 0){
-            numberOfLives--;
-            transform.position = lastGroundPosition;
-            transform.rotation = lastGroundRotation;
         }
     }
 
