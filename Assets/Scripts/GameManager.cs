@@ -87,7 +87,14 @@ public class GameManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        if (beamSkill.isUnlocked)
+        {
+            skills.Remove(ricochetSkill);
+        }
+        if (ricochetSkill.isUnlocked)
+        {
+            skills.Remove(beamSkill);
+        }
     }
 
     public void GameOver()
