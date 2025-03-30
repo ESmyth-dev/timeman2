@@ -133,8 +133,35 @@ public class LaserMachine : MonoBehaviour {
         RaycastHit2D hitInfo2D;
         RaycastHit hitInfo3D;
 
+        
+
         foreach (LaserElement element in elementsList)
         {
+            
+            // Get the BoxCollider component attached to the laser element
+            BoxCollider laserCollider = element.transform.GetComponent<BoxCollider>();
+            
+            // Check if any colliders are overlapping with the laser's box collider
+            Collider[] hitColliders = Physics.OverlapBox(
+                laserCollider.bounds.center, 
+                laserCollider.bounds.extents, 
+                element.transform.rotation, 
+                m_currentProperties.m_layerMask);
+            
+            // Check if the player is among the hit colliders
+            foreach (Collider hitCol in hitColliders)
+            {
+                if (hitCol.CompareTag("Player"))
+                {
+                    Debug.Log("Hit player");
+                    // You could also add code to damage the player here
+                }
+            }
+
+
+
+
+
             if ( m_currentProperties.m_rotate )
             {
                 if ( m_currentProperties.m_rotateClockwise )

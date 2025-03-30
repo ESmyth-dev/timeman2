@@ -144,10 +144,27 @@ public class PlayerController : MonoBehaviour
         rewindProfile = Resources.Load<PostProcessProfile>("RewindProfile");
 
         //Start recording positions
+<<<<<<< Updated upstream
         recordPositionsCoroutine = StartCoroutine(RecordPositions());
         recordGroundCoroutine = StartCoroutine(RecordGroundPosition());
 
+=======
+        StartCoroutine(RecordPositions());
+        if(GameObject.Find("Lava")){
+            Debug.Log("Lava found, setting lastGroundPosition to lava position");
+            StartCoroutine(RecordGroundPosition());
+        }
+>>>>>>> Stashed changes
     }
+
+    private void OnTriggerEnter(Collider other)
+        {
+            // Check if collided object has the "laser" tag
+            if (other.CompareTag("Laser"))
+            {
+                Hit();
+            }
+        }
 
     // Update is called once per frame
     void Update()
@@ -166,7 +183,8 @@ public class PlayerController : MonoBehaviour
         }
 
 
-
+        // get player colldier, if colldier iteracts with with player, check the tag of colldier, if collider is "laser" then call Hit()
+        
         if (slider.value <= 0.1f)
         {
             overHeated = false;
