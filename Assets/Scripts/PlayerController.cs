@@ -99,6 +99,11 @@ public class PlayerController : MonoBehaviour
             gameManager = new GameManager();
         }
 
+        if (GameManager.instance.beamSkill.isUnlocked)
+        {
+            beamEnabled = true;
+        }
+
 
         slider = GameObject.Find("Slider").GetComponent<Slider>();
 
