@@ -103,6 +103,11 @@ public class PlayerController : MonoBehaviour
             gameManager = new GameManager();
         }
 
+        if (GameManager.instance.beamSkill.isUnlocked)
+        {
+            beamEnabled = true;
+        }
+
 
         slider = GameObject.Find("Slider").GetComponent<Slider>();
 
@@ -146,7 +151,6 @@ public class PlayerController : MonoBehaviour
         //Start recording positions
         recordPositionsCoroutine = StartCoroutine(RecordPositions());
         recordGroundCoroutine = StartCoroutine(RecordGroundPosition());
-
     }
 
     private void OnTriggerEnter(Collider other)
