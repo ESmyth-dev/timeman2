@@ -53,10 +53,6 @@ public class UserIntManager : MonoBehaviour
         bombBackground = GameObject.Find("BombInactive").GetComponent<Image>();
         bombBackground.enabled = false;
 
-        //choose new ability
-        abilityChoice = GameObject.Find("SelectNewAbility");
-        abilityChoice.SetActive(false);
-
         // pause menu
         menuActive = false;
         pauseMenuBackground = GameObject.Find("PauseMenuBackground").GetComponent<Image>();
