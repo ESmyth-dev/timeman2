@@ -290,6 +290,7 @@ public class PlayerController : MonoBehaviour
                     overHeated = true;                    
                 } 
                 GameObject bullet = Instantiate(shotPrefab, gun.position, Quaternion.Euler(transform.rotation.x, transform.rotation.y, transform.rotation.z));
+                
 
                 // set bullet's firer variable
                 ShotCollision shotScript = bullet.GetComponent<ShotCollision>();
@@ -315,7 +316,6 @@ public class PlayerController : MonoBehaviour
             if (!overHeated)
             {
                 slider.value += beamFillSpeed * Time.deltaTime;
-                Debug.Log("Click");
                 if (slider.value >= 1f)
                 {
                     overHeated = true;
@@ -326,7 +326,11 @@ public class PlayerController : MonoBehaviour
                     if (hits[i].distance > 3)
                     {
                         beamLine.SetPosition(0, gun.position);
-                        beamLine.SetPosition(1, hits[i].point); 
+                        beamLine.SetPosition(1, hits[i].point);
+                        if ((hits[i].collider.gameObject.tag == "Enemy" || hits[i].collider.gameObject.tag == "downEnemy"))
+                        {
+                            hits[i].collider.gameObject.GetComponent<EnemyBehaviour>().Hit();
+                        }
                         beamLight.transform.position = gun.position;
                         beamLight.transform.rotation = gun.rotation;
                         break;
@@ -334,8 +338,15 @@ public class PlayerController : MonoBehaviour
                 }
                 beamLine.enabled = true;
                 beamLight.enabled = true;
+
             }
         }
+
+        if(Input.GetMouseButtonUp(0) && beamEnabled && !isRewinding && !pauseMenuActive)
+        {
+            beamLine.enabled = false;
+        }
+
         if (Input.GetMouseButtonDown(1) && babyBombReady && !isRewinding && gameManager.timeGrenadeSkill.isUnlocked && !pauseMenuActive)
         {
             babyBombReady = false;

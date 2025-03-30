@@ -7,7 +7,7 @@ public class ShotCollision : MonoBehaviour
     public GameObject Firer = null;
 
     private Vector3 direction;
-    public int ricochetCount;
+    public int ricochetCount = 0;
     private int ricochets;
     private bool isEnemyBullet = true;
     PlayerController playerController;
