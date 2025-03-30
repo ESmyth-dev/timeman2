@@ -56,48 +56,62 @@ public class LaserMachine : MonoBehaviour {
         m_assignSparks = m_data.m_laserSparks != null;
         m_assignLaserMaterial = m_data.m_laserMaterial != null;
 
-        for (int i = 0; i < laserCount; i++)
-        {
-            LaserElement element = new LaserElement();
+            for (int i = 0; i < laserCount; i++)
+            {
+                LaserElement element = new LaserElement();
+                // add the Laser tag to the object
 
-            GameObject newObj = new GameObject("lineRenderer_" + i.ToString());
+                GameObject newObj = new GameObject("lineRenderer_" + i.ToString());
+                newObj.tag = "Laser";
 
-            if( m_currentProperties.m_physicsType == LaserProperties.PhysicsType.Physics2D )
+                if( m_currentProperties.m_physicsType == LaserProperties.PhysicsType.Physics2D )
                 newObj.transform.position = (Vector2)transform.position;
-            else
+                else
                 newObj.transform.position = transform.position;
 
-            newObj.transform.rotation = transform.rotation;
-            newObj.transform.Rotate( Vector3.up , i * angleStep );
-            newObj.transform.position += newObj.transform.forward * m_currentProperties.m_minRadialDistance;
+                newObj.transform.rotation = transform.rotation;
+                newObj.transform.Rotate( Vector3.up , i * angleStep );
+                newObj.transform.position += newObj.transform.forward * m_currentProperties.m_minRadialDistance;
 
-            newObj.AddComponent<LineRenderer>();
+                newObj.AddComponent<LineRenderer>();
+                
 
-            if( m_assignLaserMaterial )
+                if( m_assignLaserMaterial )
                 newObj.GetComponent<LineRenderer>().material = m_data.m_laserMaterial;
 
-            newObj.GetComponent<LineRenderer>().receiveShadows = false;
-            newObj.GetComponent<LineRenderer>().shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
-            newObj.GetComponent<LineRenderer>().startWidth = m_currentProperties.m_rayWidth;
-            newObj.GetComponent<LineRenderer>().useWorldSpace = true;
-            newObj.GetComponent<LineRenderer>().SetPosition(0, newObj.transform.position);
-            newObj.GetComponent<LineRenderer>().SetPosition(1, newObj.transform.position + transform.forward * m_currentProperties.m_maxRadialDistance);
-            newObj.transform.SetParent(transform);
-            
-            if( m_assignSparks )
-            {
+                newObj.GetComponent<LineRenderer>().receiveShadows = false;
+                newObj.GetComponent<LineRenderer>().shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+                newObj.GetComponent<LineRenderer>().startWidth = m_currentProperties.m_rayWidth;
+                newObj.GetComponent<LineRenderer>().useWorldSpace = true;
+                newObj.GetComponent<LineRenderer>().SetPosition(0, newObj.transform.position);
+                newObj.GetComponent<LineRenderer>().SetPosition(1, newObj.transform.position + transform.forward * m_currentProperties.m_maxRadialDistance);
+                newObj.transform.SetParent(transform);
+
+                //newObj.AddComponent<Collider>();
+                // add box collider
+                BoxCollider boxCollider = newObj.AddComponent<BoxCollider>();
+                // set size of collider
+                boxCollider.isTrigger = true;
+                boxCollider.size = new Vector3(0.25f, 0.25f, m_currentProperties.m_maxRadialDistance);
+                // set center of collider
+                boxCollider.center = new Vector3(0, 0, m_currentProperties.m_maxRadialDistance / 2);
+
+
+                
+                if( m_assignSparks )
+                {
                 GameObject sparks = Instantiate(m_data.m_laserSparks);
                 sparks.transform.SetParent(newObj.transform);
                 sparks.SetActive(false);
                 element.sparks = sparks;
+                }
+
+                element.transform = newObj.transform;
+                element.lineRenderer = newObj.GetComponent<LineRenderer>();
+                element.impact = false;
+
+                elementsList.Add(element);
             }
-
-            element.transform = newObj.transform;
-            element.lineRenderer = newObj.GetComponent<LineRenderer>();
-            element.impact = false;
-
-            elementsList.Add(element);
-        }
         
 	}
         
@@ -147,6 +161,10 @@ public class LaserMachine : MonoBehaviour {
 
                     if (hitInfo3D.collider)
                     {
+                        Debug.Log("Hit " + hitInfo3D.collider.gameObject.name);
+
+
+
                         element.lineRenderer.SetPosition(1, hitInfo3D.point);
 
                         if( m_assignSparks )
@@ -160,13 +178,14 @@ public class LaserMachine : MonoBehaviour {
                         for example, if the hitInfoXD.collider is not null do whatever thing you wanna do to the target object.
                         DoAction();
                         */
+                        Debug.Log("Hit " + hitInfo3D.collider.gameObject.name);
+                            if (hitInfo3D.collider.gameObject.tag == "Player")
+                            {
 
-                        if (hitInfo3D.collider.gameObject.tag == "Player")
-                        {
-                            Debug.Log("Player hit");
-                            // call from player contorler script
-                            // hitInfo3D.collider.gameObject.GetComponent<Player>().TakeDamage(1);
-                        }
+                                Debug.Log("Player hit");
+                                // call from player contorler script
+                                // hitInfo3D.collider.gameObject.GetComponent<Player>().TakeDamage(1);
+                            }
 
 
 
