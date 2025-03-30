@@ -21,10 +21,14 @@ public class SkillCanvasPopulator : MonoBehaviour
 
     private Transform description;
 
+    public CloseDoorScript ender;
+
     // Start is called before the first frame update
     void Start()
     {  
         description = GameObject.Find("Description").transform;
+        ender = FindAnyObjectByType<CloseDoorScript>();
+        
     }
 
     // Update is called once per frame
@@ -41,6 +45,10 @@ public class SkillCanvasPopulator : MonoBehaviour
         Button1.GetComponentInChildren<Button>().onClick.AddListener(() =>
         {
             skill1.isUnlocked = true;
+            GameManager.instance.skills.Add(skill2);
+            GameManager.instance.skills.Add(skill3);
+            ender.LoadNextLevel();
+
         });
         //Button1.GetComponentInChildren<RawImage>().texture = skill1.skillTexture;
 
@@ -50,7 +58,9 @@ public class SkillCanvasPopulator : MonoBehaviour
         Button2.GetComponentInChildren<Button>().onClick.AddListener(() =>
         {
             skill2.isUnlocked = true;
-            Debug.Log("skill 2 unlocked");
+            GameManager.instance.skills.Add(skill1);
+            GameManager.instance.skills.Add(skill3);
+            ender.LoadNextLevel();
         });
         //Button2.GetComponentInChildren<RawImage>().texture = skill2.skillTexture;
 
@@ -60,6 +70,9 @@ public class SkillCanvasPopulator : MonoBehaviour
         Button3.GetComponentInChildren<Button>().onClick.AddListener(() =>
         {
             skill3.isUnlocked = true;
+            GameManager.instance.skills.Add(skill1);
+            GameManager.instance.skills.Add(skill2);
+            ender.LoadNextLevel();
         });
         // Button3.GetComponentInChildren<RawImage>().texture = skill3.skillTexture;
     }

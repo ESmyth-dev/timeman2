@@ -3,31 +3,33 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using System.Linq;
+using System;
+using System.Collections.Generic;
 
 
 public class CloseDoorScript : MonoBehaviour
 {
 
-    //private string[] levels = { "Level1", "Level2", "LavaLevel", "Laser Room", "Outside"};
-    private string[] levels;
+    private string[] levels = { "Level1", "Level2", "LavaLevel", "Laser Room", "Outside"};
+    //private string[] levels;
 
-    void Awake()
-    {
-        levels = GetLevelsInBuild();
-    }
+    //void Awake()
+    //{
+    //    levels = GetLevelsInBuild();
+    //}
     
-    private string[] GetLevelsInBuild()
-    {
-        int sceneCount = UnityEngine.SceneManagement.SceneManager.sceneCountInBuildSettings;
-        string[] scenes = new string[sceneCount];
+    //private string[] GetLevelsInBuild()
+    //{
+    //    int sceneCount = UnityEngine.SceneManagement.SceneManager.sceneCountInBuildSettings;
+    //    string[] scenes = new string[sceneCount];
 
-        Debug.Log("Scene count in build settings: " + sceneCount);
-        for (int i = 0; i < sceneCount; i++)
-        {
-            scenes[i] = System.IO.Path.GetFileNameWithoutExtension(UnityEngine.SceneManagement.SceneUtility.GetScenePathByBuildIndex(i));
-        }
-        return scenes;
-    }
+    //    Debug.Log("Scene count in build settings: " + sceneCount);
+    //    for (int i = 0; i < sceneCount; i++)
+    //    {
+    //        scenes[i] = System.IO.Path.GetFileNameWithoutExtension(UnityEngine.SceneManagement.SceneUtility.GetScenePathByBuildIndex(i));
+    //    }
+    //    return scenes;
+    //}
 
     [SerializeField] private float sceneLoadDelay = 1.0f;
     GameObject skillsCanvas;
@@ -79,9 +81,29 @@ public class CloseDoorScript : MonoBehaviour
         FindAnyObjectByType<CameraController>().mouseSensitivity = 0f;
         FindAnyObjectByType<PlayerController>().enabled = false;
         SkillCanvasPopulator populator = skillsCanvas.GetComponent<SkillCanvasPopulator>();
-        populator.skill1 = GameManager.instance.skills[0];
-        populator.skill2 = GameManager.instance.skills[1];
-        populator.skill3 = GameManager.instance.skills[2];
+        List<Skill> skillsList = GameManager.instance.skills;
+
+        int NoOfSkills = skillsList.Count;
+        Debug.Log($"You have {NoOfSkills} skills in the pool.");
+        int skillIndex1 = UnityEngine.Random.Range(0, NoOfSkills);
+        Skill skill1 = skillsList[skillIndex1];
+        skillsList.RemoveAt(skillIndex1);
+
+        NoOfSkills -= 1;
+        int skillIndex2 = UnityEngine.Random.Range(0, NoOfSkills);
+        Skill skill2 = skillsList[skillIndex2];
+        skillsList.RemoveAt(skillIndex2);
+
+        NoOfSkills -= 1;
+        int skillIndex3 = UnityEngine.Random.Range(0, NoOfSkills);
+        Skill skill3 = skillsList[skillIndex3];
+        skillsList.RemoveAt(skillIndex3);
+
+
+
+        populator.skill1 = skill1;
+        populator.skill2 = skill2;
+        populator.skill3 = skill3;
         populator.UpdateCanvas();
         //LoadNextLevel();
 
@@ -101,7 +123,7 @@ public class CloseDoorScript : MonoBehaviour
         doorTransform.position = targetPosition;
     }
 
-    private void LoadNextLevel()
+    public void LoadNextLevel()
     {
         // deenable currennt scene  folder 
         string currentSceneName = SceneManager.GetActiveScene().name;
@@ -110,7 +132,7 @@ public class CloseDoorScript : MonoBehaviour
 
 
         // Load a random scene from the levels array
-        int nextSceneIndex = Random.Range(0, levels.Length);
+        int nextSceneIndex = UnityEngine.Random.Range(0, levels.Length);
         Debug.Log("Loading next scene: " + levels[nextSceneIndex]);
         SceneManager.LoadScene(levels[nextSceneIndex]);
 
