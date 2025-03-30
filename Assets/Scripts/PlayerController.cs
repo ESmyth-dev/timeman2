@@ -6,6 +6,7 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.Rendering.PostProcessing;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using UnityEngine.Video;
 
@@ -38,7 +39,6 @@ public class PlayerController : MonoBehaviour
     private Coroutine slowTimeCoroutine;
     private bool blinkReady;
     private bool babyBombReady = true;
-    private float numberOfLives;
     private bool jumpEnd = false;
     private bool isRewinding = false;
     private GameManager gameManager;
@@ -108,13 +108,20 @@ public class PlayerController : MonoBehaviour
             beamEnabled = true;
         }
 
+        // Show correct amount of lives in gui
+        for (int i = 3; i > GameManager.instance.numberOfLives; i--)
+        {
+            GameObject lifeGui = GameObject.Find("Life" + i);
+            lifeGui.SetActive(false);
+        }
+        
+
 
         slider = GameObject.Find("Slider").GetComponent<Slider>();
 
         pauseMenuActive = false;
         UIman = GameObject.Find("GuiCanvas").GetComponent<UserIntManager>();
 
-        numberOfLives = 3;
         overHeated = false;
         blinkReady = true;
         timeSlowed = false;
@@ -161,11 +168,23 @@ public class PlayerController : MonoBehaviour
                 Hit();
             }
         }
+   
+    private void OnParticleCollision(GameObject particleSystemGO)
+    {
+        // Check if the colliding particle's GameObject has the "Laser" tag
+        Hit();
+    
+    }
+
 
     // Update is called once per frame
     void Update()
     {
-        pauseMenuActive = UIman.menuActive;
+        if (UIman != null)
+        {
+            pauseMenuActive = UIman.menuActive;
+        }
+        
 
         if (gameManager.gunCooldownSkill.isUnlocked)
         {
@@ -279,6 +298,7 @@ public class PlayerController : MonoBehaviour
                     overHeated = true;                    
                 } 
                 GameObject bullet = Instantiate(shotPrefab, gun.position, Quaternion.Euler(transform.rotation.x, transform.rotation.y, transform.rotation.z));
+                
 
                 // set bullet's firer variable
                 ShotCollision shotScript = bullet.GetComponent<ShotCollision>();
@@ -304,7 +324,6 @@ public class PlayerController : MonoBehaviour
             if (!overHeated)
             {
                 slider.value += beamFillSpeed * Time.deltaTime;
-                Debug.Log("Click");
                 if (slider.value >= 1f)
                 {
                     overHeated = true;
@@ -315,7 +334,11 @@ public class PlayerController : MonoBehaviour
                     if (hits[i].distance > 3)
                     {
                         beamLine.SetPosition(0, gun.position);
-                        beamLine.SetPosition(1, hits[i].point); 
+                        beamLine.SetPosition(1, hits[i].point);
+                        if ((hits[i].collider.gameObject.tag == "Enemy" || hits[i].collider.gameObject.tag == "downEnemy"))
+                        {
+                            hits[i].collider.gameObject.GetComponent<EnemyBehaviour>().Hit();
+                        }
                         beamLight.transform.position = gun.position;
                         beamLight.transform.rotation = gun.rotation;
                         break;
@@ -323,8 +346,15 @@ public class PlayerController : MonoBehaviour
                 }
                 beamLine.enabled = true;
                 beamLight.enabled = true;
+
             }
         }
+
+        if(Input.GetMouseButtonUp(0) && beamEnabled && !isRewinding && !pauseMenuActive)
+        {
+            beamLine.enabled = false;
+        }
+
         if (Input.GetMouseButtonDown(1) && babyBombReady && !isRewinding && gameManager.timeGrenadeSkill.isUnlocked && !pauseMenuActive)
         {
             babyBombReady = false;
@@ -620,9 +650,12 @@ public class PlayerController : MonoBehaviour
             return;
         }
 
-        if(numberOfLives > 0)
+        if(GameManager.instance.numberOfLives > 0)
         {
-            numberOfLives--;
+            GameObject lifeGui = GameObject.Find("Life" + GameManager.instance.numberOfLives);
+            lifeGui.SetActive(false);
+
+            GameManager.instance.numberOfLives--;
             if(GameManager.instance.deathBubble){
                 // Instantiate the death bubble prefab at the player's position
                 GameObject deathBubble = Instantiate(bombPrefab, transform.position, Quaternion.identity);
@@ -650,6 +683,8 @@ public class PlayerController : MonoBehaviour
         GameObject deathVideoPlayerObj = GameObject.Find("DeathVideoPlayer");
         VideoPlayer deathVideoPlayer = deathVideoPlayerObj.GetComponent<VideoPlayer>();
 
+        deathVideoPlayer.loopPointReached += ResetGameAfterDeath; // Reset the game when you die
+
         Camera mainCamera = GetComponentInChildren<Camera>();
         deathVideoPlayer.targetCamera = mainCamera;
 
@@ -658,6 +693,37 @@ public class PlayerController : MonoBehaviour
         int randomIndex = Random.Range(0, deathClips.Length);
         deathVideoPlayer.clip = deathClips[randomIndex];
         deathVideoPlayer.Play();
+
+        // show text
+        GameObject gameOverRawImage = GameObject.Find("GameOverRawImage");
+        if (gameOverRawImage != null)
+        {
+            RawImage rawImage = gameOverRawImage.GetComponent<RawImage>();
+            if (rawImage != null)
+            {
+                rawImage.enabled = true;
+            }
+        }
+    }
+
+
+    private void ResetGameAfterDeath(VideoPlayer vp)
+    {
+        vp.loopPointReached -= ResetGameAfterDeath;
+
+        Destroy(GameManager.instance.gameObject);
+
+        SceneManager.LoadScene("Level1");
+    }
+
+
+
+    public void LavaHit(){
+        if(GameManager.instance.numberOfLives > 0){
+            GameManager.instance.numberOfLives--;
+            transform.position = lastGroundPosition;
+            transform.rotation = lastGroundRotation;
+        }
     }
 
     private void SetEnemyBehaviour(bool value)
@@ -707,7 +773,7 @@ public class PlayerController : MonoBehaviour
 
     private bool CheckIfGrounded(){
 
-        int layerMask = ~LayerMask.GetMask("LavaLayer");
+        int layerMask = ~LayerMask.GetMask("Lava");
         // Check if the player is grounded by casting a ray downwards
         RaycastHit hit;
         if (Physics.Raycast(transform.position, Vector3.down, out hit, 0.5f, layerMask))

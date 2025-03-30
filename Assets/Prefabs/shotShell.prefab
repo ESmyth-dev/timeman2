@@ -70,7 +70,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Firer: {fileID: 0}
-  ricochetCount: 1
+  ricochetCount: 0
 --- !u!54 &4374220889077843598
 Rigidbody:
   m_ObjectHideFlags: 0

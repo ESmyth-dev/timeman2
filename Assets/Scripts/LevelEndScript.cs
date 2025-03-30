@@ -10,26 +10,28 @@ using System.Collections.Generic;
 public class CloseDoorScript : MonoBehaviour
 {
 
-    private string[] levels = { "Level1", "Level2", "LavaLevel", "Laser Room", "Outside"};
-    //private string[] levels;
+    // private string[] levels = { "Level1", "Level2", "LavaLevel", "Laser Room", "Outside"};
+    private string[] levels;
 
-    //void Awake()
-    //{
-    //    levels = GetLevelsInBuild();
-    //}
+    void Awake()
+    {
+       levels = GetLevelsInBuild()
+            .Where(level => level != "HomePage")
+            .ToArray();
+    }
     
-    //private string[] GetLevelsInBuild()
-    //{
-    //    int sceneCount = UnityEngine.SceneManagement.SceneManager.sceneCountInBuildSettings;
-    //    string[] scenes = new string[sceneCount];
+    private string[] GetLevelsInBuild()
+    {
+       int sceneCount = UnityEngine.SceneManagement.SceneManager.sceneCountInBuildSettings;
+       string[] scenes = new string[sceneCount];
 
-    //    Debug.Log("Scene count in build settings: " + sceneCount);
-    //    for (int i = 0; i < sceneCount; i++)
-    //    {
-    //        scenes[i] = System.IO.Path.GetFileNameWithoutExtension(UnityEngine.SceneManagement.SceneUtility.GetScenePathByBuildIndex(i));
-    //    }
-    //    return scenes;
-    //}
+       Debug.Log("Scene count in build settings: " + sceneCount);
+       for (int i = 0; i < sceneCount; i++)
+       {
+           scenes[i] = System.IO.Path.GetFileNameWithoutExtension(UnityEngine.SceneManagement.SceneUtility.GetScenePathByBuildIndex(i));
+       }
+       return scenes;
+    }
 
     [SerializeField] private float sceneLoadDelay = 1.0f;
     GameObject skillsCanvas;
@@ -85,6 +87,10 @@ public class CloseDoorScript : MonoBehaviour
 
         int NoOfSkills = skillsList.Count;
         Debug.Log($"You have {NoOfSkills} skills in the pool.");
+        for(int i = 0; i<skillsList.Count; i++)
+        {
+            Debug.Log(skillsList[i].skillName);
+        }
         int skillIndex1 = UnityEngine.Random.Range(0, NoOfSkills);
         Skill skill1 = skillsList[skillIndex1];
         skillsList.RemoveAt(skillIndex1);
