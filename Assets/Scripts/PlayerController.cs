@@ -146,8 +146,16 @@ public class PlayerController : MonoBehaviour
         //Start recording positions
         recordPositionsCoroutine = StartCoroutine(RecordPositions());
         recordGroundCoroutine = StartCoroutine(RecordGroundPosition());
-
     }
+
+    private void OnTriggerEnter(Collider other)
+        {
+            // Check if collided object has the "laser" tag
+            if (other.CompareTag("Laser"))
+            {
+                Hit();
+            }
+        }
 
     // Update is called once per frame
     void Update()
@@ -165,6 +173,9 @@ public class PlayerController : MonoBehaviour
 
         }
 
+
+        // get player colldier, if colldier iteracts with with player, check the tag of colldier, if collider is "laser" then call Hit()
+        
         if (slider.value <= 0.1f)
         {
             overHeated = false;
