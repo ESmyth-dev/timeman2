@@ -61,7 +61,7 @@ public class GameManager : MonoBehaviour
         timeGrenadeSkill.skillDescription = "Send out a sphere of pure time force, sending all those it touches back in time, turning them into small incapacitated children.";
         skills.Add(timeGrenadeSkill);
 
-        gunCooldownSkill.skillName = "Increased Weapon Cooldown Speed";
+        gunCooldownSkill.skillName = "Faster Gun Cooldown";
         gunCooldownSkill.skillDescription = "Increase the rate at which your weapon cools down by creating a small function quantum time flucuation.";
         skills.Add(gunCooldownSkill);
 
