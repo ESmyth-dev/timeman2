@@ -158,6 +158,8 @@ public class PlayerController : MonoBehaviour
 
         }
 
+
+
         if (slider.value <= 0.1f)
         {
             overHeated = false;
@@ -346,6 +348,18 @@ public class PlayerController : MonoBehaviour
                 animator.SetBool("onGround", true);
 
             }
+        }
+    }
+
+
+
+    void OnCollision(Collision collision)
+    {
+        Debug.Log("Collision with: " + collision.gameObject.name);
+        if (collision.gameObject.CompareTag("Laser"))
+        {
+            Debug.Log("Player has been hit by a laser");
+            Hit();
         }
     }
 
