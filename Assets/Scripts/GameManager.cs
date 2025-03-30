@@ -19,7 +19,7 @@ public class GameManager : MonoBehaviour
     public Skill ricochetSkill = new Skill();
     public Skill beamSkill = new Skill();
     public List<Skill> skills = new List<Skill>();
-
+    public List<Skill> skillPersist = new List<Skill>();
 
     public bool deathBubble = false;
 
@@ -77,7 +77,11 @@ public class GameManager : MonoBehaviour
         beamSkill.skillDescription = "Switch your gun from blast mode to a constant beam, it was on a button, you just didn't notice it until now.";
         skills.Add(beamSkill);
 
-
+        int length = skills.Count;
+        Skill[] myArray = skills.ToArray();
+        Skill[] skillarray = new Skill[length];
+        Array.Copy(myArray, skillarray, length);
+        skillPersist = new List<Skill>(skillarray);
     }
 
     // Update is called once per frame

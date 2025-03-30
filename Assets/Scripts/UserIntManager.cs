@@ -39,12 +39,15 @@ public class UserIntManager : MonoBehaviour
     CanvasGroup s;
     CanvasGroup bl;
     CanvasGroup bo;
+    GameManager gameMan;
 
     void Start()
     {
         hideBlind = false;
         hideBomb = false;
         hideTime = false;
+
+        gameMan = GameObject.Find("GameManager").GetComponent<GameManager>();
         
         if (SceneManager.GetActiveScene().name == "HomePage")
         {
@@ -109,39 +112,24 @@ public class UserIntManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        skills = GameManager.instance.skills;
-        foreach (Skill sp in skills)
+        //skills = GameManager.instance.skills;
+        foreach (Skill sk in gameMan.skillPersist)
         {
-            if (sp.skillName == "Blink")
+            if (sk.isUnlocked && sk.skillName == "Blink")
             {
-                hideBlind = true;
-                bl.alpha = 0;
-            }
-            else
-            {
-                hideBlind = false;
+                //hideBlind = true;
                 bl.alpha = 1;
             }
 
-            if (sp.skillName == "Slow Time")
+            if (sk.isUnlocked && sk.skillName == "Slow Time")
             {
-                hideTime = true;
-                s.alpha = 0;
-            }
-            else
-            {
-                hideTime = false;
+                //hideTime = true;
                 s.alpha = 1;
             }
 
-            if (sp.skillName == "Baby Time Bomb")
+            if (sk.isUnlocked && sk.skillName == "Baby Time Bomb")
             {
                 hideBomb = true;
-                bo.alpha = 0;
-            }
-            else
-            {
-                hideBomb = false;
                 bo.alpha = 1;
             }
 
