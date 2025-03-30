@@ -165,8 +165,6 @@ public class PlayerController : MonoBehaviour
 
         }
 
-
-
         if (slider.value <= 0.1f)
         {
             overHeated = false;
