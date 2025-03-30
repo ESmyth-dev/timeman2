@@ -86,6 +86,10 @@ public class PlayerController : MonoBehaviour
     private Button backToGameButton;
     private UserIntManager UIman;
 
+    //Coroutines
+    private Coroutine recordPositionsCoroutine;
+    private Coroutine recordGroundCoroutine;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -145,13 +149,18 @@ public class PlayerController : MonoBehaviour
         rewindProfile = Resources.Load<PostProcessProfile>("RewindProfile");
 
         //Start recording positions
-        StartCoroutine(RecordPositions());
-        if(GameObject.Find("Lava")){
-            Debug.Log("Lava found, setting lastGroundPosition to lava position");
-            StartCoroutine(RecordGroundPosition());
-        }
-
+        recordPositionsCoroutine = StartCoroutine(RecordPositions());
+        recordGroundCoroutine = StartCoroutine(RecordGroundPosition());
     }
+
+    private void OnTriggerEnter(Collider other)
+        {
+            // Check if collided object has the "laser" tag
+            if (other.CompareTag("Laser"))
+            {
+                Hit();
+            }
+        }
 
     // Update is called once per frame
     void Update()
@@ -170,7 +179,8 @@ public class PlayerController : MonoBehaviour
         }
 
 
-
+        // get player colldier, if colldier iteracts with with player, check the tag of colldier, if collider is "laser" then call Hit()
+        
         if (slider.value <= 0.1f)
         {
             overHeated = false;
@@ -496,6 +506,7 @@ public class PlayerController : MonoBehaviour
                 recordedPositions.Add(transform.position);
                 recordedRotations.Add(transform.rotation);
 
+                Debug.Log("Recording position: " + transform.position);
                 //Waits 1 sec
                 yield return new WaitForSeconds(1f);
         }
@@ -545,8 +556,11 @@ public class PlayerController : MonoBehaviour
         postProcessVolume.enabled = true;
         SetEnemyBehaviour(false);      
 
-        StopCoroutine(RecordPositions());
-        StopCoroutine(RecordGroundPosition()); // Stop any existing coroutines
+        Debug.Log("Stopping position recording before rewind");
+        StopCoroutine(recordPositionsCoroutine);
+        recordPositionsCoroutine = null;
+        StopCoroutine(recordGroundCoroutine);
+        recordGroundCoroutine = null;
         StartCoroutine(SmoothRewind());
     }
 
@@ -595,8 +609,8 @@ public class PlayerController : MonoBehaviour
         isRewinding = false;
 
         Debug.Log("Rewind complete.");
-        StartCoroutine(RecordPositions());
-        StartCoroutine(RecordGroundPosition()); // Restart recording positions
+        recordPositionsCoroutine = StartCoroutine(RecordPositions());
+        recordGroundCoroutine = StartCoroutine(RecordGroundPosition());
     }
 
     private IEnumerator EnableEnemyBehaviourAfterDelay()
@@ -654,16 +668,6 @@ public class PlayerController : MonoBehaviour
         int randomIndex = Random.Range(0, deathClips.Length);
         deathVideoPlayer.clip = deathClips[randomIndex];
         deathVideoPlayer.Play();
-    }
-
-
-
-    public void LavaHit(){
-        if(numberOfLives > 0){
-            numberOfLives--;
-            transform.position = lastGroundPosition;
-            transform.rotation = lastGroundRotation;
-        }
     }
 
     private void SetEnemyBehaviour(bool value)
