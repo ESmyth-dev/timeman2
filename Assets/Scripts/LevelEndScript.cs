@@ -66,17 +66,8 @@ public class CloseDoorScript : MonoBehaviour
 
         // Load scene after delay
         yield return new WaitForSeconds(sceneLoadDelay);
-        GameObject.Find("GuiCanvas").SetActive(false);
-        skillsCanvas.GetComponent<Canvas>().enabled = true;
-        Cursor.lockState = CursorLockMode.None;
-        FindAnyObjectByType<CameraController>().mouseSensitivity = 0f;
-        SkillCanvasPopulator pop = skillsCanvas.GetComponent<SkillCanvasPopulator>();
-        pop.skill1 = GameManager.instance.skills[0];
-        pop.skill2 = GameManager.instance.skills[1];
-        pop.skill3 = GameManager.instance.skills[2];
-        pop.UpdateCanvas();
-        // LoadNextLevel();
-
+        LoadNextLevel();
+        
     }
 
     private IEnumerator MoveDoor(Transform doorTransform, Vector3 targetPosition, float duration)
