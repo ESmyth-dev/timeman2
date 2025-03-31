@@ -9,6 +9,7 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager instance;
     public int numberOfLives = 3;
+    public int levelsCompleted = 0;
     private int level = 0;
 
     public Skill blinkSkill = new Skill();
