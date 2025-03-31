@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
@@ -24,8 +25,39 @@ public class GameManager : MonoBehaviour
 
     public bool deathBubble = false;
 
+    public int NUM_ROOMS_FOR_WIN = 3;
+
+    public List<string> levels;
+
+    private string[] GetLevelsInBuild()
+    {
+        int sceneCount = UnityEngine.SceneManagement.SceneManager.sceneCountInBuildSettings;
+        string[] scenes = new string[sceneCount];
+
+
+        // get current scene name
+        string currentSceneName = SceneManager.GetActiveScene().name;
+        // remove current scene from the list
+        Debug.Log("Current scene: " + currentSceneName);
+
+
+
+
+        Debug.Log("Scene count in build settings: " + sceneCount);
+        for (int i = 0; i < sceneCount; i++)
+        {
+            scenes[i] = System.IO.Path.GetFileNameWithoutExtension(UnityEngine.SceneManagement.SceneUtility.GetScenePathByBuildIndex(i));
+        }
+        return scenes;
+    }
+
+
+
     void Awake()
     {
+        levels = GetLevelsInBuild()
+         .Where(level => level != "HomePage")
+         .ToList<string>();
         if (instance == null)
         {
             instance = this;
@@ -35,6 +67,12 @@ public class GameManager : MonoBehaviour
         {
             Destroy(gameObject);
         }
+    }
+
+    private void OnEnable()
+    {
+        levels.Remove(SceneManager.GetActiveScene().name);
+        Debug.Log($"removed level: {SceneManager.GetActiveScene().name}");
     }
 
 
@@ -83,5 +121,6 @@ public class GameManager : MonoBehaviour
     public void GameOver()
     {
         //Need to add code to display game over screen
+        // I think we have this, redundant method ???
     }
 }

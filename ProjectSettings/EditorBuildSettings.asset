@@ -23,4 +23,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Levels/Outside.unity
     guid: 2156f2d291559436e8d9c2a6647012c6
+  - enabled: 1
+    path: Assets/Scenes/VictoryScreen.unity
+    guid: e3b5ec4f84373430b8a977a4d6810cbe
   m_configObjects: {}
