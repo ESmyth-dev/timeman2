@@ -131,17 +131,23 @@ public class CloseDoorScript : MonoBehaviour
 
     public void LoadNextLevel()
     {
+        GameManager.instance.levelsCompleted += 1;
+
         // deenable currennt scene  folder 
         string currentSceneName = SceneManager.GetActiveScene().name;
         Debug.Log("Current scene: " + currentSceneName);
 
-
-
-        // Load a random scene from the levels array
-        int nextSceneIndex = UnityEngine.Random.Range(0, levels.Length);
-        Debug.Log("Loading next scene: " + levels[nextSceneIndex]);
-        SceneManager.LoadScene(levels[nextSceneIndex]);
-
+        if (GameManager.instance.levelsCompleted >= 5)
+        {
+            SceneManager.LoadScene("EndScreen");
+        }
+        else
+        {
+            // Load a random scene from the levels array
+            int nextSceneIndex = UnityEngine.Random.Range(0, levels.Length);
+            Debug.Log("Loading next scene: " + levels[nextSceneIndex]);
+            SceneManager.LoadScene(levels[nextSceneIndex]);
+        }
 
     }
 }
