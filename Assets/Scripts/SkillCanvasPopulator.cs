@@ -27,7 +27,7 @@ public class SkillCanvasPopulator : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {  
-        if (UnityEngine.ColorUtility.TryParseHtmlString("#00FFEF", out Color color))
+        if (UnityEngine.ColorUtility.TryParseHtmlString("#000000", out Color color))
             {
                 iconColor = color;
             }
@@ -50,6 +50,7 @@ public class SkillCanvasPopulator : MonoBehaviour
         Button1.GetComponent<SkillButton>().skillDescription = skill1.skillDescription;
         Button1.GetComponentInChildren<Image>().sprite = skill1.skillTexture;
         Button1.GetComponentInChildren<Image>().color = iconColor;
+        Button1.GetComponentInChildren<Image>().transform.SetAsLastSibling();
         Button1.GetComponentInChildren<Button>().onClick.AddListener(() =>
         {
             skill1.isUnlocked = true;
@@ -65,6 +66,7 @@ public class SkillCanvasPopulator : MonoBehaviour
         Button2.GetComponent<SkillButton>().skillDescription = skill2.skillDescription;
         Button2.GetComponentInChildren<Image>().sprite = skill2.skillTexture;
         Button2.GetComponentInChildren<Image>().color = iconColor;
+        Button2.GetComponentInChildren<Image>().transform.SetAsLastSibling();
         Button2.GetComponentInChildren<Button>().onClick.AddListener(() =>
         {
             skill2.isUnlocked = true;
@@ -79,6 +81,7 @@ public class SkillCanvasPopulator : MonoBehaviour
         Button3.GetComponent<SkillButton>().skillDescription = skill3.skillDescription;
         Button3.GetComponentInChildren<Image>().sprite = skill3.skillTexture;
         Button3.GetComponentInChildren<Image>().color = iconColor;
+        Button3.GetComponentInChildren<Image>().transform.SetAsLastSibling();
         Button3.GetComponentInChildren<Button>().onClick.AddListener(() =>
         {
             skill3.isUnlocked = true;
