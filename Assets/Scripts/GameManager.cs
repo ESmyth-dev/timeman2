@@ -21,6 +21,8 @@ public class GameManager : MonoBehaviour
     public List<Skill> skills = new List<Skill>();
     public List<Skill> skillPersist = new List<Skill>();
 
+    public float enemyPercentage;
+
     public bool deathBubble = false;
 
     void Awake()
