@@ -76,12 +76,10 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    private void OnEnable()
+    public void removeSceneFromPool()
     {
         levels.Remove(SceneManager.GetActiveScene().name);
-        Debug.Log($"removed level: {SceneManager.GetActiveScene().name}");
     }
-
 
     // Start is called before the first frame update
     void Start()

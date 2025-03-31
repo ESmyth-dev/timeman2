@@ -87,6 +87,7 @@ public class PlayerController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        GameManager.instance.removeSceneFromPool();
         if (GameManager.instance != null)
         {
             gameManager = GameManager.instance;
