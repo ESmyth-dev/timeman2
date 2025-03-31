@@ -19,7 +19,6 @@ public class PlayerController : MonoBehaviour
     public float cooldownSpeed = 0.2f;
     public float beamFillSpeed = 0.5f;
     private bool overHeated;
-    public bool beamEnabled = false;
     public Light beamLight;
     public float speed = 1.0f;
     public float slowdownFactor = 10;
@@ -102,11 +101,6 @@ public class PlayerController : MonoBehaviour
             gameManager = new GameManager();
         }
 
-        if (GameManager.instance.beamSkill.isUnlocked)
-        {
-            beamEnabled = true;
-        }
-
         // Show correct amount of lives in gui
         for (int i = 3; i > GameManager.instance.numberOfLives; i--)
         {
@@ -168,12 +162,6 @@ public class PlayerController : MonoBehaviour
             }
         }
    
-    private void OnParticleCollision(GameObject particleSystemGO)
-    {
-        // Check if the colliding particle's GameObject has the "Laser" tag
-        Hit();
-    
-    }
 
 
     // Update is called once per frame
@@ -218,168 +206,174 @@ public class PlayerController : MonoBehaviour
             gameManager.slowTimeSkill.isUnlocked = true;
         }
 
-        if (Input.GetKey(KeyCode.W) && !isRewinding)
+        if (!isRewinding)
         {
-            animator.SetBool("movingForwards", true);
-            moveDirection += forward;
-        }
-
-        if (Input.GetKeyUp(KeyCode.W) && !isRewinding)
-        {
-            animator.SetBool("movingForwards", false);
-        }
-
-        if (Input.GetKey(KeyCode.D) && !isRewinding)
-        {
-            animator.SetBool("movingRight", true);
-            moveDirection += right;
-        }
-
-        if (Input.GetKeyUp(KeyCode.D) && !isRewinding)
-        {
-            animator.SetBool("movingRight", false);
-        }
-
-        if (Input.GetKey(KeyCode.A) && !isRewinding)
-        {
-            animator.SetBool("movingLeft", true);
-            moveDirection -= right;
-        }
-
-        if (Input.GetKeyUp(KeyCode.A) && !isRewinding)
-        {
-            animator.SetBool("movingLeft", false);
-        }
-
-        if (Input.GetKeyDown(KeyCode.F) && !isRewinding && !pauseMenuActive && gameManager.blinkSkill.isUnlocked)
-        {
-            BlinkAbility();
-        }
-        if (Input.GetKeyDown(KeyCode.C) && !isRewinding && gameManager.slowTimeSkill.isUnlocked && !pauseMenuActive)
-        {
-            SlowTimeAbility();
-        }
-
-        if (Input.GetKey(KeyCode.S) && !isRewinding)
-        {
-            animator.SetBool("movingBackwards", true);
-            moveDirection -= forward;
-        }
-
-        if (Input.GetKeyUp(KeyCode.S) && !isRewinding)
-        {
-            animator.SetBool("movingBackwards", false);
-        }
-        if (moveDirection != Vector3.zero)
-        {
-            transform.Translate(moveDirection * Time.deltaTime * speed, Space.World);
-        }
-
-        // Jumping
-        if (Input.GetKeyDown(KeyCode.Space) && isGrounded && !isRewinding && !pauseMenuActive)
-        {
-            jumpEnd = false;
-            rb.AddForce(transform.up * jumpForce, ForceMode.Impulse);
-            isGrounded = false;
-            animator.SetBool("jumping", true);
-        } else {
-            if(Input.GetKeyDown(KeyCode.Space) && !isGrounded)
+            if (Input.GetKey(KeyCode.W))
             {
-                if(gameManager.doubleJumpSkill.isUnlocked && jumpEnd == false){
-                    jumpEnd = true;
-                    rb.velocity = new Vector3(rb.velocity.x, 0, rb.velocity.z);
-                    rb.AddForce((transform.up * jumpForce), ForceMode.Impulse);
-                    isGrounded = false;
-                    animator.SetBool("falling", false);
-                    animator.SetBool("jumping", true);
-                }
+                animator.SetBool("movingForwards", true);
+                moveDirection += forward;
             }
-        }
 
-        if (Input.GetMouseButtonDown(0) && !beamEnabled && !isRewinding && !pauseMenuActive)
-        {
-            if (!overHeated)
+            if (Input.GetKeyUp(KeyCode.W))
             {
-                slider.value += 0.2f;
-                if (slider.value >= 1f)
-                {
-                    overHeated = true;                    
-                } 
-                GameObject bullet = Instantiate(shotPrefab, gun.position, Quaternion.Euler(transform.rotation.x, transform.rotation.y, transform.rotation.z));
-                
+                animator.SetBool("movingForwards", false);
+            }
 
-                // set bullet's firer variable
-                ShotCollision shotScript = bullet.GetComponent<ShotCollision>();
-                shotScript.Firer = gameObject;
+            if (Input.GetKey(KeyCode.D))
+            {
+                animator.SetBool("movingRight", true);
+                moveDirection += right;
+            }
 
-                RaycastHit[] hits = Physics.RaycastAll(cam.transform.position, cam.transform.forward);
-                for (int i = 0; i < hits.Length; i++)
+            if (Input.GetKeyUp(KeyCode.D))
+            {
+                animator.SetBool("movingRight", false);
+            }
+
+            if (Input.GetKey(KeyCode.A))
+            {
+                animator.SetBool("movingLeft", true);
+                moveDirection -= right;
+            }
+
+            if (Input.GetKeyUp(KeyCode.A))
+            {
+                animator.SetBool("movingLeft", false);
+            }
+
+            if (Input.GetKeyDown(KeyCode.F) && !pauseMenuActive && gameManager.blinkSkill.isUnlocked)
+            {
+                BlinkAbility();
+            }
+            if (Input.GetKeyDown(KeyCode.C) && gameManager.slowTimeSkill.isUnlocked && !pauseMenuActive)
+            {
+                SlowTimeAbility();
+            }
+
+            if (Input.GetKey(KeyCode.S))
+            {
+                animator.SetBool("movingBackwards", true);
+                moveDirection -= forward;
+            }
+
+            if (Input.GetKeyUp(KeyCode.S))
+            {
+                animator.SetBool("movingBackwards", false);
+            }
+            if (moveDirection != Vector3.zero)
+            {
+                transform.Translate(moveDirection * Time.deltaTime * speed, Space.World);
+            }
+
+            // Jumping
+            if (Input.GetKeyDown(KeyCode.Space) && isGrounded && !pauseMenuActive)
+            {
+                jumpEnd = false;
+                rb.AddForce(transform.up * jumpForce, ForceMode.Impulse);
+                isGrounded = false;
+                animator.SetBool("jumping", true);
+            }
+            else
+            {
+                if (Input.GetKeyDown(KeyCode.Space) && !isGrounded)
                 {
-                    if (hits[i].distance > 3)
+                    if (gameManager.doubleJumpSkill.isUnlocked && jumpEnd == false)
                     {
-                        bullet.transform.LookAt(hits[i].point);
-                        break;
+                        jumpEnd = true;
+                        rb.velocity = new Vector3(rb.velocity.x, 0, rb.velocity.z);
+                        rb.AddForce((transform.up * jumpForce), ForceMode.Impulse);
+                        isGrounded = false;
+                        animator.SetBool("falling", false);
+                        animator.SetBool("jumping", true);
                     }
                 }
-
-                pewAudioSource.PlayOneShot(pewAudioClip);
-
             }
-        }
 
-        if (Input.GetMouseButton(0) && beamEnabled && !isRewinding && !pauseMenuActive)
-        {
-            if (!overHeated)
+            if (Input.GetMouseButtonDown(0) && !GameManager.instance.beamSkill.isUnlocked && !pauseMenuActive)
             {
-                slider.value += beamFillSpeed * Time.deltaTime;
-                if (slider.value >= 1f)
+                if (!overHeated)
                 {
-                    overHeated = true;
-                }
-                RaycastHit[] hits = Physics.RaycastAll(cam.transform.position, cam.transform.forward);
-                for (int i = 0; i < hits.Length; i++)
-                {
-                    if (hits[i].distance > 3)
+                    slider.value += 0.2f;
+                    if (slider.value >= 1f)
                     {
-                        beamLine.SetPosition(0, gun.position);
-                        beamLine.SetPosition(1, hits[i].point);
-                        if ((hits[i].collider.gameObject.tag == "Enemy" || hits[i].collider.gameObject.tag == "downEnemy"))
+                        overHeated = true;
+                    }
+                    GameObject bullet = Instantiate(shotPrefab, gun.position, Quaternion.Euler(transform.rotation.x, transform.rotation.y, transform.rotation.z));
+
+
+                    // set bullet's firer variable
+                    ShotCollision shotScript = bullet.GetComponent<ShotCollision>();
+                    shotScript.Firer = gameObject;
+
+                    RaycastHit[] hits = Physics.RaycastAll(cam.transform.position, cam.transform.forward);
+                    for (int i = 0; i < hits.Length; i++)
+                    {
+                        if (hits[i].distance > 3)
                         {
-                            hits[i].collider.gameObject.GetComponent<EnemyBehaviour>().Hit();
+                            bullet.transform.LookAt(hits[i].point);
+                            break;
                         }
-                        beamLight.transform.position = gun.position;
-                        beamLight.transform.rotation = gun.rotation;
+                    }
+
+                    pewAudioSource.PlayOneShot(pewAudioClip);
+
+                }
+            }
+
+            if (Input.GetMouseButton(0) && GameManager.instance.beamSkill.isUnlocked && !pauseMenuActive)
+            {
+                if (!overHeated)
+                {
+                    slider.value += beamFillSpeed * Time.deltaTime;
+                    if (slider.value >= 1f)
+                    {
+                        overHeated = true;
+                    }
+                    RaycastHit[] hits = Physics.RaycastAll(cam.transform.position, cam.transform.forward);
+                    for (int i = 0; i < hits.Length; i++)
+                    {
+                        if (hits[i].distance > 3)
+                        {
+                            beamLine.SetPosition(0, gun.position);
+                            beamLine.SetPosition(1, hits[i].point);
+                            if ((hits[i].collider.gameObject.tag == "Enemy" || hits[i].collider.gameObject.tag == "downEnemy"))
+                            {
+                                hits[i].collider.gameObject.GetComponent<EnemyBehaviour>().Hit();
+                            }
+                            beamLight.transform.position = gun.position;
+                            beamLight.transform.rotation = gun.rotation;
+                            break;
+                        }
+                    }
+                    beamLine.enabled = true;
+                    beamLight.enabled = true;
+
+                }
+            }
+
+            if (Input.GetMouseButtonUp(0) && GameManager.instance.beamSkill.isUnlocked && !pauseMenuActive)
+            {
+                beamLine.enabled = false;
+            }
+
+            if (Input.GetMouseButtonDown(1) && babyBombReady && gameManager.timeGrenadeSkill.isUnlocked && !pauseMenuActive)
+            {
+                babyBombReady = false;
+                Image bombBackground = GameObject.Find("BombInactive").GetComponent<Image>();
+                var tempColor = bombBackground.color;
+                tempColor.a = 0.2f;
+                bombBackground.color = tempColor;
+                StartCoroutine(babyBombCooldown());
+
+                GameObject bomb = Instantiate(bombPrefab, gun.position, Quaternion.Euler(transform.rotation.x, transform.rotation.y, transform.rotation.z));
+                RaycastHit[] hits = Physics.RaycastAll(cam.transform.position, cam.transform.forward);
+                for (int i = 0; i < hits.Length; i++)
+                {
+                    if (hits[i].distance > 3)
+                    {
+                        bomb.transform.LookAt(hits[i].point);
                         break;
                     }
-                }
-                beamLine.enabled = true;
-                beamLight.enabled = true;
-
-            }
-        }
-
-        if(Input.GetMouseButtonUp(0) && beamEnabled && !isRewinding && !pauseMenuActive)
-        {
-            beamLine.enabled = false;
-        }
-
-        if (Input.GetMouseButtonDown(1) && babyBombReady && !isRewinding && gameManager.timeGrenadeSkill.isUnlocked && !pauseMenuActive)
-        {
-            babyBombReady = false;
-            Image bombBackground = GameObject.Find("BombInactive").GetComponent<Image>();
-            var tempColor = bombBackground.color;
-            tempColor.a = 0.2f;
-            bombBackground.color = tempColor;
-            StartCoroutine(babyBombCooldown());
-
-            GameObject bomb = Instantiate(bombPrefab, gun.position, Quaternion.Euler(transform.rotation.x, transform.rotation.y, transform.rotation.z));
-            RaycastHit[] hits = Physics.RaycastAll(cam.transform.position, cam.transform.forward);
-            for (int i = 0; i < hits.Length; i++)
-            {
-                if (hits[i].distance > 3)
-                {
-                    bomb.transform.LookAt(hits[i].point);
-                    break;
                 }
             }
         }
@@ -414,6 +408,8 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+<<<<<<< Updated upstream
+=======
     void OnCollision(Collision collision)
     {
         Debug.Log("Collision with: " + collision.gameObject.name);
@@ -424,6 +420,9 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+
+
+>>>>>>> Stashed changes
     IEnumerator SlowTime()
     {
         //yield on a new YieldInstruction that waits for 5 seconds.
