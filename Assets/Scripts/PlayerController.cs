@@ -408,21 +408,6 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-<<<<<<< Updated upstream
-=======
-    void OnCollision(Collision collision)
-    {
-        Debug.Log("Collision with: " + collision.gameObject.name);
-        if (collision.gameObject.CompareTag("Laser"))
-        {
-            Debug.Log("Player has been hit by a laser");
-            Hit();
-        }
-    }
-
-
-
->>>>>>> Stashed changes
     IEnumerator SlowTime()
     {
         //yield on a new YieldInstruction that waits for 5 seconds.
