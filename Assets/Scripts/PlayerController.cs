@@ -334,6 +334,11 @@ public class PlayerController : MonoBehaviour
                     RaycastHit[] hits = Physics.RaycastAll(cam.transform.position, cam.transform.forward);
                     for (int i = 0; i < hits.Length; i++)
                     {
+                        if ((hits[i].collider.gameObject.tag == "Enemy" || hits[i].collider.gameObject.tag == "downEnemy"))
+                        {
+                            hits[i].collider.gameObject.GetComponent<EnemyBehaviour>().Hit();
+                        }
+
                         if (hits[i].distance > 3)
                         {
                             beamLine.SetPosition(0, gun.position);
