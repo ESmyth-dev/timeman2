@@ -453,7 +453,7 @@ public class PlayerController : MonoBehaviour
 
         if (blinkReady && blinkVector != Vector3.zero)
         {
-            if (Physics.Raycast(transform.position + transform.up * 0.5f, blinkVector, out RaycastHit hit, blinkDistance, LayerMask.GetMask(new string[] {"LevelLineOfSight", "Level"})))
+            if (Physics.Raycast(transform.position + transform.up * 0.7f, blinkVector, out RaycastHit hit, blinkDistance, LayerMask.GetMask(new string[] {"LevelLineOfSight", "Level"})))
             {
                 Debug.Log("Obstacle detected! shorter teleport");
                 transform.position += blinkVector * (hit.distance - 1.5f);
