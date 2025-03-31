@@ -13,39 +13,8 @@ public class CloseDoorScript : MonoBehaviour
     private readonly int NUM_ROOMS_FOR_WIN = 5;
 
     // private string[] levels = { "Level1", "Level2", "LavaLevel", "Laser Room", "Outside"};
-    private string[] levels;
-
-    void Awake()
-    {
-       levels = GetLevelsInBuild()
-            .Where(level => level != "HomePage" || level != "VictoryScreen")
-            .ToArray();
-    }
+    private List<string> levels;
     
-
-
-
-    private string[] GetLevelsInBuild()
-    {
-       int sceneCount = UnityEngine.SceneManagement.SceneManager.sceneCountInBuildSettings;
-       string[] scenes = new string[sceneCount];
-
-
-        // get current scene name
-        string currentSceneName = SceneManager.GetActiveScene().name;
-        // remove current scene from the list
-        Debug.Log("Current scene: " + currentSceneName);
-
-         
-        
-
-       Debug.Log("Scene count in build settings: " + sceneCount);
-       for (int i = 0; i < sceneCount; i++)
-       {
-           scenes[i] = System.IO.Path.GetFileNameWithoutExtension(UnityEngine.SceneManagement.SceneUtility.GetScenePathByBuildIndex(i));
-       }
-       return scenes;
-    }
 
     [SerializeField] private float sceneLoadDelay = 1.0f;
     GameObject skillsCanvas;
@@ -57,6 +26,7 @@ public class CloseDoorScript : MonoBehaviour
     {
         skillsCanvas = GameObject.Find("SkillsCanvas");
         skillsCanvas.GetComponent<Canvas>().enabled = false;
+        levels = GameManager.instance.levels;
     }
 
     private void OnTriggerEnter(Collider other)
@@ -164,7 +134,7 @@ public class CloseDoorScript : MonoBehaviour
         else
         {
             // Load a random scene from the levels array
-            int nextSceneIndex = UnityEngine.Random.Range(0, levels.Length);
+            int nextSceneIndex = UnityEngine.Random.Range(0, levels.Count);
             Debug.Log("Loading next scene: " + levels[nextSceneIndex]);
             SceneManager.LoadScene(levels[nextSceneIndex]);
         }
