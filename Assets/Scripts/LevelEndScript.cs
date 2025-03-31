@@ -125,7 +125,7 @@ public class CloseDoorScript : MonoBehaviour
         string currentSceneName = SceneManager.GetActiveScene().name;
         Debug.Log("Current scene: " + currentSceneName);
 
-        if (GameManager.instance.levelsCompleted >= NUM_ROOMS_FOR_WIN)
+        if (GameManager.instance.levelsCompleted >= GameManager.instance.NUM_ROOMS_FOR_WIN)
         {
             SceneManager.LoadScene("VictoryScreen");
         }
