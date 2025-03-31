@@ -35,15 +35,23 @@ public class LaserMachine : MonoBehaviour {
     LaserProperties m_currentProperties;// = new LaserProperties();
         
     float m_time = 0;
+        float normal_rotation;
+        float slow_rotation;
     bool m_active = true;
     bool m_assignLaserMaterial;
     bool m_assignSparks;
+        PlayerController controller;
   		
 
     void OnEnable()
     {
         m_currentProperties = m_overrideExternalProperties ? m_inspectorProperties : m_data.m_properties;
-        
+            normal_rotation = m_currentProperties.m_rotationSpeed;
+            slow_rotation = normal_rotation * 0.1f;
+            controller = FindAnyObjectByType<PlayerController>();
+
+
+
 
         m_currentProperties.m_initialTimingPhase = Mathf.Clamp01(m_currentProperties.m_initialTimingPhase);
         m_time = m_currentProperties.m_initialTimingPhase * m_currentProperties.m_intervalTime;
@@ -100,6 +108,10 @@ public class LaserMachine : MonoBehaviour {
                 GameObject sparks = Instantiate(m_data.m_laserSparks);
                 sparks.transform.SetParent(newObj.transform);
                 sparks.tag = "Laser";
+                // Add a small sphere collider to the sparks
+                SphereCollider sparksCollider = sparks.AddComponent<SphereCollider>();
+                sparksCollider.radius = 0.1f;
+                sparksCollider.isTrigger = true; // Set as trigger so it doesn't affect physics
                 sparks.SetActive(true);
                 element.sparks = sparks;
 
@@ -161,10 +173,21 @@ public class LaserMachine : MonoBehaviour {
 
             if ( m_currentProperties.m_rotate )
             {
-                if ( m_currentProperties.m_rotateClockwise )
-                    element.transform.RotateAround(transform.position, transform.up, Time.deltaTime * m_currentProperties.m_rotationSpeed);    //rotate around Global!!
-                else
-                    element.transform.RotateAround(transform.position, transform.up, -Time.deltaTime * m_currentProperties.m_rotationSpeed);
+                if (controller.timeSlowed)
+                    {
+                        if (m_currentProperties.m_rotateClockwise)
+                            element.transform.RotateAround(transform.position, transform.up, Time.deltaTime * slow_rotation);    //rotate around Global!!
+                        else
+                            element.transform.RotateAround(transform.position, transform.up, -Time.deltaTime * slow_rotation);
+                    }
+                    else
+                    {
+                        if (m_currentProperties.m_rotateClockwise)
+                            element.transform.RotateAround(transform.position, transform.up, Time.deltaTime * normal_rotation);
+                        else
+                            element.transform.RotateAround(transform.position, transform.up, -Time.deltaTime * normal_rotation);
+                    }
+
             }
 
 
@@ -205,7 +228,6 @@ public class LaserMachine : MonoBehaviour {
                         Debug.Log("Hit " + hitInfo3D.collider.gameObject.name);
                             if (hitInfo3D.collider.gameObject.tag == "Player")
                             {
-
                                 Debug.Log("Player hit");
                                 // call from player contorler script
                                 // hitInfo3D.collider.gameObject.GetComponent<Player>().TakeDamage(1);
