@@ -789,7 +789,7 @@ public class PlayerController : MonoBehaviour
         // Delete percentage of enemies depending of difficulty
         GameObject enemiesParent = GameObject.Find("Enemies");
         int childCount = enemiesParent.transform.childCount;
-        int numberOfEnemiesToDelete = Mathf.RoundToInt(childCount * ((100-GameManager.instance.enemyPercentage) / 100f));
+        int numberOfEnemiesToDelete = 0; // Mathf.RoundToInt(childCount * ((100-GameManager.instance.enemyPercentage) / 100f));
 
         List<int> childIndices = new List<int>();
         for (int i = 0; i < childCount; i++)

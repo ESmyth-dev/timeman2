@@ -17,7 +17,7 @@ public class SkeleCleanup : MonoBehaviour
 
         if (gameObject.CompareTag("babySkeleton"))
         {
-            babyAudioClips = Resources.LoadAll<AudioClip>("Audio/Baby");
+            babyAudioClips = Resources.LoadAll<AudioClip>("Audio/BabyDeath");
             int randomIndex = Random.Range(0, babyAudioClips.Length);
             audioSource.PlayOneShot(babyAudioClips[randomIndex]);
         }
