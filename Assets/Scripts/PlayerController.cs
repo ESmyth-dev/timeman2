@@ -750,7 +750,7 @@ public class PlayerController : MonoBehaviour
 
     private void SetEnemyBehaviour(bool value)
     {
-        Transform enemiesParent = GameObject.Find(enemyPath)?.transform;
+        Transform enemiesParent = GameObject.Find("Enemies")?.transform;
 
         if (enemiesParent == null)
         {
