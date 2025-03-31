@@ -511,6 +511,18 @@ PrefabInstance:
       propertyPath: m_Name
       value: GameManager
       objectReference: {fileID: 0}
+    - target: {fileID: 5165209404422778687, guid: 9c33361bf48cfb849894982d5c1b5929, type: 3}
+      propertyPath: slowIcon
+      value: 
+      objectReference: {fileID: 2800000, guid: 5b77e5d785c544c918a84f6436b5b148, type: 3}
+    - target: {fileID: 5165209404422778687, guid: 9c33361bf48cfb849894982d5c1b5929, type: 3}
+      propertyPath: blinkIcon
+      value: 
+      objectReference: {fileID: 2800000, guid: 3bd429fa3cdcc4f60a3f6d421cc03414, type: 3}
+    - target: {fileID: 5165209404422778687, guid: 9c33361bf48cfb849894982d5c1b5929, type: 3}
+      propertyPath: timeGrenadeIcon
+      value: 
+      objectReference: {fileID: 2800000, guid: d4e3dc89e270440028057364a91fd7ae, type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

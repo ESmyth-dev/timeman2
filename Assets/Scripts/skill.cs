@@ -7,7 +7,7 @@ public class Skill
     //name
     public string skillName;
     //icon
-    public Texture skillTexture;
+    public Sprite skillTexture;
     //description
     public string skillDescription;
     public bool isUnlocked = false;
