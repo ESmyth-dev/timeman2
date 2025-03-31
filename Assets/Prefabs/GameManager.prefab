@@ -26,7 +26,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3567789824644471498}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -88.08995, y: 0.6609889, z: 20.63787}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -142,12 +142,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   numberOfLives: 3
-  bulletRicochet: 0
-  bulletPierce: 0
-  timeGrenade: 0
-  timePulse: 0
-  doubleJump: 1
-  blink: 0
-  slowTime: 0
-  slowDown: 0
+  levelsCompleted: 0
+  blinkIcon: {fileID: 21300000, guid: 3bd429fa3cdcc4f60a3f6d421cc03414, type: 3}
+  slowIcon: {fileID: 21300000, guid: 5b77e5d785c544c918a84f6436b5b148, type: 3}
+  doubleJumpIcon: {fileID: 21300000, guid: 887ed248b4faec249a72c2638e80bb3b, type: 3}
+  timeGrenadeIcon: {fileID: 21300000, guid: d4e3dc89e270440028057364a91fd7ae, type: 3}
+  cooldownIcon: {fileID: 21300000, guid: 93d2e40de810948b88277657ab27a94b, type: 3}
+  ricochetIcon: {fileID: 21300000, guid: a31ae34b76c7543908167f5f0e838d76, type: 3}
+  enemyPercentage: 100
   deathBubble: 0
+  NUM_ROOMS_FOR_WIN: 3
+  levels: []
