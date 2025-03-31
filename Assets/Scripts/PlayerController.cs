@@ -281,7 +281,6 @@ public class PlayerController : MonoBehaviour
                         rb.velocity = new Vector3(rb.velocity.x, 0, rb.velocity.z);
                         rb.AddForce((transform.up * jumpForce), ForceMode.Impulse);
                         isGrounded = false;
-                        animator.SetBool("falling", false);
                         animator.SetBool("jumping", true);
                     }
                 }
@@ -355,7 +354,6 @@ public class PlayerController : MonoBehaviour
     {
         animator.SetBool("jumping", false);
         animator.SetBool("onGround", false);
-        animator.SetBool("falling", true);
     }
 
     void OnCollisionStay(Collision collision)
