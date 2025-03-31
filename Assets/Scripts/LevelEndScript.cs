@@ -20,10 +20,22 @@ public class CloseDoorScript : MonoBehaviour
             .ToArray();
     }
     
+
+
+
     private string[] GetLevelsInBuild()
     {
        int sceneCount = UnityEngine.SceneManagement.SceneManager.sceneCountInBuildSettings;
        string[] scenes = new string[sceneCount];
+
+
+        // get current scene name
+        string currentSceneName = SceneManager.GetActiveScene().name;
+        // remove current scene from the list
+        Debug.Log("Current scene: " + currentSceneName);
+
+         
+        
 
        Debug.Log("Scene count in build settings: " + sceneCount);
        for (int i = 0; i < sceneCount; i++)
@@ -131,17 +143,23 @@ public class CloseDoorScript : MonoBehaviour
 
     public void LoadNextLevel()
     {
+        GameManager.instance.levelsCompleted += 1;
+
         // deenable currennt scene  folder 
         string currentSceneName = SceneManager.GetActiveScene().name;
         Debug.Log("Current scene: " + currentSceneName);
 
-
-
-        // Load a random scene from the levels array
-        int nextSceneIndex = UnityEngine.Random.Range(0, levels.Length);
-        Debug.Log("Loading next scene: " + levels[nextSceneIndex]);
-        SceneManager.LoadScene(levels[nextSceneIndex]);
-
+        if (GameManager.instance.levelsCompleted >= 5)
+        {
+            SceneManager.LoadScene("EndScreen");
+        }
+        else
+        {
+            // Load a random scene from the levels array
+            int nextSceneIndex = UnityEngine.Random.Range(0, levels.Length);
+            Debug.Log("Loading next scene: " + levels[nextSceneIndex]);
+            SceneManager.LoadScene(levels[nextSceneIndex]);
+        }
 
     }
 }

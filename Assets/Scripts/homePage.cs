@@ -39,6 +39,8 @@ public class homePage : MonoBehaviour
         medium.onClick.AddListener(mediumClick);
         hard.onClick.AddListener(hardClick);
 
+        mediumClick();
+
     }
 
     // Update is called once per frame
@@ -49,6 +51,7 @@ public class homePage : MonoBehaviour
 
     void startClick()
     {
+        b.image.sprite = buttonClick;
         SceneManager.LoadScene("Level1");
     }
 

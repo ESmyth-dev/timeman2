@@ -202,7 +202,7 @@ public class PlayerController : MonoBehaviour
         if (Input.GetKey(KeyCode.P))
         {
             gameManager.timeGrenadeSkill.isUnlocked = true;
-            gameManager.beamSkill.isUnlocked = true;
+            gameManager.ricochetSkill.isUnlocked = true;
             gameManager.doubleJumpSkill.isUnlocked = true;
             gameManager.blinkSkill.isUnlocked = true;
             gameManager.slowTimeSkill.isUnlocked = true;
@@ -794,7 +794,8 @@ public class PlayerController : MonoBehaviour
         // Delete percentage of enemies depending of difficulty
         GameObject enemiesParent = GameObject.Find("Enemies");
         int childCount = enemiesParent.transform.childCount;
-        int numberOfEnemiesToDelete = Mathf.RoundToInt(childCount * ((100-GameManager.instance.enemyPercentage) / 100f));
+
+        int numberOfEnemiesToDelete = Mathf.RoundToInt(childCount * (1-GameManager.instance.enemyPercentage));
 
         List<int> childIndices = new List<int>();
         for (int i = 0; i < childCount; i++)
