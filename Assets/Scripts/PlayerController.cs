@@ -679,7 +679,7 @@ public class PlayerController : MonoBehaviour
 
         Destroy(GameManager.instance.gameObject);
 
-        SceneManager.LoadScene("Level1");
+        SceneManager.LoadScene("HomePage");
     }
 
 
