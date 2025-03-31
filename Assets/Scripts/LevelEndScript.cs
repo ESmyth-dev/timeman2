@@ -20,10 +20,22 @@ public class CloseDoorScript : MonoBehaviour
             .ToArray();
     }
     
+
+
+
     private string[] GetLevelsInBuild()
     {
        int sceneCount = UnityEngine.SceneManagement.SceneManager.sceneCountInBuildSettings;
        string[] scenes = new string[sceneCount];
+
+
+        // get current scene name
+        string currentSceneName = SceneManager.GetActiveScene().name;
+        // remove current scene from the list
+        Debug.Log("Current scene: " + currentSceneName);
+
+         
+        
 
        Debug.Log("Scene count in build settings: " + sceneCount);
        for (int i = 0; i < sceneCount; i++)
