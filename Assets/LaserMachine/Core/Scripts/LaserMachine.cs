@@ -108,6 +108,10 @@ public class LaserMachine : MonoBehaviour {
                 GameObject sparks = Instantiate(m_data.m_laserSparks);
                 sparks.transform.SetParent(newObj.transform);
                 sparks.tag = "Laser";
+                // Add a small sphere collider to the sparks
+                SphereCollider sparksCollider = sparks.AddComponent<SphereCollider>();
+                sparksCollider.radius = 0.1f;
+                sparksCollider.isTrigger = true; // Set as trigger so it doesn't affect physics
                 sparks.SetActive(true);
                 element.sparks = sparks;
 
@@ -224,7 +228,6 @@ public class LaserMachine : MonoBehaviour {
                         Debug.Log("Hit " + hitInfo3D.collider.gameObject.name);
                             if (hitInfo3D.collider.gameObject.tag == "Player")
                             {
-
                                 Debug.Log("Player hit");
                                 // call from player contorler script
                                 // hitInfo3D.collider.gameObject.GetComponent<Player>().TakeDamage(1);
