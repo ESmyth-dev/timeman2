@@ -25,6 +25,7 @@ public class Victory : MonoBehaviour
     void replayClick()
     {
         //b.image.sprite = buttonClick;
+        Destroy(GameManager.instance.gameObject);
         SceneManager.LoadScene("homePage");
     }
 }
