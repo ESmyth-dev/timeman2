@@ -10,8 +10,6 @@ using System.Collections.Generic;
 public class CloseDoorScript : MonoBehaviour
 {
 
-    private readonly int NUM_ROOMS_FOR_WIN = 5;
-
     // private string[] levels = { "Level1", "Level2", "LavaLevel", "Laser Room", "Outside"};
     private List<string> levels;
     
@@ -58,7 +56,7 @@ public class CloseDoorScript : MonoBehaviour
 
         GameManager.instance.levelsCompleted += 1;
 
-        if (GameManager.instance.levelsCompleted == NUM_ROOMS_FOR_WIN)
+        if (GameManager.instance.levelsCompleted == GameManager.instance.NUM_ROOMS_FOR_WIN)
         {
             SceneManager.LoadScene("VictoryScreen");
         }
