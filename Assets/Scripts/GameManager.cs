@@ -10,7 +10,6 @@ public class GameManager : MonoBehaviour
     public static GameManager instance;
     public int numberOfLives = 3;
     public int levelsCompleted = 0;
-    private int level = 0;
 
     public Skill blinkSkill = new Skill();
     public Skill slowTimeSkill = new Skill();
@@ -18,7 +17,6 @@ public class GameManager : MonoBehaviour
     public Skill timeGrenadeSkill = new Skill();
     public Skill gunCooldownSkill = new Skill();
     public Skill ricochetSkill = new Skill();
-    public Skill beamSkill = new Skill();
     public List<Skill> skills = new List<Skill>();
     public List<Skill> skillPersist = new List<Skill>();
 
@@ -38,12 +36,6 @@ public class GameManager : MonoBehaviour
             Destroy(gameObject);
         }
     }
-
-    public void LevelUp()
-    {
-        level++;
-    }
-
 
 
     // Start is called before the first frame update
@@ -76,10 +68,6 @@ public class GameManager : MonoBehaviour
         ricochetSkill.skillDescription = "Use time fracture potential energy to allow your bullets to ricochet off a surface.";
         skills.Add(ricochetSkill);
 
-        beamSkill.skillName = "Enable Beam Mode";
-        beamSkill.skillDescription = "Switch your gun from blast mode to a constant beam, it was on a button, you just didn't notice it until now.";
-        //skills.Add(beamSkill);
-
         int length = skills.Count;
         Skill[] myArray = skills.ToArray();
         Skill[] skillarray = new Skill[length];
@@ -90,14 +78,6 @@ public class GameManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (beamSkill.isUnlocked)
-        {
-            skills.Remove(ricochetSkill);
-        }
-        if (ricochetSkill.isUnlocked)
-        {
-            skills.Remove(beamSkill);
-        }
     }
 
     public void GameOver()
