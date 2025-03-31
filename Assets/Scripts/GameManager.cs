@@ -83,5 +83,6 @@ public class GameManager : MonoBehaviour
     public void GameOver()
     {
         //Need to add code to display game over screen
+        // I think we have this, redundant method ???
     }
 }
