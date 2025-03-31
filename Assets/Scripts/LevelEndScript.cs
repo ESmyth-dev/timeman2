@@ -119,7 +119,7 @@ public class CloseDoorScript : MonoBehaviour
 
     public void LoadNextLevel()
     {
-        GameManager.instance.levelsCompleted += 1;
+        //GameManager.instance.levelsCompleted += 1;
 
         // deenable currennt scene  folder 
         string currentSceneName = SceneManager.GetActiveScene().name;
