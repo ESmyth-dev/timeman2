@@ -107,7 +107,9 @@ public class PlayerController : MonoBehaviour
             GameObject lifeGui = GameObject.Find("Life" + i);
             lifeGui.SetActive(false);
         }
-        
+
+        // Delete some of the enemies depending on difficulty
+        DeleteEnemies();
 
 
         slider = GameObject.Find("Slider").GetComponent<Slider>();
@@ -332,6 +334,11 @@ public class PlayerController : MonoBehaviour
                     RaycastHit[] hits = Physics.RaycastAll(cam.transform.position, cam.transform.forward);
                     for (int i = 0; i < hits.Length; i++)
                     {
+                        if ((hits[i].collider.gameObject.tag == "Enemy" || hits[i].collider.gameObject.tag == "downEnemy"))
+                        {
+                            hits[i].collider.gameObject.GetComponent<EnemyBehaviour>().Hit();
+                        }
+
                         if (hits[i].distance > 3)
                         {
                             beamLine.SetPosition(0, gun.position);
@@ -780,6 +787,36 @@ public class PlayerController : MonoBehaviour
             return true;
         }
         return false;
+    }
+
+    public void DeleteEnemies()
+    {
+        // Delete percentage of enemies depending of difficulty
+        GameObject enemiesParent = GameObject.Find("Enemies");
+        int childCount = enemiesParent.transform.childCount;
+        int numberOfEnemiesToDelete = Mathf.RoundToInt(childCount * ((100-GameManager.instance.enemyPercentage) / 100f));
+
+        List<int> childIndices = new List<int>();
+        for (int i = 0; i < childCount; i++)
+        {
+            childIndices.Add(i);
+        }
+
+        // Shuffle list
+        for (int i = 0; i < childIndices.Count; i++)
+        {
+            int temp = childIndices[i];
+            int randomIndex = Random.Range(i, childIndices.Count);
+            childIndices[i] = childIndices[randomIndex];
+            childIndices[randomIndex] = temp;
+        }
+
+        // Delete
+        for (int i = 0; i < numberOfEnemiesToDelete; i++)
+        {
+            Transform childToDelete = enemiesParent.transform.GetChild(childIndices[i]);
+            Destroy(childToDelete.gameObject);
+        }
     }
 }
 
