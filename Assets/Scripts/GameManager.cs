@@ -78,7 +78,7 @@ public class GameManager : MonoBehaviour
 
         beamSkill.skillName = "Enable Beam Mode";
         beamSkill.skillDescription = "Switch your gun from blast mode to a constant beam, it was on a button, you just didn't notice it until now.";
-        skills.Add(beamSkill);
+        //skills.Add(beamSkill);
 
         int length = skills.Count;
         Skill[] myArray = skills.ToArray();
