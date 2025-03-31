@@ -12,8 +12,6 @@ using UnityEngine.Video;
 
 public class PlayerController : MonoBehaviour
 {
-    public string enemyPath = "CopyPasteRoom/Random Room/Preset1/Enemies";
-
     public Animator animator;
     private Slider slider;
     public LineRenderer beamLine;
@@ -740,13 +738,7 @@ public class PlayerController : MonoBehaviour
 
     private void SetEnemyBehaviour(bool value)
     {
-        Transform enemiesParent = GameObject.Find(enemyPath)?.transform;
-
-        if (enemiesParent == null)
-        {
-            Debug.LogError("Could not find the Enemies folder at path: " + enemyPath);
-            return;
-        }
+        Transform enemiesParent = GameObject.Find("Enemies")?.transform;
 
         List<GameObject> enemyObjects = GetChildren(enemiesParent);
 
