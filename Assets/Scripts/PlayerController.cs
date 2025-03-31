@@ -12,8 +12,6 @@ using UnityEngine.Video;
 
 public class PlayerController : MonoBehaviour
 {
-    public string enemyPath = "CopyPasteRoom/Random Room/Preset1/Enemies";
-
     public Animator animator;
     private Slider slider;
     public LineRenderer beamLine;
@@ -39,10 +37,10 @@ public class PlayerController : MonoBehaviour
     private Coroutine slowTimeCoroutine;
     private bool blinkReady;
     private bool babyBombReady = true;
-    private float numberOfLives;
     private bool jumpEnd = false;
     private bool isRewinding = false;
     private GameManager gameManager;
+    public bool CheatMode = false;
 
     private Vector3 lastGroundPosition;
     private Quaternion lastGroundRotation;
@@ -109,13 +107,20 @@ public class PlayerController : MonoBehaviour
             beamEnabled = true;
         }
 
+        // Show correct amount of lives in gui
+        for (int i = 3; i > GameManager.instance.numberOfLives; i--)
+        {
+            GameObject lifeGui = GameObject.Find("Life" + i);
+            lifeGui.SetActive(false);
+        }
+        
+
 
         slider = GameObject.Find("Slider").GetComponent<Slider>();
 
         pauseMenuActive = false;
         UIman = GameObject.Find("GuiCanvas").GetComponent<UserIntManager>();
 
-        numberOfLives = 3;
         overHeated = false;
         blinkReady = true;
         timeSlowed = false;
@@ -174,7 +179,11 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        pauseMenuActive = UIman.menuActive;
+        if (UIman != null)
+        {
+            pauseMenuActive = UIman.menuActive;
+        }
+        
 
         if (gameManager.gunCooldownSkill.isUnlocked)
         {
@@ -199,6 +208,15 @@ public class PlayerController : MonoBehaviour
         Vector3 right = transform.right;
         forward = Vector3.ProjectOnPlane(forward, Vector3.up).normalized;
         right = Vector3.ProjectOnPlane(right, Vector3.up).normalized;
+
+        if (Input.GetKey(KeyCode.P))
+        {
+            gameManager.timeGrenadeSkill.isUnlocked = true;
+            gameManager.beamSkill.isUnlocked = true;
+            gameManager.doubleJumpSkill.isUnlocked = true;
+            gameManager.blinkSkill.isUnlocked = true;
+            gameManager.slowTimeSkill.isUnlocked = true;
+        }
 
         if (Input.GetKey(KeyCode.W) && !isRewinding)
         {
@@ -233,7 +251,7 @@ public class PlayerController : MonoBehaviour
             animator.SetBool("movingLeft", false);
         }
 
-        if (Input.GetKeyDown(KeyCode.F) && !isRewinding && gameManager.blinkSkill.isUnlocked && !pauseMenuActive)
+        if (Input.GetKeyDown(KeyCode.F) && !isRewinding && !pauseMenuActive && gameManager.blinkSkill.isUnlocked)
         {
             BlinkAbility();
         }
@@ -349,7 +367,9 @@ public class PlayerController : MonoBehaviour
         {
             babyBombReady = false;
             Image bombBackground = GameObject.Find("BombInactive").GetComponent<Image>();
-            bombBackground.enabled = true;
+            var tempColor = bombBackground.color;
+            tempColor.a = 0.2f;
+            bombBackground.color = tempColor;
             StartCoroutine(babyBombCooldown());
 
             GameObject bomb = Instantiate(bombPrefab, gun.position, Quaternion.Euler(transform.rotation.x, transform.rotation.y, transform.rotation.z));
@@ -370,7 +390,9 @@ public class PlayerController : MonoBehaviour
         yield return new WaitForSeconds(babyBombCooldownSeconds);
         babyBombReady = true;
         Image bombBackground = GameObject.Find("BombInactive").GetComponent<Image>();
-        bombBackground.enabled = false;
+        var tempColor = bombBackground.color;
+        tempColor.a = 1f;
+        bombBackground.color = tempColor;
     }
 
     public void JumpEnd()
@@ -391,8 +413,6 @@ public class PlayerController : MonoBehaviour
             }
         }
     }
-
-
 
     void OnCollision(Collision collision)
     {
@@ -420,7 +440,9 @@ public class PlayerController : MonoBehaviour
         // wait another 5 seconds to use the slow time ability again
         yield return new WaitForSeconds(slowdownCooldownSeconds);
         Image slowAbilityBackground = GameObject.Find("SlowInactive").GetComponent<Image>();
-        slowAbilityBackground.enabled = false;
+        var tempColor = slowAbilityBackground.color;
+        tempColor.a = 1f;
+        slowAbilityBackground.color = tempColor;
         timeSlowedCooldown = false;
 
     }
@@ -440,20 +462,23 @@ public class PlayerController : MonoBehaviour
             timeSlowedCooldown = true;
 
             Image slowAbilityBackground = GameObject.Find("SlowInactive").GetComponent<Image>();
-            slowAbilityBackground.enabled = true;
+            var tempColor = slowAbilityBackground.color;
+            tempColor.a = 0.2f;
+            slowAbilityBackground.color = tempColor;
 
             slowTimeAudioSource.PlayOneShot(timeSlowAudioClip);
 
             slowTimeCoroutine = StartCoroutine(SlowTime());
-        }
-        
+        } 
     }
 
     IEnumerator blinkCooldown()
     {
         yield return new WaitForSeconds(blinkCooldownSeconds);
         Image blinkBackground = GameObject.Find("BlinkInactive").GetComponent<Image>();
-        blinkBackground.enabled = false;
+        var tempColor = blinkBackground.color;
+        tempColor.a = 1f;
+        blinkBackground.color = tempColor;
         blinkReady = true;
     }
 
@@ -504,7 +529,9 @@ public class PlayerController : MonoBehaviour
                 Instantiate(blinkSFX, effectVector, effectRotation);
             }
             Image blinkBackground = GameObject.Find("BlinkInactive").GetComponent<Image>();
-            blinkBackground.enabled = true;
+            var tempColor = blinkBackground.color;
+            tempColor.a = 0.2f;
+            blinkBackground.color = tempColor;
             blinkReady = false;
             blinkAudioSource.PlayOneShot(blinkAudioClip);
             StartCoroutine(blinkCooldown());
@@ -526,7 +553,6 @@ public class PlayerController : MonoBehaviour
                 recordedPositions.Add(transform.position);
                 recordedRotations.Add(transform.rotation);
 
-                Debug.Log("Recording position: " + transform.position);
                 //Waits 1 sec
                 yield return new WaitForSeconds(1f);
         }
@@ -536,7 +562,7 @@ public class PlayerController : MonoBehaviour
     {
         while (true)
         {
-            if (isGrounded)
+            if (isGrounded=CheckIfGrounded())
             {
                 lastGroundPosition = transform.position;
                 lastGroundRotation = transform.rotation;
@@ -589,7 +615,6 @@ public class PlayerController : MonoBehaviour
         Debug.Log("Rewinding...");
 
         if(GameObject.Find("Lava")){
-            Debug.Log("Lava found, setting lastGroundPosition to lava position");
             recordedPositions[0] = lastGroundPosition;
             recordedRotations[0] = lastGroundRotation;
         }
@@ -597,8 +622,6 @@ public class PlayerController : MonoBehaviour
         // Iterate backward through recorded positions
         for (int i = recordedPositions.Count - 1; i >= 0; i--)
         {
-
-            Debug.Log("Rewinding to position: " + recordedPositions[i]);
             Vector3 startPos = transform.position;
             Quaternion startRot = transform.rotation;
             Vector3 targetPos = recordedPositions[i];
@@ -642,17 +665,17 @@ public class PlayerController : MonoBehaviour
 
     public void Hit()
     {
-        //sends a log message to terminal 
-        Debug.Log("Player has been hit");
-
         if (isRewinding)
         {
             return;
         }
 
-        if(numberOfLives > 0)
+        if(GameManager.instance.numberOfLives > 0)
         {
-            numberOfLives--;
+            GameObject lifeGui = GameObject.Find("Life" + GameManager.instance.numberOfLives);
+            lifeGui.SetActive(false);
+
+            GameManager.instance.numberOfLives--;
             if(GameManager.instance.deathBubble){
                 // Instantiate the death bubble prefab at the player's position
                 GameObject deathBubble = Instantiate(bombPrefab, transform.position, Quaternion.identity);
@@ -710,15 +733,14 @@ public class PlayerController : MonoBehaviour
 
         Destroy(GameManager.instance.gameObject);
 
-        // reload Level1 scene
         SceneManager.LoadScene("Level1");
     }
 
 
 
     public void LavaHit(){
-        if(numberOfLives > 0){
-            numberOfLives--;
+        if(GameManager.instance.numberOfLives > 0){
+            GameManager.instance.numberOfLives--;
             transform.position = lastGroundPosition;
             transform.rotation = lastGroundRotation;
         }
@@ -726,13 +748,7 @@ public class PlayerController : MonoBehaviour
 
     private void SetEnemyBehaviour(bool value)
     {
-        Transform enemiesParent = GameObject.Find(enemyPath)?.transform;
-
-        if (enemiesParent == null)
-        {
-            Debug.LogError("Could not find the Enemies folder at path: " + enemyPath);
-            return;
-        }
+        Transform enemiesParent = GameObject.Find("Enemies")?.transform;
 
         List<GameObject> enemyObjects = GetChildren(enemiesParent);
 
@@ -767,6 +783,19 @@ public class PlayerController : MonoBehaviour
         }
 
         return result;
+    }
+
+    private bool CheckIfGrounded(){
+
+        int layerMask = ~LayerMask.GetMask("Lava");
+        // Check if the player is grounded by casting a ray downwards
+        RaycastHit hit;
+        if (Physics.Raycast(transform.position, Vector3.down, out hit, 0.5f, layerMask))
+        {
+            Debug.Log("Grounded: " + hit.collider.gameObject.name);
+            return true;
+        }
+        return false;
     }
 }
 

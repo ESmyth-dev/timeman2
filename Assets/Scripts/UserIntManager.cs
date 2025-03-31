@@ -39,12 +39,15 @@ public class UserIntManager : MonoBehaviour
     CanvasGroup s;
     CanvasGroup bl;
     CanvasGroup bo;
+    GameManager gameMan;
 
     void Start()
     {
         hideBlind = false;
         hideBomb = false;
         hideTime = false;
+
+        gameMan = GameObject.Find("GameManager").GetComponent<GameManager>();
         
         if (SceneManager.GetActiveScene().name == "HomePage")
         {
@@ -66,20 +69,20 @@ public class UserIntManager : MonoBehaviour
 
         // ability bar
         slowAbilityBackground = GameObject.Find("SlowInactive").GetComponent<Image>();
-        slowAbilityBackground.enabled = false;
+        slowAbilityBackground.enabled = true;
         slow = GameObject.Find("SlowTime");
         s = slow.GetComponent<CanvasGroup>();
         s.alpha = 0;
 
 
         blinkBackground = GameObject.Find("BlinkInactive").GetComponent<Image>();
-        blinkBackground.enabled = false;
+        blinkBackground.enabled = true;
         blink = GameObject.Find("Blink");
         bl = blink.GetComponent<CanvasGroup>();
         bl.alpha = 0;
 
         bombBackground = GameObject.Find("BombInactive").GetComponent<Image>();
-        bombBackground.enabled = false;
+        bombBackground.enabled = true;
         bomb = GameObject.Find("BabyBomb");
         bo = bomb.GetComponent<CanvasGroup>();
         bo.alpha = 0;
@@ -109,39 +112,24 @@ public class UserIntManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        skills = GameManager.instance.skills;
-        foreach (Skill sp in skills)
+        //skills = GameManager.instance.skills;
+        foreach (Skill sk in gameMan.skillPersist)
         {
-            if (sp.skillName == "Blink")
+            if (sk.isUnlocked && sk.skillName == "Blink")
             {
-                hideBlind = true;
-                bl.alpha = 0;
-            }
-            else
-            {
-                hideBlind = false;
+                //hideBlind = true;
                 bl.alpha = 1;
             }
 
-            if (sp.skillName == "Slow Time")
+            if (sk.isUnlocked && sk.skillName == "Slow Time")
             {
-                hideTime = true;
-                s.alpha = 0;
-            }
-            else
-            {
-                hideTime = false;
+                //hideTime = true;
                 s.alpha = 1;
             }
 
-            if (sp.skillName == "Baby Time Bomb")
+            if (sk.isUnlocked && sk.skillName == "Baby Time Bomb")
             {
                 hideBomb = true;
-                bo.alpha = 0;
-            }
-            else
-            {
-                hideBomb = false;
                 bo.alpha = 1;
             }
 

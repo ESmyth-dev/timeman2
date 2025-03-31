@@ -19,7 +19,7 @@ public class GameManager : MonoBehaviour
     public Skill ricochetSkill = new Skill();
     public Skill beamSkill = new Skill();
     public List<Skill> skills = new List<Skill>();
-
+    public List<Skill> skillPersist = new List<Skill>();
 
     public bool deathBubble = false;
 
@@ -61,7 +61,7 @@ public class GameManager : MonoBehaviour
         timeGrenadeSkill.skillDescription = "Send out a sphere of pure time force, sending all those it touches back in time, turning them into small incapacitated children.";
         skills.Add(timeGrenadeSkill);
 
-        gunCooldownSkill.skillName = "Increased Weapon Cooldown Speed";
+        gunCooldownSkill.skillName = "Faster Gun Cooldown";
         gunCooldownSkill.skillDescription = "Increase the rate at which your weapon cools down by creating a small function quantum time flucuation.";
         skills.Add(gunCooldownSkill);
 
@@ -77,13 +77,24 @@ public class GameManager : MonoBehaviour
         beamSkill.skillDescription = "Switch your gun from blast mode to a constant beam, it was on a button, you just didn't notice it until now.";
         skills.Add(beamSkill);
 
-
+        int length = skills.Count;
+        Skill[] myArray = skills.ToArray();
+        Skill[] skillarray = new Skill[length];
+        Array.Copy(myArray, skillarray, length);
+        skillPersist = new List<Skill>(skillarray);
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+        if (beamSkill.isUnlocked)
+        {
+            skills.Remove(ricochetSkill);
+        }
+        if (ricochetSkill.isUnlocked)
+        {
+            skills.Remove(beamSkill);
+        }
     }
 
     public void GameOver()
