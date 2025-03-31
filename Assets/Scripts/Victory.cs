@@ -12,6 +12,9 @@ public class Victory : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        Cursor.visible = true;
+        Cursor.lockState = CursorLockMode.None;
+
         b = GameObject.Find("PlayAgainButton").GetComponent<Button>();
         b.onClick.AddListener(replayClick);
     }

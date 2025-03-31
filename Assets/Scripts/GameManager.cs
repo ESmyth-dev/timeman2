@@ -76,12 +76,10 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    private void OnEnable()
+    public void removeSceneFromPool()
     {
         levels.Remove(SceneManager.GetActiveScene().name);
-        Debug.Log($"removed level: {SceneManager.GetActiveScene().name}");
     }
-
 
     // Start is called before the first frame update
     void Start()
@@ -105,14 +103,17 @@ public class GameManager : MonoBehaviour
 
         gunCooldownSkill.skillName = "Faster Gun Cooldown";
         gunCooldownSkill.skillDescription = "Increase the rate at which your weapon cools down by creating a small function quantum time flucuation.";
+        gunCooldownSkill.skillTexture = cooldownIcon;
         skills.Add(gunCooldownSkill);
 
         doubleJumpSkill.skillName = "Double Jump";
         doubleJumpSkill.skillDescription = "Bend space time itself using powerful time magic to allow you to propel yourself while in mid air!";
+        doubleJumpSkill.skillTexture = doubleJumpIcon;
         skills.Add(doubleJumpSkill);
 
         ricochetSkill.skillName = "Bullet Richochet";
         ricochetSkill.skillDescription = "Use time fracture potential energy to allow your bullets to ricochet off a surface.";
+        ricochetSkill. skillTexture = ricochetIcon;
         skills.Add(ricochetSkill);
 
         int length = skills.Count;
