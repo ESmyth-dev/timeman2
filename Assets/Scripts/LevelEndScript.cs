@@ -10,7 +10,7 @@ using System.Collections.Generic;
 public class CloseDoorScript : MonoBehaviour
 {
 
-    private int NUM_ROOMS_FOR_WIN = 1;
+    private readonly int NUM_ROOMS_FOR_WIN = 5;
 
     // private string[] levels = { "Level1", "Level2", "LavaLevel", "Laser Room", "Outside"};
     private string[] levels;
