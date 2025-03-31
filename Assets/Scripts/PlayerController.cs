@@ -159,9 +159,13 @@ public class PlayerController : MonoBehaviour
                 Hit();
             }
         }
-   
-
-
+    
+    private void OnParticleCollision(GameObject particleSystemGO)
+    {
+        // Check if the colliding particle's GameObject has the "Laser" tag
+        Hit();
+    
+    }
     // Update is called once per frame
     void Update()
     {
