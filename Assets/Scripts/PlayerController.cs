@@ -14,12 +14,8 @@ public class PlayerController : MonoBehaviour
 {
     public Animator animator;
     private Slider slider;
-    public LineRenderer beamLine;
-    public float beamRange = 100f;
     public float cooldownSpeed = 0.2f;
-    public float beamFillSpeed = 0.5f;
     private bool overHeated;
-    public Light beamLight;
     public float speed = 1.0f;
     public float slowdownFactor = 10;
     public float blinkDistance = 5;
@@ -107,7 +103,9 @@ public class PlayerController : MonoBehaviour
             GameObject lifeGui = GameObject.Find("Life" + i);
             lifeGui.SetActive(false);
         }
-        
+
+        // Delete some of the enemies depending on difficulty
+        DeleteEnemies();
 
 
         slider = GameObject.Find("Slider").GetComponent<Slider>();
@@ -200,7 +198,7 @@ public class PlayerController : MonoBehaviour
         if (Input.GetKey(KeyCode.P))
         {
             gameManager.timeGrenadeSkill.isUnlocked = true;
-            gameManager.beamSkill.isUnlocked = true;
+            gameManager.ricochetSkill.isUnlocked = true;
             gameManager.doubleJumpSkill.isUnlocked = true;
             gameManager.blinkSkill.isUnlocked = true;
             gameManager.slowTimeSkill.isUnlocked = true;
@@ -289,7 +287,7 @@ public class PlayerController : MonoBehaviour
                 }
             }
 
-            if (Input.GetMouseButtonDown(0) && !GameManager.instance.beamSkill.isUnlocked && !pauseMenuActive)
+            if (Input.GetMouseButtonDown(0) && !pauseMenuActive)
             {
                 if (!overHeated)
                 {
@@ -318,42 +316,6 @@ public class PlayerController : MonoBehaviour
                     pewAudioSource.PlayOneShot(pewAudioClip);
 
                 }
-            }
-
-            if (Input.GetMouseButton(0) && GameManager.instance.beamSkill.isUnlocked && !pauseMenuActive)
-            {
-                if (!overHeated)
-                {
-                    slider.value += beamFillSpeed * Time.deltaTime;
-                    if (slider.value >= 1f)
-                    {
-                        overHeated = true;
-                    }
-                    RaycastHit[] hits = Physics.RaycastAll(cam.transform.position, cam.transform.forward);
-                    for (int i = 0; i < hits.Length; i++)
-                    {
-                        if (hits[i].distance > 3)
-                        {
-                            beamLine.SetPosition(0, gun.position);
-                            beamLine.SetPosition(1, hits[i].point);
-                            if ((hits[i].collider.gameObject.tag == "Enemy" || hits[i].collider.gameObject.tag == "downEnemy"))
-                            {
-                                hits[i].collider.gameObject.GetComponent<EnemyBehaviour>().Hit();
-                            }
-                            beamLight.transform.position = gun.position;
-                            beamLight.transform.rotation = gun.rotation;
-                            break;
-                        }
-                    }
-                    beamLine.enabled = true;
-                    beamLight.enabled = true;
-
-                }
-            }
-
-            if (Input.GetMouseButtonUp(0) && GameManager.instance.beamSkill.isUnlocked && !pauseMenuActive)
-            {
-                beamLine.enabled = false;
             }
 
             if (Input.GetMouseButtonDown(1) && babyBombReady && gameManager.timeGrenadeSkill.isUnlocked && !pauseMenuActive)
@@ -717,7 +679,7 @@ public class PlayerController : MonoBehaviour
 
         Destroy(GameManager.instance.gameObject);
 
-        SceneManager.LoadScene("Level1");
+        SceneManager.LoadScene("HomePage");
     }
 
 
@@ -780,6 +742,37 @@ public class PlayerController : MonoBehaviour
             return true;
         }
         return false;
+    }
+
+    public void DeleteEnemies()
+    {
+        // Delete percentage of enemies depending of difficulty
+        GameObject enemiesParent = GameObject.Find("Enemies");
+        int childCount = enemiesParent.transform.childCount;
+
+        int numberOfEnemiesToDelete = Mathf.RoundToInt(childCount * (1-GameManager.instance.enemyPercentage));
+
+        List<int> childIndices = new List<int>();
+        for (int i = 0; i < childCount; i++)
+        {
+            childIndices.Add(i);
+        }
+
+        // Shuffle list
+        for (int i = 0; i < childIndices.Count; i++)
+        {
+            int temp = childIndices[i];
+            int randomIndex = Random.Range(i, childIndices.Count);
+            childIndices[i] = childIndices[randomIndex];
+            childIndices[randomIndex] = temp;
+        }
+
+        // Delete
+        for (int i = 0; i < numberOfEnemiesToDelete; i++)
+        {
+            Transform childToDelete = enemiesParent.transform.GetChild(childIndices[i]);
+            Destroy(childToDelete.gameObject);
+        }
     }
 }
 

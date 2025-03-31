@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using TMPro;
 
 public class homePage : MonoBehaviour
 {
@@ -16,15 +17,22 @@ public class homePage : MonoBehaviour
     Image mediumImg;
     Image hardImg;
 
+    public Sprite button;
+    public Sprite buttonHover;
+    public Sprite buttonClick;
+
     // Start is called before the first frame update
     void Start()
     {
+        Cursor.visible = true;
+        Cursor.lockState = CursorLockMode.None;
+
         b = GameObject.Find("PlayButton").GetComponent<Button>();
         b.onClick.AddListener(startClick);
 
-        easy = GameObject.Find("Easy").GetComponent<Button>();
-        medium = GameObject.Find("Medium").GetComponent<Button>();
-        hard = GameObject.Find("Hard").GetComponent<Button>();
+        easy = GameObject.Find("EasyButton").GetComponent<Button>();
+        medium = GameObject.Find("MediumButton").GetComponent<Button>();
+        hard = GameObject.Find("HardButton").GetComponent<Button>();
 
         easyImg = easy.GetComponent<Image>();
         mediumImg = medium.GetComponent<Image>();
@@ -33,6 +41,8 @@ public class homePage : MonoBehaviour
         easy.onClick.AddListener(easyClick);
         medium.onClick.AddListener(mediumClick);
         hard.onClick.AddListener(hardClick);
+
+        mediumClick();
 
     }
 
@@ -44,28 +54,32 @@ public class homePage : MonoBehaviour
 
     void startClick()
     {
+        b.image.sprite = buttonClick;
         SceneManager.LoadScene("Level1");
     }
 
     void easyClick()
     {
-        easyImg.color = Color.blue;
-        mediumImg.color = Color.white;
-        hardImg.color = Color.white;
+        easy.image.sprite = buttonClick;
+        medium.image.sprite = button;
+        hard.image.sprite = button;
+
         GameManager.instance.enemyPercentage = 0.5f;
     }
     void mediumClick()
     {
-        easyImg.color = Color.white;
-        mediumImg.color = Color.blue;
-        hardImg.color = Color.white;
+        easy.image.sprite = button;
+        medium.image.sprite = buttonClick;
+        hard.image.sprite = button;
+
         GameManager.instance.enemyPercentage = 0.75f;
     }
     void hardClick()
     {
-        easyImg.color = Color.white;
-        mediumImg.color = Color.white;
-        hardImg.color = Color.blue;
+        easy.image.sprite = button;
+        medium.image.sprite = button;
+        hard.image.sprite = buttonClick;
+
         GameManager.instance.enemyPercentage = 1f;
     }
 }
