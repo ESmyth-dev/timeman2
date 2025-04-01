@@ -49,8 +49,6 @@ public class GameManager : MonoBehaviour
 
 
 
-
-        Debug.Log("Scene count in build settings: " + sceneCount);
         for (int i = 0; i < sceneCount; i++)
         {
             scenes[i] = System.IO.Path.GetFileNameWithoutExtension(UnityEngine.SceneManagement.SceneUtility.GetScenePathByBuildIndex(i));

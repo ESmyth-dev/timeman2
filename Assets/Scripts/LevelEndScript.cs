@@ -55,6 +55,7 @@ public class CloseDoorScript : MonoBehaviour
         GameObject.Find("GuiCanvas").SetActive(false);
 
         GameManager.instance.levelsCompleted += 1;
+        Debug.Log($"LEVELS COMPLETED: { GameManager.instance.levelsCompleted}");
 
         if (GameManager.instance.levelsCompleted == GameManager.instance.NUM_ROOMS_FOR_WIN)
         {
