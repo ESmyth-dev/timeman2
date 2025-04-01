@@ -63,7 +63,7 @@ public class GameManager : MonoBehaviour
     void Awake()
     {
         levels = GetLevelsInBuild()
-         .Where(level => level != "HomePage")
+         .Where(level => level != "HomePage" && level != "VictoryScreen")
          .ToList<string>();
         if (instance == null)
         {
