@@ -32,7 +32,7 @@ public class GameManager : MonoBehaviour
 
     public bool deathBubble = false;
 
-    public int NUM_ROOMS_FOR_WIN = 3;
+    public int NUM_ROOMS_FOR_WIN = 5;
 
     public List<string> levels;
 
