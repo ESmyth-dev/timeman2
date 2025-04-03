@@ -3,7 +3,7 @@ using UnityEngine;
 public class MusicPlaylist : MonoBehaviour
 {
     public AudioClip[] playlist; // Assign your songs in the Inspector
-    private AudioSource audioSource;
+    public AudioSource audioSource;
     private int currentTrack = 0;
 
     void Start()
