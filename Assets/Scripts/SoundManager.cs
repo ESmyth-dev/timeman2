@@ -11,6 +11,8 @@ public class MusicPlaylist : MonoBehaviour
         audioSource = GetComponent<AudioSource>();
         if (playlist.Length > 0)
         {
+            //Pick a random track to start with
+            currentTrack = Random.Range(0, playlist.Length);
             PlayTrack(currentTrack);
         }
     }
