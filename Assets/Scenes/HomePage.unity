@@ -513,7 +513,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5165209404422778687, guid: 9c33361bf48cfb849894982d5c1b5929, type: 3}
       propertyPath: NUM_ROOMS_FOR_WIN
-      value: 5
+      value: 3
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
