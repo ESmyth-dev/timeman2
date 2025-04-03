@@ -4473,6 +4473,10 @@ PrefabInstance:
       value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 100000, guid: bb8c7438a4ec94b458e043eea4341d0f, type: 3}
+      propertyPath: m_TagString
+      value: floor
+      objectReference: {fileID: 0}
+    - target: {fileID: 100000, guid: bb8c7438a4ec94b458e043eea4341d0f, type: 3}
       propertyPath: m_StaticEditorFlags
       value: 2147483647
       objectReference: {fileID: 0}
