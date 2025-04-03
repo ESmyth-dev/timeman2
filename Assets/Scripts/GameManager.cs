@@ -32,7 +32,7 @@ public class GameManager : MonoBehaviour
 
     public bool deathBubble = false;
 
-    public int NUM_ROOMS_FOR_WIN = 3;
+    public int NUM_ROOMS_FOR_WIN = 5;
 
     public List<string> levels;
 
@@ -49,8 +49,6 @@ public class GameManager : MonoBehaviour
 
 
 
-
-        Debug.Log("Scene count in build settings: " + sceneCount);
         for (int i = 0; i < sceneCount; i++)
         {
             scenes[i] = System.IO.Path.GetFileNameWithoutExtension(UnityEngine.SceneManagement.SceneUtility.GetScenePathByBuildIndex(i));
@@ -63,7 +61,7 @@ public class GameManager : MonoBehaviour
     void Awake()
     {
         levels = GetLevelsInBuild()
-         .Where(level => level != "HomePage")
+         .Where(level => level != "HomePage" && level != "VictoryScreen")
          .ToList<string>();
         if (instance == null)
         {

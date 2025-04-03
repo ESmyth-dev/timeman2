@@ -9,6 +9,10 @@ namespace Lightbug.LaserMachine
 
 public class LaserMachine : MonoBehaviour {
 
+        float normalSpeed;
+        float slowSpeed;
+        PlayerController controller;
+
     struct LaserElement 
     {
         public Transform transform;        
@@ -43,7 +47,9 @@ public class LaserMachine : MonoBehaviour {
     void OnEnable()
     {
         m_currentProperties = m_overrideExternalProperties ? m_inspectorProperties : m_data.m_properties;
-        
+            normalSpeed = m_currentProperties.m_rotationSpeed;
+            slowSpeed = normalSpeed * 0.1f;
+            controller = FindAnyObjectByType<PlayerController>();
 
         m_currentProperties.m_initialTimingPhase = Mathf.Clamp01(m_currentProperties.m_initialTimingPhase);
         m_time = m_currentProperties.m_initialTimingPhase * m_currentProperties.m_intervalTime;
@@ -161,10 +167,22 @@ public class LaserMachine : MonoBehaviour {
 
             if ( m_currentProperties.m_rotate )
             {
-                if ( m_currentProperties.m_rotateClockwise )
-                    element.transform.RotateAround(transform.position, transform.up, Time.deltaTime * m_currentProperties.m_rotationSpeed);    //rotate around Global!!
-                else
-                    element.transform.RotateAround(transform.position, transform.up, -Time.deltaTime * m_currentProperties.m_rotationSpeed);
+                if (!controller.timeSlowed)
+                    {
+                        if (m_currentProperties.m_rotateClockwise)
+                            element.transform.RotateAround(transform.position, transform.up, Time.deltaTime * normalSpeed);    //rotate around Global!!
+                        else
+                            element.transform.RotateAround(transform.position, transform.up, -Time.deltaTime * normalSpeed);
+                    }
+
+                    else
+                    {
+                        if (m_currentProperties.m_rotateClockwise)
+                            element.transform.RotateAround(transform.position, transform.up, Time.deltaTime * slowSpeed);    //rotate around Global!!
+                        else
+                            element.transform.RotateAround(transform.position, transform.up, -Time.deltaTime * slowSpeed);
+                    }
+
             }
 
 
